@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f5f5f5;
+    top: 0px !important;
 }
 
 .bg-primary {
@@ -260,6 +261,18 @@ body {
 .dropdown-menu .dropdown-item:hover {
     background-color: transparent;
     color: inherit;
+}
+
+#google_translate_element {
+    background-color: #005ea5;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+}
+
+body > .skiptranslate > iframe.skiptranslate {
+    display: none !important;
 }
 
 @media (max-width: 768px) {

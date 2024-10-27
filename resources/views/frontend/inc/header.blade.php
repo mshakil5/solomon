@@ -33,6 +33,10 @@
                     Login
                 </a>
                 @endif
+
+                <div class="nav-item">
+                    <div id="google_translate_element"></div>
+                </div>
         </nav>
     </div>
 </div>  
