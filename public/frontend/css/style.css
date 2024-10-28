@@ -263,7 +263,7 @@ body {
     color: inherit;
 }
 
-#google_translate_element {
+.google_translate_element {
     background-color: #005ea5;
     border: 1px solid #cccccc;
     border-radius: 3px;
