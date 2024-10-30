@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 @php
-    $companyDetails = \App\Models\CompanyDetails::select('fav_icon')->first();
+    $companyDetails = \App\Models\CompanyDetails::select('fav_icon', 'footer_content', 'company_name')->first();
 @endphp
 
 <head>
@@ -95,6 +95,20 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            var elements = document.querySelectorAll('.google_translate_element');
+            elements.forEach(function(element) {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,ro',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, element);
+            });
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     @yield('script')
 

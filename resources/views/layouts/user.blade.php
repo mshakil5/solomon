@@ -70,6 +70,9 @@
                 </li>
                 @endif
             </nav>
+            <div class="nav-item nav-link">
+                <div class="google_translate_element"></div>
+            </div>
             <nav class="navbar-nav d-md-none">
                 <a class="nav-item nav-link" href="#">
                     Homeowner
@@ -109,6 +112,20 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled@4"></script>
     <script src="{{ asset('assets/admin/lightbox/lightbox.min.js')}}"></script>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            var elements = document.querySelectorAll('.google_translate_element');
+            elements.forEach(function(element) {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,ro',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, element);
+            });
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     @yield('script')
 
