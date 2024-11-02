@@ -23,7 +23,7 @@ class FrontendController extends Controller
     public function index()
     {
         $categories = Category::where('status', 1)->select('name', 'slug', 'image')->get();
-        $companyDetails = CompanyDetails::select('footer_content')->first();
+        $companyDetails = CompanyDetails::select('footer_content', 'company_name', 'address1', 'phone1', 'email1')->first();
         return view('frontend.index', compact('categories', 'companyDetails'));
     }
 

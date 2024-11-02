@@ -16,7 +16,7 @@
             Cookies
         </a>
         |
-        <a href="{{ route('contact.show') }}">
+        <a href="{{ route('homepage') }}#contact">
             Contact us
         </a>
         |

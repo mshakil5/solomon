@@ -132,7 +132,7 @@
                 <form id="assignStaffForm">
                     <input type="hidden" id="workId" name="work_id">
                     <div class="form-group">
-                        <label for="staffSelect">Staff</label>
+                        <label for="staffSelect">Staff<span class="text-danger">*</span></label>
                         <select class="form-control" id="staffSelect" name="staff_id" required>
                             <option value="" disabled selected>Select Staff</option>
                             @foreach ($staffs as $staff)
@@ -142,22 +142,22 @@
                     </div>
                     <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="startDate">Start Date</label>
+                        <label for="startDate">Start Date<span class="text-danger">*</span></label>
                         <input type="date" class="form-control" id="startDate" name="start_date" required>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="endDate">End Date</label>
+                        <label for="endDate">End Date<span class="text-danger">*</span></label>
                         <input type="date" class="form-control" id="endDate" name="end_date" required>
                     </div>
                     </div>
                     <div class="row">
                     <div class="form-group col-md-6">
                         <label for="startTime">Start Time</label>
-                        <input type="time" class="form-control" id="startTime" name="start_time" required>
+                        <input type="time" class="form-control" id="startTime" name="start_time">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="endTime">End Time</label>
-                        <input type="time" class="form-control" id="endTime" name="end_time" required>
+                        <input type="time" class="form-control" id="endTime" name="end_time">
                     </div>
                     </div>
                     <div class="form-group">
@@ -282,6 +282,7 @@
                   }, 100);
               },
               error: function(xhr, status, error) {
+                alert(xhr.responseText);
                   $('#loading').hide();
                   console.error(xhr.responseText);
               }

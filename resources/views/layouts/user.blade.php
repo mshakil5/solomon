@@ -43,11 +43,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <nav class="navbar-nav ml-auto d-none d-md-flex">
-                <a class="nav-item nav-link" href="#">
-                    Homeowner
+                <a class="nav-item nav-link" href="{{ route('aboutUs') }}">
+                    About
                 </a>
-                <a class="nav-item nav-link" href="#">
-                    Trades
+                <a class="nav-item nav-link" href="{{ route('homepage') }}#contact">
+                    Contact
                 </a>
                 @if(Auth::check())
                 <li class="nav-item dropdown">

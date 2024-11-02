@@ -101,7 +101,7 @@
                 <thead>
                 <tr>
                   <th style="text-align: center">Job Id</th>
-                  <th style="text-align: center">Title</th>
+                  <th style="text-align: center">User Name</th>
                   <th style="text-align: center">Date</th>
                   <th style="text-align: center">Amount</th>
                   <th style="text-align: center">Action</th>
@@ -110,9 +110,9 @@
                 <tbody>
                   @foreach ($data as $key => $data)
                   <tr>
-                    <td style="text-align: center">{{$data->orderid}}</td>
+                    <td style="text-align: center">{{$data->work->orderid}}</td>
                     <td style="text-align: center">{{$data->work->name}}</td>
-                    <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
+                    <td style="text-align: center">{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
                     <td style="text-align: center">{{$data->amount}}</td>
                     <td style="text-align: center">
                       <a id="EditBtn" rid="{{$data->id}}" class="btn btn-link">
@@ -179,8 +179,8 @@
 
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
-      var url = "{{URL::to('/admin/transactions')}}";
-      var upurl = "{{URL::to('/admin/transactions-update')}}";
+      var url = "{{URL::to('/admin/transaction')}}";
+      var upurl = "{{URL::to('/admin/transaction/update')}}";
 
 
 
@@ -207,8 +207,8 @@
                       window.setTimeout(function(){location.reload()},2000)
                     }
                 },
-                error: function (d) {
-                    console.log(d);
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
           });
         }

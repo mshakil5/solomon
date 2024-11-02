@@ -24,36 +24,23 @@ class TransactionController extends Controller
             exit();
         }
 
-        // if(empty($request->net_amount)){
-        //     $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Net amount \" field..!</b></div>";
-        //     return response()->json(['status'=> 303,'message'=>$message]);
-        //     exit();
-        // }
-
         if(empty($request->amount)){
             $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Amount \" field..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
 
-        $validatedData = $request->validate([
-            'date' => 'required|date',
-            'amount' => 'required|numeric',
-            // 'net_amount' => 'required|numeric',
-            'work_id' => 'required|exists:works,id', 
-        ]);
-
-        $work = Work::findOrFail($validatedData['work_id']);
+        $work = Work::findOrFail($request->work_id);
 
         $transaction = new Transaction();
-        $transaction->date = $validatedData['date'];
-        $transaction->amount = $validatedData['amount'];
-        // $transaction->net_amount = $validatedData['net_amount'];
-        $transaction->work_id = $validatedData['work_id'];
+        $transaction->date = $request->date;
+        $transaction->amount = $request->amount;
+        $transaction->work_id = $work->id;
         $transaction->user_id = $work->user_id; 
 
-        $tranid = now()->format('Ym') . Str::random(6);
-        $transaction->tranid = $tranid;
+        $timestamp = now()->format('YmdHis');
+        $randomDigits = rand(1000, 9999);
+        $transaction->tranid = $timestamp . $randomDigits;
 
         if ($transaction->save()){
             $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Transaction Create Successfully.</b></div>";
@@ -80,23 +67,11 @@ class TransactionController extends Controller
             exit();
         }
 
-        if(empty($request->net_amount)){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Net amount \" field..!</b></div>";
-            return response()->json(['status'=> 303,'message'=>$message]);
-            exit();
-        }
-
         if(empty($request->amount)){
             $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Amount \" field..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
-
-        $validatedData = $request->validate([
-            'date' => 'nullable|date',
-            'amount' => 'nullable|numeric',
-            'net_amount' => 'nullable|numeric',
-        ]);
 
         $transaction = Transaction::find($request->codeid);
 
@@ -104,13 +79,11 @@ class TransactionController extends Controller
             return response()->json(['error' => 'Transaction not found'], 404);
         }
 
-        $updateData = [
-            'date' => $validatedData['date'],
-            'amount' => $validatedData['amount'],
-            'net_amount' => $validatedData['net_amount'],
-        ];
+        $transaction->date = $request->date;
+        $transaction->amount = $request->amount;
+        $transaction->save();
 
-        if ($transaction->update($updateData)) {
+        if ($transaction->save()) {
             $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data Updated Successfully.</b></div>";
             return response()->json(['status'=> 300,'message'=>$message]);$message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data Updated Successfully.</b></div>";
             return response()->json(['status'=> 300,'message'=>$message]);

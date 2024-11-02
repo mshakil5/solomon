@@ -7,11 +7,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <nav class="navbar-nav ml-auto">
-            <a class="nav-item nav-link" href="#">
-                Homeowner
+            <a class="nav-item nav-link" href="{{ route('aboutUs') }}">
+                About
             </a>
-            <a class="nav-item nav-link" href="#">
-                Trades
+            <a class="nav-item nav-link" href="{{ route('homepage') }}#contact">
+                Contact
             </a>
             @if(Auth::check())
                 @if(auth()->user()->is_type == '1')
@@ -32,7 +32,10 @@
                 <a class="nav-item nav-link" href="{{ route('login') }}">
                     Login
                 </a>
-                @endif
+                <a class="nav-item nav-link" href="{{ route('register') }}">
+                    Register
+                </a>
+            @endif
 
                 <div class="nav-item">
                     <div class="google_translate_element"></div>

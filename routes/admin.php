@@ -52,9 +52,9 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     Route::get('/work/transaction/{id}', [TransactionController::class, 'showTransactions'])->name('work.transactions');
     Route::get('/add/transaction/{work_id}', [TransactionController::class, 'addTransaction'])->name('add.transaction');
-    Route::post('/store/transaction', [TransactionController::class, 'storeTransaction'])->name('store.transaction');
-    Route::get('/transaction/edit/{id}', [TransactionController::class, 'editTransaction'])->name('transaction.edit');
-    Route::put('/transaction/update/{id}', [TransactionController::class, 'updateTransaction'])->name('transaction.update');
+    Route::post('/transaction', [TransactionController::class, 'store'])->name('store.transaction');
+    Route::get('/transaction/{id}/edit', [TransactionController::class, 'edit'])->name('transaction.edit');
+    Route::post('/transaction/update', [TransactionController::class, 'update'])->name('transaction.update');
     Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->name('transaction.destroy');
 
 
