@@ -20,4 +20,14 @@ class FeedbackController extends Controller
         $data =  Quote::latest()->get();
         return view('admin.feedback.quote', compact('data'));
     }
+
+    public function toggleReviewStatus(Request $request)
+    {
+        $review = Review::findOrFail($request->id);
+        $review->status = $request->status;
+        $review->save();
+
+        return response()->json(['message' => 'Review status updated successfully!']);
+    }
+
 }

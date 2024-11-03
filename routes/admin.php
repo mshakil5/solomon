@@ -118,6 +118,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/reviews', [FeedbackController::class, 'getReviews'])->name('allReviews');
     Route::get('/quotes', [FeedbackController::class, 'getQuotes'])->name('allQuotes');
 
+    Route::post('/toggle-review-status', [FeedbackController::class, 'toggleReviewStatus']);
+
 
     //Staff crud by Admin
     Route::get('/questions', [QuestionController::class, 'index'])->name('allQuestions');

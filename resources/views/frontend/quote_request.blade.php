@@ -18,7 +18,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">Your Name</label>
+                                    <label for="name" class="form-label">Your Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control" required>
                                     @error('name')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="email" class="form-label">Your Email</label>
+                                    <label for="email" class="form-label">Your Email <span class="text-danger">*</span></label>
                                     <input type="email" name="email" id="email" class="form-control" required>
                                     @error('email')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="phone" class="form-label">Your Phone Number</label>
+                            <label for="phone" class="form-label">Your Phone Number <span class="text-danger">*</span></label>
                             <input type="text" name="phone" id="phone" class="form-control" required>
                             @error('phone')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -45,7 +45,7 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="details" class="form-label">Details of Your Request</label>
+                            <label for="details" class="form-label">Details of Your Request <span class="text-danger">*</span></label>
                             <textarea name="details" id="details" class="form-control" rows="5" required></textarea>
                             @error('details')
                                 <div class="text-danger small mt-1">{{ $message }}</div>

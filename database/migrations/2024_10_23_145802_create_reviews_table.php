@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->tinyInteger('stars')->nullable();
             $table->longText('review')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

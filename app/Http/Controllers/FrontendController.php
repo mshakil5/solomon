@@ -203,7 +203,8 @@ class FrontendController extends Controller
 
     public function review()
     {
-        return view('frontend.review');
+        $reviews = Review::orderBy('id', 'desc')->where('status', '1')->select('name', 'stars', 'review')->get();
+        return view('frontend.review', compact('reviews'));
     }
 
     public function reviewStore(Request $request)
