@@ -42,6 +42,7 @@
                   <th>Status</th>
                   <th>Timer</th>
                   <th>Image</th>
+                  <th>Review</th>
                   <th>Details</th>
                 </tr>
                 </thead>
@@ -132,6 +133,12 @@
                     <a href="{{ route('view.image', $data->id) }}" class="btn btn-secondary">
                       <i class="fas fa-image"></i>
                     </a>
+                  </td>
+
+                  <td>
+                      <a href="{{ route('admin.work.review', $data->id) }}" class="btn btn-info">
+                          Review
+                      </a>
                   </td>
        
                     <td>

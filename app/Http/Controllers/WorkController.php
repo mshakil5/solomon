@@ -485,7 +485,6 @@ class WorkController extends Controller
             'user_id' => Auth::id(),
             'note' => $request->note,
             'image' => $imageName,
-            'created_by' => Auth::id(),
         ]);
 
         foreach ($request->answers as $questionId => $answer) {
@@ -512,6 +511,33 @@ class WorkController extends Controller
         ]);
 
         return back()->with('success', 'Reply added successfully!');
+    }
+
+    public function showAdminReview($id)
+    {
+        $work = Work::findOrFail($id);
+
+        $existingReview = WorkReview::with(['answers.question', 'replies.user'])
+            ->where('work_id', $work->id)
+            ->first();
+
+        return view('admin.work.review', compact('existingReview'));
+    }
+
+    public function storeReplyByAdmin(Request $request, $reviewId)
+    {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $review = WorkReview::findOrFail($reviewId);
+
+        $review->replies()->create([
+            'user_id' => Auth::id(),
+            'content' => $request->input('content'),
+        ]);
+
+        return redirect()->back()->with('success', 'Reply added successfully!');
     }
 
 }
