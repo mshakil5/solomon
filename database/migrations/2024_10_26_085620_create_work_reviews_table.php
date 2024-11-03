@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->longText('note')->nullable();
             $table->string('image')->nullable();
-            $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }
