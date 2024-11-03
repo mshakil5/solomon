@@ -16,6 +16,7 @@ use App\Models\WorkAssign;
 use App\Models\ReviewQuestion;
 use App\Models\WorkReview;
 use App\Models\ReviewAnswer;
+use App\Models\WorkReviewReply;
 
 class WorkController extends Controller
 {
@@ -453,7 +454,7 @@ class WorkController extends Controller
         $work = Work::findOrFail($id);
         $questions = ReviewQuestion::where('status', 1)->latest()->get();
 
-        $existingReview = WorkReview::with('answers.question')
+        $existingReview = WorkReview::with(['answers.question', 'replies.user'])
             ->where('work_id', $work->id)
             ->where('user_id', auth()->id())
             ->first();
@@ -484,6 +485,7 @@ class WorkController extends Controller
             'user_id' => Auth::id(),
             'note' => $request->note,
             'image' => $imageName,
+            'created_by' => Auth::id(),
         ]);
 
         foreach ($request->answers as $questionId => $answer) {
@@ -496,4 +498,20 @@ class WorkController extends Controller
 
         return redirect()->route('user.works')->with('success', 'Review submitted successfully.');
     }
+
+    public function storeReply(Request $request, $reviewId)
+    {
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        WorkReviewReply::create([
+            'work_review_id' => $reviewId,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return back()->with('success', 'Reply added successfully!');
+    }
+
 }

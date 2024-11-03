@@ -25,4 +25,9 @@ class WorkReview extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function replies()
+    {
+        return $this->hasMany(WorkReviewReply::class, 'work_review_id');
+    }
 }
