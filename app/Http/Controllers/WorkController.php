@@ -225,8 +225,8 @@ class WorkController extends Controller
             'staff_id' => 'required|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
             'note' => 'nullable|string',
         ]);
 
