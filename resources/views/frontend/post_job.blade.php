@@ -110,12 +110,12 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-1 text-end">
-                                    <button class="btn btn-success add-row" type="button">+</button>
+                                    <button class="btn btn-primary add-row" type="button">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success mt-3">Submit</button>
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
 
                         <div id='loading' style='display:none ;'>
                             <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
