@@ -4,6 +4,29 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-10">
+
+            @if($reviews->count() > 0)
+            <h2 class="mb-4">Reviews</h2>
+            <div class="row">
+                @foreach($reviews as $review)
+                    <div class="col-md-3">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $review->name }}</h5>
+                                <div class="mb-2">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span class="star {{ $i <= $review->stars ? 'text-warning' : '' }}">&#9733;</span>
+                                    @endfor
+                                </div>
+                                <p class="card-text">{!! $review->review !!}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <hr>
+            @endif
+
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
                     <h2 class="mb-0">Leave a Review</h2>
@@ -13,12 +36,12 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    <form action="#" method="POST">
+                    <form action="{{ route('review.store') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">Your Name</label>
+                                    <label for="name" class="form-label">Your Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control" required>
                                     @error('name')
                                         <div class="text-danger small mt-1">{{ $message }}</div>
@@ -27,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="stars" class="form-label">Rate Us</label>
+                                    <label for="stars" class="form-label">Rate Us <span class="text-danger">*</span></label>
                                     <div id="star-rating" class="star-rating">
                                         <input type="radio" name="stars" value="5" id="star5"><label for="star5">&#9733;</label>
                                         <input type="radio" name="stars" value="4" id="star4"><label for="star4">&#9733;</label>
@@ -43,7 +66,7 @@
                         </div>
 
                         <div class="form-group mb-4">
-                            <label for="review" class="form-label">Your Review</label>
+                            <label for="review" class="form-label">Your Review <span class="text-danger">*</span></label>
                             <textarea name="review" id="review" class="form-control" rows="5" required></textarea>
                             @error('review')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -103,9 +126,17 @@
         border-radius: 8px;
     }
 
-     .form-label {
+    .form-label {
         font-weight: bold;
         margin-bottom: 0.5rem;
+    }
+
+    .text-warning {
+        color: gold !important;
+    }
+
+    .star {
+        font-size: 1.5rem;
     }
 </style>
 

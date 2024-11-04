@@ -90,9 +90,10 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
     Route::get('/work/{work}/transactions', [WorkController::class, 'showTransactions'])->name('show.transactions');
 
     Route::get('/work/{id}/review', [WorkController::class, 'showReviewForm'])->name('work.review');
-    Route::post('/work/{id}/review', [WorkController::class, 'submitReview'])->name('work.review.submit');
 
     Route::post('/work-review/store', [WorkController::class, 'storeReview'])->name('work.review.store');
+
+    Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply'])->name('work.review.reply.store');
 
     Route::get('/profile', [UserController::class, 'userProfile'])->name('user.profile');
     Route::post('/user/profile/update', [UserController::class, 'userProfileUpdate'])->name('user.profile.update');

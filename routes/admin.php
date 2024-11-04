@@ -48,6 +48,10 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/get-all-work/{id}', [WorkController::class, 'workGallery'])->name('admin.workGallery');
     Route::get('/work/{id}', [WorkController::class, 'workDetailsByAdmin'])->name('admin.work.details');
 
+    Route::get('/work/{id}/review', [WorkController::class, 'showAdminReview'])->name('admin.work.review');
+
+    Route::post('/review/{review}/reply', [WorkController::class, 'storeReplyByAdmin'])->name('admin.review.reply.store');
+
     Route::get('/all-transaction', [TransactionController::class, 'allTransactions'])->name('allTransactions');
 
     Route::get('/work/transaction/{id}', [TransactionController::class, 'showTransactions'])->name('work.transactions');
@@ -117,6 +121,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     //Feedbacks
     Route::get('/reviews', [FeedbackController::class, 'getReviews'])->name('allReviews');
     Route::get('/quotes', [FeedbackController::class, 'getQuotes'])->name('allQuotes');
+
+    Route::post('/toggle-review-status', [FeedbackController::class, 'toggleReviewStatus']);
 
 
     //Staff crud by Admin

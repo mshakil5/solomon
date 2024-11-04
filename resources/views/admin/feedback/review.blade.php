@@ -23,6 +23,7 @@
                   <th>Name</th>
                   <th>Rating</th>
                   <th>Review</th>
+                  <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,12 @@
                     <td>{{$data->name}}</td>
                     <td>{{ $data->stars }} / 5</td>
                     <td>{!! $data->review !!}</td>
+                    <td>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $data->id }}" data-id="{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitchStatus{{ $data->id }}"></label>
+                        </div>
+                    </td>
                   </tr>
                   @endforeach
                 
@@ -61,6 +68,37 @@ $(function () {
     "buttons": ["copy", "csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 });
+</script>
+
+<script>
+  $('.toggle-status').change(function() {
+    var isChecked = $(this).is(':checked');
+    var reviewId = $(this).data('id');
+
+    $.ajax({
+        url: '/admin/toggle-review-status',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: reviewId,
+            status: isChecked ? 1 : 0
+        },
+        success: function(response) {
+            swal({
+                text: "Review status updated successfully!",
+                icon: "success",
+                button: {
+                    text: "OK",
+                    className: "swal-button--confirm"
+                }
+            });
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+        }
+    });
+});
+
 </script>
 
 @endsection
