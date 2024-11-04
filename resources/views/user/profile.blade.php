@@ -29,13 +29,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="form-label">Name</label>
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="surname" class="form-label">Company Name</label>
+                                <label for="surname" class="form-label">Company Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="surname" name="surname" value="{{ $user->surname }}" required>
                             </div>
                         </div>
@@ -44,13 +44,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email" class="form-label">Email</label>
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone" class="form-label">Phone</label>
+                                <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" required>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address_first_line" class="form-label">Address First Line</label>
+                                <label for="address_first_line" class="form-label">Address First Line <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="address_first_line" name="address_first_line" value="{{ $user->address_first_line }}" required>
                             </div>
                         </div>
@@ -72,14 +72,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="town" class="form-label">Town</label>
-                                <input type="text" class="form-control" id="town" name="town" value="{{ $user->town }}">
+                                <label for="town" class="form-label">Town <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="town" name="town" value="{{ $user->town }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="postcode" class="form-label">Post Code</label>
-                                <input type="text" class="form-control" id="postcode" name="postcode" value="{{ $user->postcode }}">
+                                <label for="postcode" class="form-label">Post Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="postcode" name="postcode" value="{{ $user->postcode }}" required>
                             </div>
                         </div>
                     </div>

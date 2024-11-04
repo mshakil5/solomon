@@ -5,11 +5,13 @@
 
 <div class="categories mt-5">
 
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
+    <div class="container col-10">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     </div>
-@endif
 
     <h2>
         Browse our most popular categories
@@ -125,7 +127,7 @@
                     @if ($message = Session::get('message'))
                         <div class="alert alert-primary alert-dismissible fade show" role="alert">
                             <strong>{{ $message }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>

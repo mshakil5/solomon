@@ -37,22 +37,22 @@
 
                         <div class="row mt-3">
                             <div class="col-lg-4 col-12">
-                                <label for="name">Name</label>
+                                <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" value="{{ $work->name }}" required>
                             </div>
                             <div class="col-lg-4 col-12">
-                                <label for="email">Email</label>
+                                <label for="email">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="email" class="form-control" value="{{ $work->email }}" required>
                             </div>
                             <div class="col-lg-4 col-12">
-                                <label for="phone">Phone</label>
+                                <label for="phone">Phone <span class="text-danger">*</span></label>
                                 <input type="number" name="phone" id="phone" class="form-control" value="{{ $work->phone }}" required>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="col-lg-4 col-12">
-                                <label for="address_first_line">Address First Line</label>
+                                <label for="address_first_line">Address First Line <span class="text-danger">*</span></label>
                                 <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ $work->address_first_line }}" required>
                             </div>
                             <div class="col-lg-4 col-12">
@@ -64,12 +64,12 @@
                                 <input type="text" name="address_third_line" id="address_third_line" class="form-control" value="{{ $work->address_third_line }}">
                             </div>
                             <div class="col-lg-6 col-12 mt-3">
-                                <label for="town">Town</label>
-                                <input type="text" name="town" id="town" class="form-control" value="{{ $work->town }}">
+                                <label for="town">Town <span class="text-danger">*</span></label>
+                                <input type="text" name="town" id="town" class="form-control" value="{{ $work->town }}" required>
                             </div>
                             <div class="col-lg-6 col-12 mt-3">
-                                <label for="post_code">Post Code</label>
-                                <input type="text" name="post_code" id="post_code" class="form-control" value="{{ $work->post_code }}">
+                                <label for="post_code">Post Code <span class="text-danger">*</span></label>
+                                <input type="text" name="post_code" id="post_code" class="form-control" value="{{ $work->post_code }}" required>
                             </div>
                         </div>
 
@@ -97,11 +97,11 @@
 
                         <div class="row mt-3">
                             <div class="col-lg-12 col-12">
-                                <button type="button" class="btn btn-success add-row">Add New</button>
+                                <button type="button" class="btn btn-primary add-row">Add New</button>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-success mt-3">Update</button>
+                        <button type="submit" class="btn btn-primary mt-3">Update</button>
 
                     </form>
                     @else

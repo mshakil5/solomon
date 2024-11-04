@@ -39,7 +39,10 @@ class HomeController extends Controller
      */
     public function adminHome(): View
     {
-        return view('admin.dashboard');
+        $newJobsCount = Work::where('status', 1)->count();
+        $processingJobsCount = Work::where('status', 2)->count();
+        $completedJobsCount = Work::where('status', 3)->count();
+        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount'));
     }
   
     /**

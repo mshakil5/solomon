@@ -124,7 +124,7 @@
                     <li class="nav-item">
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <span class="iconify icon" data-icon="fa:sign-out" data-inline="false"></span>
-                            {{ __('Sign Out') }}
+                            {{ __('Log Out') }}
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
