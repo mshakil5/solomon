@@ -60,9 +60,12 @@
                         {{$data->post_code}}
                     </td>
                     <td>
-                        @if ($data->workAssign) {{ $data->workAssign->staff->name }} {{ $data->workAssign->staff->surname }}  @else
-                        Not Assigned @endif
-                    </td>
+                      @if ($data->workAssign && $data->workAssign->staff)
+                          {{ $data->workAssign->staff->name }} {{ $data->workAssign->staff->surname }}
+                      @else
+                          Not Assigned
+                      @endif
+                  </td>
                     <td>
                       <div class="btn-group">
                         <button type="button" class="btn btn-secondary">

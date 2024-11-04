@@ -35,13 +35,13 @@ class WorkController extends Controller
 
     public function processing()
     {
-        $data = Work::orderby('id','DESC')->where('status','2')->get();
+        $data = Work::with('workAssign')->orderby('id','DESC')->where('status','2')->get();
         return view('admin.work.processing', compact('data'));
     }
 
     public function complete()
     {
-        $data = Work::with('invoice')->orderby('id','DESC')->where('status','3')->get();
+        $data = Work::with(['invoice','workAssign'])->orderby('id','DESC')->where('status','3')->get();
         return view('admin.work.complete', compact('data'));
     }
 

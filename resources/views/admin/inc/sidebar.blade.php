@@ -39,7 +39,7 @@
       </li>
 
       <li class="nav-item dropdown {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/job*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*')) ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*')) ? 'active' : '' }}">
+        <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/job*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*') || Route::is('admin.work.review')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                   Jobs

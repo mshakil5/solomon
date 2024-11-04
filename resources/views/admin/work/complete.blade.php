@@ -36,13 +36,11 @@
                   <th>Category</th>
                   <th>Client Details</th>
                   <th>Address</th>
+                  <th>Staff</th>
                   <th>Transaction</th>
                   <th>Invoice</th>
-                  <th>Staff</th>
                   <th>Status</th>
                   <th>Timer</th>
-                  <th>Image</th>
-                  <th>Review</th>
                   <th>Details</th>
                 </tr>
                 </thead>
@@ -65,6 +63,13 @@
                         {{$data->post_code}}
                     </td>
                     <td>
+                      @if ($data->workAssign && $data->workAssign->staff)
+                          {{ $data->workAssign->staff->name }} {{ $data->workAssign->staff->surname }}
+                      @else
+                          Not Assigned
+                      @endif
+                  </td>
+                    <td>
                         <a href="{{ route('work.transactions', $data->id) }}" class="btn btn-secondary">
                             Transaction 
                         </a>
@@ -80,13 +85,6 @@
                           Add  Invoice
                       </a>
                       @endif
-                    </td>
-                    <td>
-                        @if ($data->assigned_to)
-                            {{ $data->assignedTo->name }} {{ $data->assignedTo->surname }}
-                        @else
-                            Not Assigned
-                        @endif
                     </td>
 
                     <td>
@@ -128,22 +126,16 @@
 
                       <span>{{ $hours }}h {{ $minutes }}m {{ $seconds }}s</span>
                   </td>
-
-                  <td>
-                    <a href="{{ route('view.image', $data->id) }}" class="btn btn-secondary">
-                      <i class="fas fa-image"></i>
-                    </a>
-                  </td>
-
-                  <td>
-                      <a href="{{ route('admin.work.review', $data->id) }}" class="btn btn-info">
-                          Review
-                      </a>
-                  </td>
        
                     <td>
                         <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('view.image', $data->id) }}" class="btn btn-secondary">
+                          <i class="fas fa-image"></i>
+                        </a>
+                        <a href="{{ route('admin.work.review', $data->id) }}" class="btn btn-secondary">
+                          <i class="fas fa-comments"></i>
                         </a>
                     </td>
 
