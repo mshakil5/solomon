@@ -114,7 +114,9 @@
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="transaction_id">Start Date:</label>
-                                    <p>{{ \Carbon\Carbon::parse($work->workAssign->start_date)->format('d/m/y') }}</p>
+                                <p>
+                                    {{ $work->workAssign && $work->workAssign->start_date ? \Carbon\Carbon::parse($work->workAssign->start_date)->format('d/m/y') : '' }}
+                                </p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -126,13 +128,13 @@
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="transaction_id">Start Time:</label>
-                                <p>{{ \Carbon\Carbon::parse($work->workAssign->start_time)->format('h:i A') }}</p>
+                                <p>{{ $work->workAssign && $work->workAssign->start_time ? \Carbon\Carbon::parse($work->workAssign->start_time)->format('h:i A') : '' }}</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="transaction_id">End Time:</label>
-                                <p>{{ \Carbon\Carbon::parse($work->workAssign->end_time)->format('h:i A') }}</p>
+                                <p>{{ $work->workAssign && $work->workAssign->end_time ? \Carbon\Carbon::parse($work->workAssign->end_time)->format('h:i A') : '' }}</p>
                             </div>
                         </div>
                         <div class="col-md-6">

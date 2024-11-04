@@ -27,7 +27,7 @@
                     <div class="row">
                         <div class="col-8 mx-auto">
                             <div class="form-group">
-                                <label for="current_password" class="form-label">Current Password</label>
+                                <label for="current_password" class="form-label">Current Password <span class="text-danger">*</span></label>
                                 <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" required autocomplete="current-password">
                                 
                                 @error('current_password')
@@ -42,7 +42,7 @@
                     <div class="row">
                         <div class="col-8 mx-auto">
                             <div class="form-group">
-                                <label for="new_password" class="form-label">New Password</label>
+                                <label for="new_password" class="form-label">New Password <span class="text-danger">*</span></label>
                                 <input id="new_password" type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" required autocomplete="new-password">
                                 
                                 @error('new_password')
@@ -57,7 +57,7 @@
                     <div class="row">
                         <div class="col-8 mx-auto">
                             <div class="form-group">
-                                <label for="confirm_password" class="form-label">Confirm New Password</label>
+                                <label for="confirm_password" class="form-label">Confirm New Password <span class="text-danger">*</span></label>
                                 <input id="confirm_password" type="password" class="form-control" name="confirm_password" required autocomplete="new-password">
                             </div>
                         </div>

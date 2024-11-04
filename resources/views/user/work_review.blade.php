@@ -52,7 +52,7 @@
                         <form action="{{ route('work.review.reply.store', $existingReview->id) }}" method="POST" class="mt-3">
                             @csrf
                             <div class="form-group">
-                                <label for="reply" class="h5">Leave a Reply</label>
+                                <label for="reply" class="h5">Leave a Reply <span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="content" id="reply" rows="3" placeholder="Write a reply..." required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary mt-2">Reply</button>

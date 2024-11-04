@@ -88,13 +88,14 @@
 
         <div class="col-md-6">
             <label for="start_time">Start Time:</label>
-            <input type="text" class="form-control" id="start_time" name="start_time" value="{{ \Carbon\Carbon::parse($work->workAssign->start_time)->format('h:i A') }}" disabled>
+            <input type="text" class="form-control" id="start_time" name="start_time" 
+                value="{{ $work->workAssign && $work->workAssign->start_time ? \Carbon\Carbon::parse($work->workAssign->start_time)->format('h:i A') : '' }}" disabled>
         </div>
 
         <div class="col-md-6">
             <label for="end_time">End Time:</label>
             <input type="text" class="form-control" id="end_time" name="end_time" 
-                value="{{ \Carbon\Carbon::parse($work->workAssign->end_time)->format('h:i A') }}" disabled>
+                value="{{ $work->workAssign && $work->workAssign->end_time ? \Carbon\Carbon::parse($work->workAssign->end_time)->format('h:i A') : '' }}" disabled>
         </div>
 
         <div class="col-md-12">

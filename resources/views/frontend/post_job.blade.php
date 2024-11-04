@@ -61,22 +61,22 @@
 
                         <div class="row mt-3">
                             <div class="col-lg-4 col-12">
-                                <label for="name">Name</label>
+                                <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control" placeholder="Your Name" value="{{ auth()->user()->name ?? '' }}" required>
                             </div>
                             <div class="col-lg-4 col-12">
-                                <label for="email">Email</label>
+                                <label for="email">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="email" class="form-control" placeholder="you@example.com" value="{{ auth()->user()->email ?? '' }}" required>
                             </div>
                             <div class="col-lg-4 col-12">
-                                <label for="phone">Phone</label>
+                                <label for="phone">Phone <span class="text-danger">*</span></label>
                                 <input type="number" name="phone" id="phone" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="row mt-3">
                             <div class="col-lg-4 col-12">
-                                <label for="address_first_line">Address First Line</label>
+                                <label for="address_first_line">Address First Line <span class="text-danger">*</span></label>
                                 <input type="text" name="address_first_line" id="address_first_line" class="form-control" required>
                             </div>
                             <div class="col-lg-4 col-12">
@@ -88,11 +88,11 @@
                                 <input type="text" name="address_third_line" id="address_third_line" class="form-control">
                             </div>
                             <div class="col-lg-6 col-12 mt-3">
-                                <label for="town">Town</label>
+                                <label for="town">Town <span class="text-danger">*</span></label>
                                 <input type="text" name="town" id="town" class="form-control">
                             </div>
                             <div class="col-lg-6 col-12 mt-3">
-                                <label for="post_code">Post Code</label>
+                                <label for="post_code">Post Code <span class="text-danger">*</span></label>
                                 <input type="text" name="post_code" id="post_code" class="form-control">
                             </div>
                         </div>
@@ -100,17 +100,24 @@
                         <div id="imageContainer">
                             <div class="row image-row mt-3">
                                 <div class="col-lg-6">
-                                    <div class="input-group mb-3">
-                                        <input type="file" class="form-control image-upload" name="images[]" accept="image/*,video/*" required>
+                                    <div class="form-group">
+                                        <label for="image-upload">Upload Image/Video <span class="text-danger">*</span></label>
+                                        <div class="input-group mb-3">
+                                            <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*" required>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-5">
-                                    <div class="input-group mb-3">
-                                        <textarea class="form-control description resizable" placeholder="Description" rows="3" name="descriptions[]" required></textarea>
+                                    <div class="form-group">
+                                        <label for="description">Description <span class="text-danger">*</span></label>
+                                        <div class="input-group mb-3">
+                                            <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-1 text-end">
-                                    <button class="btn btn-primary add-row" type="button">+</button>
+                                    <label for="add-row" class="form-label" style="visibility: hidden;">Action</label>
+                                    <button id="add-row" class="btn btn-primary add-row" type="button">+</button>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +202,7 @@
                 $('#address_second_line').val('{{ auth()->check() ? auth()->user()->address_second_line : '' }}');
                 $('#address_third_line').val('{{ auth()->check() ? auth()->user()->address_third_line : '' }}');
                 $('#town').val('{{ auth()->check() ? auth()->user()->town : '' }}');
-                $('#post_code').val('{{ auth()->check() ? auth()->user()->post_code : '' }}');
+                $('#post_code').val('{{ auth()->check() ? auth()->user()->postcode : '' }}');
             } else {
                 $('#address_first_line, #address_second_line, #address_third_line, #town, #post_code').val('');
             }

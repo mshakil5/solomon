@@ -29,8 +29,8 @@ class UserController extends Controller
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
-            'postcode' => 'nullable|string|max:255',
+            'town' => 'required|string|max:255',
+            'postcode' => 'required|string|max:255',
  
             ], [
                 'phone.regex' => 'The phone number must be exactly 11 digits.',

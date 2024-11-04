@@ -93,7 +93,7 @@ class WorkController extends Controller
 
     public function showDetails($id)
     {
-        $work = Work::with('workimage','category')->where('id', $id)->first();
+        $work = Work::with('workimage','category', 'workAssign')->where('id', $id)->first();
         return view('user.show_work_details', compact('work'));
     }
 
