@@ -38,10 +38,15 @@
 
 <body id="section_1">
 
-    @include('frontend.inc.header')
+    <div class="sticky-container">
+        @include('frontend.inc.header')
+
+        <div class="header-line"></div> 
+    </div>
 
     @yield('content')
 
+    <div class="header-line"></div> 
     @include('frontend.inc.footer')
 
     <!-- JAVASCRIPT FILES -->

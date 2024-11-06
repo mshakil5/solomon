@@ -34,6 +34,7 @@
 
 <body id="section_1">
 
+    <div class="sticky-container">
     <div class="header navbar navbar-expand-md navbar-light bg-white">
         <a class="logo" href="{{ route('homepage') }}">
             <i class="fas fa-tools"></i> {{ $companyDetails->company_name }}
@@ -102,6 +103,8 @@
                 @endif
             </nav>
         </div>
+    </div>
+    <div class="header-line"></div>
     </div>
 
     @yield('content')
