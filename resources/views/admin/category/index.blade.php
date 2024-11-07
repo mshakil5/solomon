@@ -43,11 +43,20 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-10">
+                                <div class="col-6 d-none">
                                     <div class="form-group">
                                         <label for="feature-img">Category Image</label>
                                         <input type="file" class="form-control-file" id="image" accept="image/*">
                                         <img id="preview-image" src="#" alt="" style="max-width: 300px; width: 100%; height: auto; margin-top: 20px;">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="feature-img">Category Icon</label>
+                                        <input type="text" class="form-control" name="icon_class" placeholder="Enter icon name" id="icon_class">
+                                        <div id="icon_display" style="margin-top: 10px;">
+                                            <i id="icon" class="" style="font-size: 24px; color: red;"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +86,8 @@
                                 <tr>
                                     <th>Sl</th>
                                     <th>Name</th>
-                                    <th>Slug</th>
+                                    <!-- <th>Image</th> -->
+                                    <th>Icon</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -87,7 +97,12 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $data->name }}</td>
-                                    <td>{{ $data->slug }}</td>
+                                    <!-- <td>
+                                        <img src="{{ asset('images/category/' . $data->image) }}" alt="{{ $data->name }}" style="width: 50px; height: 50px;">
+                                    </td> -->
+                                    <td>
+                                        <i class="{{ $data->icon_class }}" style="color: red; font-size: 24px;"></i>
+                                    </td>
                                     <td>
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $data->id }}" data-id="{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}>
@@ -186,6 +201,7 @@
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
               form_data.append("description", $("#description").val());
+              form_data.append("icon_class", $("#icon_class").val());
 
               var featureImgInput = document.getElementById('image');
                 if(featureImgInput.files && featureImgInput.files[0]) {
@@ -226,6 +242,7 @@
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
               form_data.append("description", $("#description").val());
+              form_data.append("icon_class", $("#icon_class").val());
 
               var featureImgInput = document.getElementById('image');
                 if(featureImgInput.files && featureImgInput.files[0]) {
@@ -312,6 +329,7 @@
       function populateForm(data){
           $("#name").val(data.name);
           $("#description").val(data.description);
+          $("#icon_class").val(data.icon_class);
           $("#codeid").val(data.id);
           $("#addBtn").val('Update');
           $("#addBtn").html('Update');
@@ -325,12 +343,15 @@
                 featureImagePreview.src = "#";
             }
 
+            $('#icon').attr('class', data.icon_class);
+
       }
       function clearform(){
           $('#createThisForm')[0].reset();
           $("#addBtn").val('Create');
           $("#addBtn").html('Create');
           $('#preview-image').attr('src', '#');
+          $('#icon').removeClass();
           $("#cardTitle").text('Add new data');
       }
   });
@@ -345,6 +366,11 @@
             };
             reader.readAsDataURL(this.files[0]);
         });
+    });
+    
+    $('#icon_class').on('input', function() {
+        var iconClass = $(this).val();
+        $('#icon').attr('class', iconClass);
     });
 </script>
 

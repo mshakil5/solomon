@@ -16,6 +16,7 @@
     <h2>
         Browse our most popular categories
     </h2>
+    {{--  
     <div class="container col-10">
         <div class="row justify-content-center">
             <div class="categories col-12">
@@ -27,6 +28,26 @@
                                     <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="category-image img-fluid">
                                 @endif
                                 <p class="category-name">{{ $category->name }}</p>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    --}}
+
+    <div class="category-container">
+        <div class="row justify-content-center">
+            <div class="category-list col-12">
+                <div class="row justify-content-center">
+                    @foreach ($categories as $category)
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4 d-flex justify-content-center">
+                            <a href="{{ route('category.show', $category->slug) }}" class="custom-category text-center mx-auto">
+                                @if ($category->icon_class)
+                                    <i class="{{ $category->icon_class }}"></i>
+                                @endif
+                                <p class="custom-category-title">{{ $category->name }}</p>
                             </a>
                         </div>
                     @endforeach

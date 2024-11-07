@@ -32,6 +32,7 @@ class CategoryController extends Controller
         $data = new Category;
         $data->name = $request->name;
         $data->description = $request->description;
+        $data->icon_class = $request->icon_class;
         $data->slug = Str::slug($request->name);
         $data->created_by = auth()->id(); 
 
@@ -77,7 +78,8 @@ class CategoryController extends Controller
 
          $brand = Category::find($request->codeid);
          $brand->name = $request->name;
-         $brand->description = $request->description;        
+         $brand->description = $request->description;   
+         $brand->icon_class = $request->icon_class;     
          $brand->updated_by = auth()->id();
 
          if ($request->hasFile('image')) {
