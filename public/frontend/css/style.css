@@ -372,6 +372,46 @@ body > .skiptranslate > iframe.skiptranslate {
     width: 100%;
 }
 
+.category-container {
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.custom-category {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 150px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.custom-category:hover {
+    transform: translateY(-5px);
+}
+
+.custom-category i {
+    font-size: 40px;
+    color: #d0021b;
+    margin-bottom: 10px;
+}
+
+.category-list {
+    width: 100%;
+}
+
+.custom-category-title {
+    color: #0056b3;
+    font-size: 16px;
+    margin: 0;
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
     .info-section .info-box {
         width: 80%; 
