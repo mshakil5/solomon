@@ -203,7 +203,7 @@ class FrontendController extends Controller
 
     public function review()
     {
-        $reviews = Review::orderBy('id', 'desc')->where('status', '1')->select('name', 'stars', 'review')->get();
+        $reviews = Review::orderBy('id', 'desc')->where('status', '1')->select('name', 'stars', 'review')->take(8)->get();
         return view('frontend.review', compact('reviews'));
     }
 
@@ -211,6 +211,8 @@ class FrontendController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
             'review' => 'required'
         ]);
@@ -230,13 +232,43 @@ class FrontendController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'city' => 'required|string|max:255',
             'details' => 'required|string',
         ]);
         
         Quote::create($validatedData);
 
         return redirect()->back()->with('success', 'Your quote request has been submitted successfully!');
+    }
+
+    public function checkCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|min:2',
+        ]);
+
+        $city = $request->input('city');
+        $location = Location::where('city', $city)->where('status', 1)->first();
+
+        if ($location) {
+            return response()->json(['success' => true, 'message' => 'This location is available in our service.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'This location is not available in our service.']);
+        }
+    }
+
+    public function suggestCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|min:2',
+        ]);
+
+        $city = $request->input('city');
+        $locations = Location::where('city', 'LIKE', "%{$city}%")
+            ->where('status', 1)
+            ->pluck('city');
+        return response()->json($locations);
     }
 
 }

@@ -55,6 +55,9 @@ Route::post('/review', [FrontendController::class, 'reviewStore'])->name('review
 Route::get('/request-quote', [FrontendController::class, 'showRequestQuoteForm'])->name('quote.form');
 Route::post('/request-quote', [FrontendController::class, 'requestQuote'])->name('quote.request');
 
+Route::get('/check-city', [FrontendController::class, 'checkCity'])->name('check.city');
+Route::get('/suggest-city', [FrontendController::class, 'suggestCity'])->name('suggest.city');
+
 Route::get('password/request', [LoginController::class, 'showPasswordRequestForm'])->name('password.request.form');
 Route::post('password/request', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.request');
 
