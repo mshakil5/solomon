@@ -126,6 +126,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     Route::post('/toggle-review-status', [FeedbackController::class, 'toggleReviewStatus']);
 
+    Route::get('/careers', [FeedbackController::class, 'careers'])->name('admin.careers.index');    
 
     //Staff crud by Admin
     Route::get('/questions', [QuestionController::class, 'index'])->name('allQuestions');
