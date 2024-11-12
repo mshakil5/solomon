@@ -44,7 +44,14 @@
 
                     <div class="row mt-3">
                         <div class="col-12">
+                            <textarea name="address" id="details" class="form-control" rows="3" placeholder="Your Address"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
                             <textarea name="details" id="details" class="form-control" rows="5" placeholder="Details of Your Request *" required></textarea>
+                            <small class="form-text text-muted">Minimum 10 characters, maximum 500 characters.</small>
                         </div>
                     </div>
 

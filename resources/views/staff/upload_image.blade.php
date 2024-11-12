@@ -48,6 +48,12 @@
                     @csrf
                     <div class="form-group">
                         <div class="form-item">
+                            <label for="note">Note</label>
+                            <textarea class="form-control" id="note" name="note" rows="5" placeholder="Add any additional comment here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-item">
                             <label for="image">Choose Image (Max 10 MB)</label>
                             <input type="file" name="image" id="image" class="form-control" accept="image/*">
                         </div>
@@ -74,6 +80,7 @@
         <thead>
             <tr>
                 <th>Sl</th>
+                <th>Note</th>
                 <th>Image</th>
                 <th>Video</th>
                 <th>Action</th>
@@ -83,6 +90,7 @@
             @foreach($uploads as $upload)
             <tr>
                 <td>{{ $loop->iteration }}</td>
+                <td>{!! $upload->note !!}</td>
                 <td class="text-center">
                     @if($upload->image)
                     <img src="{{ asset($upload->image) }}" alt="Image" width="200">

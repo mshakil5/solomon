@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkAssign;
+use App\Models\WorkReview;
   
 class HomeController extends Controller
 {
@@ -42,7 +43,9 @@ class HomeController extends Controller
         $newJobsCount = Work::where('status', 1)->count();
         $processingJobsCount = Work::where('status', 2)->count();
         $completedJobsCount = Work::where('status', 3)->count();
-        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount'));
+        $newReviews = WorkReview::where('is_new', 1)->with('work')->latest()->get();
+        $newReviewsCount = $newReviews->count();
+        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount', 'newReviews', 'newReviewsCount'));
     }
   
     /**

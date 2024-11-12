@@ -177,7 +177,7 @@
 
         <div class="row">
             <div class="col-12">
-                <button type="submit" class="form-control">{{ __('Register') }}</button>
+                <button type="submit" class="form-control">{{ __('Registration') }}</button>
             </div>
         </div>
 

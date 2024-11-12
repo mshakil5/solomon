@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('staff_id')->nullable();
             $table->unsignedBigInteger('work_id')->nullable(); 
+            $table->longText('note')->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();
             $table->boolean('status')->default(1);

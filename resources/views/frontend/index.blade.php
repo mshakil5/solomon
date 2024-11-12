@@ -92,8 +92,8 @@
         <p>
             Over 1 million homeowners visit our site looking for approved and quality tradespeople like you.
         </p>
-        <a href="{{ Auth::check() ? (auth()->user()->is_type == '1' ? route('admin.dashboard') : (auth()->user()->is_type == '0' ? route('user.profile') : route('staff.home'))) : route('register') }}">
-            {{ Auth::check() ? 'Dashboard' : 'Join Today' }}
+        <a href="{{ route('join.us') }}">
+            Join Us
         </a>
     </div>
     <div class="info-box">

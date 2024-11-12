@@ -15,6 +15,7 @@
                         <thead>
                             <tr>
                                 <th>Sl</th>
+                                <th>Note</th>
                                 <th>Image</th>
                                 <th>Video</th>
                             </tr>
@@ -23,6 +24,7 @@
                             @foreach($uploads as $upload)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>{!! $upload->note !!}</td>
                                 <td class="text-center">
                                     @if($upload->image)
                                     <img src="{{ asset($upload->image) }}" alt="Image" width="200">

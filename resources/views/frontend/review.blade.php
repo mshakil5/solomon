@@ -86,7 +86,17 @@
                             </div>
                         </div>
 
-                        <p class="text-muted text-justify">{{ \Illuminate\Support\Str::limit($review->review, 150) }}</p>
+                        <p class="text-muted text-justify">
+                            {{ \Illuminate\Support\Str::limit($review->review, 150) }}
+                            @if(strlen($review->review) > 150)
+                                <button type="button" class="btn btn-link p-0" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#reviewModal{{ $review->id }}" 
+                                        data-review="{{ addslashes($review->review) }}">
+                                    Read More
+                                </button>
+                            @endif
+                        </p>
                     </div>
                 </div>
             @endforeach
@@ -94,33 +104,37 @@
     </div>
 </section>
 @endif
+<div class="modal fade" id="reviewModal{{ $review->id }}" tabindex="-1" aria-labelledby="reviewModalLabel{{ $review->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel{{ $review->id }}">Full Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody{{ $review->id }}" style="max-height: 400px; overflow-y: auto;">
+            </div>
+        </div>
+    </div>
+</div>
 
-<style>
-    .review-card {
-        background-color: #f9f9f9;
-        border-radius: 10px;
-        border: 1px solid #e0e0e0;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+@endsection
 
-    .review-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    }
+@section('script')
 
-    .star-rating span {
-        font-size: 1.2rem;
-    }
-
-    .card h5 {
-        font-weight: 600;
-    }
-
-    .card p {
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-
-</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modals = document.querySelectorAll('.modal');
+        modals.forEach(function(modal) {
+            modal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var reviewText = button.getAttribute('data-review');
+                var modalBody = modal.querySelector('.modal-body');
+                modalBody.innerHTML = reviewText;
+            });
+        });
+    });
+</script>
 
 @endsection

@@ -17,6 +17,7 @@ use App\Models\ReviewQuestion;
 use App\Models\WorkReview;
 use App\Models\ReviewAnswer;
 use App\Models\WorkReviewReply;
+use Illuminate\Support\Carbon;
 
 class WorkController extends Controller
 {
@@ -331,15 +332,40 @@ class WorkController extends Controller
                 $stsval = "In Progress";
             } elseif ($work->status == 3) {
                 $stsval = "Completed";
+                $this->stopWorkTimer($work->id);
             } elseif ($work->status == 4) {
                 $stsval = "Cancelled";
             }
 
             $message = "Status Change Successfully.";
-            return response()->json(['status' => 300, 'message' => $message, 'stsval' => $stsval, 'id' => $request->id]);
+                return response()->json([
+                    'status' => 300,
+                    'message' => $message,
+                    'stsval' => $stsval,
+                    'new_status' => $work->status,
+                    'id' => $request->id
+                ]);
         } else {
             $message = "There was an error to change status!!.";
             return response()->json(['status' => 303, 'message' => $message]);
+        }
+    }
+
+    private function stopWorkTimer($workId)
+    {
+        $workTime = WorkTime::where('work_id', $workId)
+                            ->whereNull('end_time')
+                            ->latest()
+                            ->first();
+
+        if ($workTime) {
+            $startTime = Carbon::parse($workTime->start_time);
+            $endTime = Carbon::now();
+            $duration = $startTime->diffInSeconds($endTime);
+
+            $workTime->end_time = $endTime;
+            $workTime->duration = $duration;
+            $workTime->save();
         }
     }
 
@@ -376,6 +402,7 @@ class WorkController extends Controller
     public function uploadFile(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'note' => 'nullable|string',
             'image' => 'required|mimes:jpeg,png,jpg,gif|max:10240',
             'video' => 'nullable|mimes:mp4,mov|max:102400',
             'work_id' => 'required'
@@ -406,6 +433,7 @@ class WorkController extends Controller
         $upload->work_id = $workId;
         $upload->staff_id = auth()->user()->id;
         $upload->image = $imagePath;
+        $upload->note = $request->note;
         if ($request->hasFile('video')) {
             $upload->video = $videoPath;
         }
@@ -520,6 +548,11 @@ class WorkController extends Controller
         $existingReview = WorkReview::with(['answers.question', 'replies.user'])
             ->where('work_id', $work->id)
             ->first();
+
+            if ($existingReview && $existingReview->is_new == 1) {
+                $existingReview->is_new = 0;
+                $existingReview->save();
+            }
 
         return view('admin.work.review', compact('existingReview'));
     }
