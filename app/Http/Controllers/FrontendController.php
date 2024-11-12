@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyDetails;
 use App\Models\Review;
 use App\Models\Quote;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Career;
 
 class FrontendController extends Controller
 {
@@ -203,7 +205,7 @@ class FrontendController extends Controller
 
     public function review()
     {
-        $reviews = Review::orderBy('id', 'desc')->where('status', '1')->select('name', 'stars', 'review')->get();
+        $reviews = Review::orderBy('id', 'desc')->where('status', '1')->select('name', 'stars', 'review')->take(8)->get();
         return view('frontend.review', compact('reviews'));
     }
 
@@ -211,6 +213,8 @@ class FrontendController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
             'review' => 'required'
         ]);
@@ -230,13 +234,93 @@ class FrontendController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'city' => 'required|string|max:255',
             'details' => 'required|string',
         ]);
         
         Quote::create($validatedData);
 
         return redirect()->back()->with('success', 'Your quote request has been submitted successfully!');
+    }
+
+    public function checkCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|min:2',
+        ]);
+
+        $city = $request->input('city');
+        $location = Location::where('city', $city)->where('status', 1)->first();
+
+        if ($location) {
+            return response()->json(['success' => true, 'message' => 'This location is available in our service.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'This location is not available in our service.']);
+        }
+    }
+
+    public function suggestCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|min:2',
+        ]);
+
+        $city = $request->input('city');
+        $locations = Location::where('city', 'LIKE', "%{$city}%")
+            ->where('status', 1)
+            ->pluck('city');
+        return response()->json($locations);
+    }
+
+    public function joinUs()
+    {
+        $categories = Category::where('status', 1)->select('id', 'name')->get();
+        return view('frontend.join_us', compact('categories'));
+    }
+
+    public function joinUsStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'address_first_line' => 'required|string|max:255',
+            'address_second_line' => 'nullable|string|max:255',
+            'address_third_line' => 'nullable|string|max:255',
+            'town' => 'required|string|max:255',
+            'postcode' => 'required|string|max:10',
+            'category_ids' => 'required|array',
+            'category_ids.*' => 'exists:categories,id',
+            'cv' => 'required|file|mimes:pdf,docx|max:3000',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $career = new Career();
+        $career->name = $request->name;
+        $career->email = $request->email;
+        $career->phone = $request->phone;
+        $career->address_first_line = $request->address_first_line;
+        $career->address_second_line = $request->address_second_line;
+        $career->address_third_line = $request->address_third_line;
+        $career->town = $request->town;
+        $career->postcode = $request->postcode;
+        $career->category_ids = json_encode($request->category_ids);
+        $career->created_by = auth()->id();
+
+        if ($request->hasFile('cv')) {
+            $file = $request->file('cv');
+            $filename = time() . '_' . rand(100000, 999999) . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/career'), $filename);
+            $career->cv = '/images/career/' . $filename;
+        }
+
+        $career->save();
+
+        return redirect()->back()->with('success', 'Your data has been submitted successfully!');
     }
 
 }

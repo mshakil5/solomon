@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use App\Models\Career;
+use App\Models\Category;
 
 class FeedbackController extends Controller
 {
@@ -28,6 +30,13 @@ class FeedbackController extends Controller
         $review->save();
 
         return response()->json(['message' => 'Review status updated successfully!']);
+    }
+
+    public function careers()
+    {
+        $data = Career::latest()->get();
+        $categories = Category::where('status', 1)->select('id', 'name')->get();
+        return view('admin.careers.index', compact('data', 'categories'));
     }
 
 }

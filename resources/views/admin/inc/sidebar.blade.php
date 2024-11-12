@@ -111,6 +111,15 @@
       </li>
 
       <li class="nav-item">
+        <a href="{{route('admin.location')}}" class="nav-link {{ (request()->is('admin/location*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Service Locations
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{route('allQuestions')}}" class="nav-link {{ (request()->is('admin/questions*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>

@@ -19,9 +19,9 @@
                   <th>Sl</th>
                   <th>Name</th>
                   <th>Email/Phone</th>
-                  <th>Rating</th>
-                  <th>Review</th>
-                  <th>Status</th>
+                  <th>Address</th>
+                  <th>Categories</th>
+                  <th>CV</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,14 +30,23 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{$data->name}}</td>
                     <td>{{$data->email}} <br> {{$data->phone}}</td>
-                    <td>{{ $data->stars }} / 5</td>
-                    <td>{!! $data->review !!}</td>
+                    <td>{{$data->address_first_line}} <br> {{$data->address_second_line}} <br> {{$data->address_third_line}} <br> {{$data->town}} <br> {{$data->post_code}}</td>
                     <td>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $data->id }}" data-id="{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="customSwitchStatus{{ $data->id }}"></label>
-                        </div>
+                        @php
+                            $categoryIds = json_decode($data->category_ids);
+                        @endphp
+
+                        @foreach ($categoryIds as $categoryId)
+                            @php
+                                $category = $categories->firstWhere('id', $categoryId);
+                            @endphp
+
+                            @if ($category)
+                                {{ $category->name }} <br>
+                            @endif
+                        @endforeach
                     </td>
+                    <td><a class="btn btn-secondary" href="{{ asset($data->cv) }}" target="_blank">View CV</a></td>
                   </tr>
                   @endforeach
                 
@@ -67,37 +76,6 @@ $(function () {
     "buttons": ["copy", "csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 });
-</script>
-
-<script>
-  $('.toggle-status').change(function() {
-    var isChecked = $(this).is(':checked');
-    var reviewId = $(this).data('id');
-
-    $.ajax({
-        url: '/admin/toggle-review-status',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            id: reviewId,
-            status: isChecked ? 1 : 0
-        },
-        success: function(response) {
-            swal({
-                text: "Review status updated successfully!",
-                icon: "success",
-                button: {
-                    text: "OK",
-                    className: "swal-button--confirm"
-                }
-            });
-        },
-        error: function(xhr) {
-            console.error(xhr.responseText);
-        }
-    });
-});
-
 </script>
 
 @endsection

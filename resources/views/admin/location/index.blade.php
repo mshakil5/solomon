@@ -17,7 +17,7 @@
 
 
     <!-- Main content -->
-    <section class="content" id="addThisFormContainer">
+    <section class="content mt-3" id="addThisFormContainer">
       <div class="container-fluid">
         <div class="row justify-content-md-center">
           <!-- right column -->
@@ -25,7 +25,7 @@
             <!-- general form elements disabled -->
             <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Add new post code</h3>
+                <h3 class="card-title" id="cardTitle">Add new location</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -34,10 +34,16 @@
                   @csrf
                   <input type="hidden" class="form-control" id="codeid" name="codeid">
                   <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6 d-none">
                       <div class="form-group">
                         <label>Post code</label>
                         <input type="text" class="form-control" id="postcode" name="postcode">
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label>Area/City</label>
+                        <input type="text" class="form-control" id="city" name="city">
                       </div>
                     </div>
                   </div>
@@ -81,16 +87,25 @@
                 <thead>
                 <tr>
                   <th>Sl</th>
-                  <th>Post Code</th>
+                  <!-- <th>Post Code</th> -->
+                  <th>City</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach ($data as $key => $data)
                   <tr>
-                    <td style="text-align: center">{{ $key + 1 }}</td>
-                    <td style="text-align: center">{{$data->postcode}}</td>
-                    <td style="text-align: center">
+                    <td>{{ $key + 1 }}</td>
+                    <!-- <td>{{$data->postcode}}</td> -->
+                    <td>{{$data->city}}</td>
+                    <td>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $data->id }}" data-id="{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="customSwitchStatus{{ $data->id }}"></label>
+                        </div>
+                    </td>
+                    <td>
                       <a id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="color: #2196f3;font-size:16px;"></i></a>
                       
                       <a id="deleteBtn" rid="{{$data->id}}"><i class="fa fa-trash-o" style="color: red;font-size:16px;"></i></a>
@@ -132,7 +147,7 @@
         "responsive": true,
       });
     });
-  </script>
+</script>
 
 <script>
   $(document).ready(function () {
@@ -159,6 +174,7 @@
           if($(this).val() == 'Create') {
               var form_data = new FormData();
               form_data.append("postcode", $("#postcode").val());
+              form_data.append("city", $("#city").val());
               $.ajax({
                 url: url,
                 method: "POST",
@@ -183,6 +199,7 @@
           if($(this).val() == 'Update'){
               var form_data = new FormData();
               form_data.append("postcode", $("#postcode").val());
+              form_data.append("city", $("#city").val());
               form_data.append("codeid", $("#codeid").val());
               
               $.ajax({
@@ -247,16 +264,51 @@
       //Delete  
       function populateForm(data){
           $("#postcode").val(data.postcode);
+          $("#city").val(data.city);
           $("#codeid").val(data.id);
           $("#addBtn").val('Update');
           $("#addBtn").html('Update');
+          $("#cardTitle").html('Update this location');
           $("#addThisFormContainer").show(300);
           $("#newBtn").hide(100);
       }
       function clearform(){
           $('#createThisForm')[0].reset();
+          $("#cardTitle").html('Add new location');
           $("#addBtn").val('Create');
       }
   });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.toggle-status').change(function() {
+            var location_id = $(this).data('id');
+            var status = $(this).prop('checked') ? 1 : 0;
+
+            $.ajax({
+                url: '/admin/location-status',
+                method: "POST",
+                data: {
+                    location_id: location_id,
+                    status: status,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(d) {
+                    swal({
+                          text: "Status updated",
+                          icon: "success",
+                          button: {
+                              text: "OK",
+                              className: "swal-button--confirm"
+                          }
+                      });
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
 </script>
 @endsection
