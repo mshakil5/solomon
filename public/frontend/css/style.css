@@ -539,3 +539,34 @@ body > .skiptranslate > iframe.skiptranslate {
 .star-rating label:hover ~ label {
     color: gold;
 }
+
+.review-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.star-rating span {
+    font-size: 1.2rem;
+}
+
+.card h5 {
+    font-weight: 600;
+}
+
+.card p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+button.form-control {
+    font-size: 16px;
+    height: auto;
+    padding: 6px;
+}

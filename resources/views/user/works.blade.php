@@ -86,7 +86,7 @@
                                 <a href="{{ route('show.details', $work->id) }}" class="btn btn-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                @if ($work->status == 3)
+                                @if ($work->status == 3 && $work->workimage)
                                 <a href="{{ route('user.work.images', $work->id) }}" class="btn btn-primary">
                                     <i class="bi bi-image"></i>
                                 </a>

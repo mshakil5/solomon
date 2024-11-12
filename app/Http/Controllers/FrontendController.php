@@ -216,7 +216,9 @@ class FrontendController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
-            'review' => 'required'
+            'review' => 'required|max:1000'
+        ], [
+            'review.max' => 'The review may not be greater than 1000 characters.',
         ]);
 
         Review::create($validated);
@@ -236,7 +238,8 @@ class FrontendController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
             'city' => 'required|string|max:255',
-            'details' => 'required|string',
+            'address' => 'nullable|string|max:400',
+            'details' => 'required|string|min:10|max:500'
         ]);
         
         Quote::create($validatedData);

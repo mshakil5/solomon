@@ -157,30 +157,49 @@
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
     $('.stsBtn').click(function() {
-      var url = "{{URL::to('/staff/change-work-status')}}";
+      var url = "{{ URL::to('/staff/change-work-status') }}";
       var id = $(this).data('id');
       var status = $(this).attr('value');
+
       $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: url,
-        data: {'status': status, 'id': id},
-        success: function(d){
-          if (d.status == 303) {
-            alert(d.message);
-          } else if(d.status == 300) {
-            swal({
-              title: "Success!",
-              text: "Status chnaged successfully",
-              icon: "success",
-              button: "OK",
-          });
-            window.setTimeout(function(){location.reload()},2000);
-          }
-        },
-        error: function (d) {
-          console.log(d);
-        }
+          type: "GET",
+          dataType: "json",
+          url: url,
+          data: {'status': status, 'id': id},
+          success: function(d) {
+              if (d.status == 303) {
+                  alert(d.message);
+              } else if (d.status == 300) {
+                  if (d.new_status == 3) {
+                      swal({
+                          title: "Success!",
+                          text: "Status changed successfully. Do you want to upload an image?",
+                          icon: "success",
+                          buttons: {
+                              cancel: "No",
+                              confirm: "Yes"
+                          },
+                      }).then((willUpload) => {
+                          if (willUpload) {
+                              window.location.href = "{{ url('/staff/upload/') }}" + '/' + d.id;
+                          } else {
+                              window.setTimeout(function() { location.reload() }, 2000);
+                          }
+                      });
+                  } else {
+                      swal({
+                          title: "Success!",
+                          text: "Status changed successfully.",
+                          icon: "success",
+                          button: "OK",
+                      });
+                      window.setTimeout(function() { location.reload() }, 2000);
+                  }
+              }
+          },
+          error: function(xhr) {
+                console.error(xhr.responseText);
+            }
       });
     });
   });

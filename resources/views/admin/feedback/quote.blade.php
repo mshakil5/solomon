@@ -20,6 +20,7 @@
                   <th>Name</th>
                   <th>Email/Phone</th>
                   <th>City</th>
+                  <th>Address</th>
                   <th>Quote</th>
                 </tr>
                 </thead>
@@ -30,6 +31,7 @@
                     <td>{{$data->name}}</td>
                     <td>{{$data->email}} <br> {{$data->phone}}</td>
                     <td>{{$data->city}}</td>
+                    <td>{!!$data->address!!}</td>
                     <td>{!! $data->details !!}</td>
                   </tr>
                   @endforeach
