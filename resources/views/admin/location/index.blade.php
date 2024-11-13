@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="form-group">
-                        <label>Area/City</label>
+                        <label>Area/City <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="city" name="city">
                       </div>
                     </div>
