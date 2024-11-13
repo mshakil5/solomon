@@ -44,7 +44,7 @@ class CompanyDetailsController extends Controller
             'footer_content' => 'nullable|string',
             'google_map' => 'nullable|string',
             'fav_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
