@@ -16,26 +16,6 @@
     <h2>
         Browse our most popular categories
     </h2>
-    {{--  
-    <div class="container col-10">
-        <div class="row justify-content-center">
-            <div class="categories col-12">
-                <div class="row justify-content-center">
-                    @foreach ($categories as $category)
-                        <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-4 d-flex justify-content-center">
-                            <a href="{{ route('category.show', $category->slug) }}" class="category card text-center mx-auto">
-                                @if ($category->image)
-                                    <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="category-image img-fluid">
-                                @endif
-                                <p class="category-name">{{ $category->name }}</p>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-    --}}
 
     <div class="category-container">
         <div class="row justify-content-center">
