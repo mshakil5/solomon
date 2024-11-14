@@ -18,6 +18,7 @@ use App\Models\WorkReview;
 use App\Models\ReviewAnswer;
 use App\Models\WorkReviewReply;
 use Illuminate\Support\Carbon;
+use App\Jobs\SendWorkAssignedEmail;
 
 class WorkController extends Controller
 {
@@ -278,7 +279,8 @@ class WorkController extends Controller
             'contactmail' => $contactmail,
         ];
 
-        Mail::to($contactmail)->send(new WorkAssignedMail($emailData));
+        // Mail::to($contactmail)->send(new WorkAssignedMail($emailData));
+        SendWorkAssignedEmail::dispatch($emailData);
 
         return response()->json(['success' => 'Staff assigned successfully']);
     }
