@@ -101,7 +101,6 @@
                           <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu" role="menu">
-                          <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="1" >New</a>
                           <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="2">In Progress</a>
                           <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="3">Completed</a>
                           <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="4">Cancelled</a>
@@ -130,6 +129,9 @@
                     <td>
                         <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('admin.work.timer.details', $data->id) }}" class="btn btn-secondary">
+                            <i class="fas fa-clock"></i>
                         </a>
                         <a href="{{ route('view.image', $data->id) }}" class="btn btn-secondary">
                           <i class="fas fa-image"></i>

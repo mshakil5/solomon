@@ -15,7 +15,7 @@ class WorkTimeController extends Controller
         $workTime = new WorkTime();
         $workTime->work_id = $request->input('work_id');
         $workTime->staff_id = auth()->id();
-        $workTime->start_time = Carbon::now();
+        $workTime->start_time = Carbon::now()->format('Y-m-d H:i');
         $workTime->start_date = Carbon::today()->format('d-m-Y');
         $workTime->created_by = auth()->id();
         $workTime->save();
@@ -40,12 +40,113 @@ class WorkTimeController extends Controller
         }
 
         $startTime = Carbon::parse($workTime->start_time);
-        $endTime = Carbon::now();
+        $endTime = Carbon::now()->format('Y-m-d H:i');
         $duration = $startTime->diffInSeconds($endTime);
         $workTime->end_time = $endTime;
         $workTime->duration = $duration;
         $workTime->save();
         return response()->json(['success' => true]);
+    }
+
+    public function startWorkByAdmin(Request $request)
+    {
+        $workTime = new WorkTime();
+        $workTime->work_id = $request->input('work_id');
+        $workTime->start_time = Carbon::now()->format('Y-m-d H:i');
+        $workTime->start_date = Carbon::today()->format('d-m-Y');
+        $workTime->created_by = auth()->id();
+        $workTime->save();
+        return response()->json(['success' => true]);
+    }
+
+    public function stopWorkByAdmin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'work_time_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $workTimeId = $request->work_time_id;
+        $workTime = WorkTime::find($workTimeId);
+
+        if (!$workTime) {
+            return response()->json(['error' => 'WorkTime not found'], 404);
+        }
+
+        $startTime = Carbon::parse($workTime->start_time);
+        $endTime = Carbon::now()->format('Y-m-d H:i');
+        $duration = $startTime->diffInSeconds($endTime);
+        $workTime->end_time = $endTime;
+        $workTime->duration = $duration;
+        $workTime->updated_by = auth()->id();
+        $workTime->save();
+        return response()->json(['success' => true]);
+    }
+
+    public function workTimeByAdmin($id)
+    {
+        $workTimes = Worktime::where('work_id', $id)->get();
+        $workId = $id;
+        return view('admin.work.timer.index', compact('workTimes', 'workId'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $workTime = WorkTime::findOrFail($id);
+    
+        $startTime = Carbon::parse($request->start_time);  // No formatting yet
+        $endTime = Carbon::parse($request->end_time);  // No formatting yet
+
+        $duration = $startTime->diffInSeconds($endTime);
+
+        $startTimeFormatted = $startTime->format('Y-m-d H:i');
+        $endTimeFormatted = $endTime->format('Y-m-d H:i');
+
+        $workTime->start_time = $startTimeFormatted;
+        $workTime->end_time = $endTimeFormatted;
+        $workTime->duration = $duration;
+        $workTime->is_break = $request->is_break;
+        $workTime->save();
+    
+        return response()->json(['message' => 'Work time updated successfully']);
+    }
+    
+    public function storeWorkTimeByAdmin(Request $request)
+    {
+        $startTime = Carbon::parse($request->start_time);
+        $endTime = Carbon::parse($request->end_time);
+        $duration = $startTime->diffInSeconds($endTime);
+        
+        $workTime = new WorkTime();
+        $workTime->work_id = $request->work_id;
+        $workTime->start_time = $startTime;
+        $workTime->start_date = Carbon::today()->format('d-m-Y');
+        $workTime->end_time = $endTime;
+        $workTime->duration = $duration;
+        $workTime->is_break = $request->is_break;
+        $workTime->save();
+
+        return response()->json(['message' => 'Work time added successfully']);
+    }
+
+    public function destroy($id)
+    {
+        $workTime = WorkTime::find($id);
+
+        if (!$workTime) {
+            return response()->json([
+                'message' => 'Work time not found'
+            ], 404);
+        }
+
+        $workTime->delete();
+
+        return response()->json([
+            'message' => 'Work time deleted successfully'
+        ], 200);
     }
 
     public function startBreak(Request $request)

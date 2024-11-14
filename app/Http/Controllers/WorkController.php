@@ -36,7 +36,7 @@ class WorkController extends Controller
 
     public function processing()
     {
-        $data = Work::with('workAssign')->orderby('id','DESC')->where('status','2')->get();
+        $data = Work::with(['workTimes','workAssign'])->orderby('id','DESC')->where('status','2')->get();
         return view('admin.work.processing', compact('data'));
     }
 
@@ -207,6 +207,7 @@ class WorkController extends Controller
                 $stsval = "In Progress";
             } elseif ($work->status == 3) {
                 $stsval = "Completed";
+                $this->stopWorkTimer($work->id);
             } elseif ($work->status == 4) {
                 $stsval = "Cancelled";
             }
@@ -362,8 +363,9 @@ class WorkController extends Controller
             $startTime = Carbon::parse($workTime->start_time);
             $endTime = Carbon::now();
             $duration = $startTime->diffInSeconds($endTime);
+            $endTimeUpdate = $endTime->format('Y-m-d H:i');
 
-            $workTime->end_time = $endTime;
+            $workTime->end_time = $endTimeUpdate;
             $workTime->duration = $duration;
             $workTime->save();
         }

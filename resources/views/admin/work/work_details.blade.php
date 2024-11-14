@@ -5,7 +5,7 @@
     
     <div class="row">
         <div class="col-2">
-            <a href="{{ route('admin.new') }}">
+            <a href="{{ url()->previous() }}">
                 <button type="button" class="btn btn-secondary my-3"><i class="fas fa-arrow-left"></i> Go back</button>
             </a>
         </div>

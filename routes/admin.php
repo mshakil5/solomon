@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\WorkTimeController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -47,6 +48,18 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     Route::get('/get-all-work/{id}', [WorkController::class, 'workGallery'])->name('admin.workGallery');
     Route::get('/work/{id}', [WorkController::class, 'workDetailsByAdmin'])->name('admin.work.details');
+
+    Route::post('/worktime/start', [WorkTimeController::class, 'startWorkByAdmin'])->name('worktime.start.admin');
+    Route::post('/worktime/stop', [WorkTimeController::class, 'stopWorkByAdmin'])->name('worktime.stop.admin');
+
+    Route::get('/work-time/{id}', [WorkTimeController::class, 'workTimeByAdmin'])->name('admin.work.timer.details');
+
+    Route::put('/worktime/{id}', [WorkTimeController::class, 'update'])->name('worktime.update');
+
+    Route::post('/worktime-store', [WorkTimeController::class, 'storeWorkTimeByAdmin'])->name('worktime.store');
+
+    Route::delete('/worktime/{id}', [WorkTimeController::class, 'destroy'])->name('worktime.destroy');
+
 
     Route::get('/work/{id}/review', [WorkController::class, 'showAdminReview'])->name('admin.work.review');
 

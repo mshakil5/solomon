@@ -221,6 +221,7 @@ class FrontendController extends Controller
             'review.max' => 'The review may not be greater than 1000 characters.',
         ]);
 
+        $validated['status'] = 0;
         Review::create($validated);
 
         return redirect()->back()->with('success', 'Review submitted successfully!');
