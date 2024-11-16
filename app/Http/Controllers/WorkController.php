@@ -18,6 +18,7 @@ use App\Models\WorkReview;
 use App\Models\ReviewAnswer;
 use App\Models\WorkReviewReply;
 use Illuminate\Support\Carbon;
+use App\Jobs\SendWorkAssignedEmail;
 
 class WorkController extends Controller
 {
@@ -36,7 +37,7 @@ class WorkController extends Controller
 
     public function processing()
     {
-        $data = Work::with('workAssign')->orderby('id','DESC')->where('status','2')->get();
+        $data = Work::with(['workTimes','workAssign'])->orderby('id','DESC')->where('status','2')->get();
         return view('admin.work.processing', compact('data'));
     }
 
@@ -207,6 +208,7 @@ class WorkController extends Controller
                 $stsval = "In Progress";
             } elseif ($work->status == 3) {
                 $stsval = "Completed";
+                $this->stopWorkTimer($work->id);
             } elseif ($work->status == 4) {
                 $stsval = "Cancelled";
             }
@@ -277,7 +279,8 @@ class WorkController extends Controller
             'contactmail' => $contactmail,
         ];
 
-        Mail::to($contactmail)->send(new WorkAssignedMail($emailData));
+        // Mail::to($contactmail)->send(new WorkAssignedMail($emailData));
+        SendWorkAssignedEmail::dispatch($emailData);
 
         return response()->json(['success' => 'Staff assigned successfully']);
     }
@@ -362,8 +365,9 @@ class WorkController extends Controller
             $startTime = Carbon::parse($workTime->start_time);
             $endTime = Carbon::now();
             $duration = $startTime->diffInSeconds($endTime);
+            $endTimeUpdate = $endTime->format('Y-m-d H:i');
 
-            $workTime->end_time = $endTime;
+            $workTime->end_time = $endTimeUpdate;
             $workTime->duration = $duration;
             $workTime->save();
         }

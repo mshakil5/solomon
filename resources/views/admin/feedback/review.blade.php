@@ -21,7 +21,7 @@
                   <th>Email/Phone</th>
                   <th>Rating</th>
                   <th>Review</th>
-                  <th>Status</th>
+                  <th>Approved</th>
                 </tr>
                 </thead>
                 <tbody>

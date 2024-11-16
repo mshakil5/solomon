@@ -38,6 +38,7 @@
                   <th>Address</th>
                   <th>Staff</th>
                   <th>Status</th>
+                  <th>Timer</th>
                   <th>Details</th>
                 </tr>
                 </thead>
@@ -52,6 +53,7 @@
                           {{$data->email}} </br> <br>
                           {{$data->phone}}
                     </td>
+
                     <td style="text-align: left">
                         {{$data->address_first_line}} </br>
                         {{$data->address_second_line}}</br>
@@ -59,13 +61,15 @@
                         {{$data->town}}</br>
                         {{$data->post_code}}
                     </td>
+
                     <td>
                       @if ($data->workAssign && $data->workAssign->staff)
                           {{ $data->workAssign->staff->name }} {{ $data->workAssign->staff->surname }}
                       @else
                           Not Assigned
                       @endif
-                  </td>
+                    </td>
+
                     <td>
                       <div class="btn-group">
                         <button type="button" class="btn btn-secondary">
@@ -87,8 +91,43 @@
                         </div>
                       </div>
                     </td>
+
+                    <td>
+                        @php
+                            $workTimes = $data->workTimes;
+                            $hasActiveWorkTime = false;
+                            $workTimeId = null;
+                            $hasEndTime = false;
+
+                            foreach ($workTimes as $workTime) {
+                                if ($workTime->start_time && !$workTime->end_time && !$workTime->is_break) {
+                                    $hasActiveWorkTime = true;
+                                    $workTimeId = $workTime->id;
+                                    break;
+                                }
+                                if ($workTime->end_time && !$workTime->is_break) {
+                                    $hasEndTime = true;
+                                }
+                            }
+                        @endphp
+
+                        @if ($data->status == 2)
+                            @if ($hasActiveWorkTime)
+                                <button type="button" class="btn btn-secondary stop-button" data-worktime-id="{{ $workTimeId }}" data-work-id="{{ $data->id }}">
+                                    Stop
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-secondary start-button" data-work-id="{{ $data->id }}">
+                                    Start
+                                </button>
+                            @endif
+                        @endif
+                    </td>
                    
                     <td>
+                        <a href="{{ route('admin.work.timer.details', $data->id) }}" class="btn btn-secondary">
+                            <i class="fas fa-clock"></i>
+                        </a>
                         <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
                             <i class="fas fa-eye"></i>
                         </a>
@@ -156,5 +195,66 @@
   });
 </script>
 
+
+<!-- Timer start and stop -->
+<script>
+  $(document).ready(function() {
+      $('.start-button').click(function() {
+          var workId = $(this).data('work-id');
+
+          $.ajax({
+              url: '{{ route("worktime.start.admin") }}', 
+              method: 'POST',
+              data: {
+                  work_id: workId,
+                  _token: '{{ csrf_token() }}'
+              },
+              success: function(response) {
+                    swal({
+                      title: "Success!",
+                      text: "Timer started",
+                      icon: "success",
+                      button: "OK",
+                  });
+                window.setTimeout(function(){location.reload()},2000);
+              },
+              error: function(xhr) {
+                  console.error(xhr.responseText);
+              }
+          });
+      });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('.stop-button').click(function() {
+          var workTimeId = $(this).data('worktime-id');
+          var workId = $(this).data('work-id');
+
+          $.ajax({
+              url: '{{ route("worktime.stop.admin") }}',
+              method: 'POST',
+              data: {
+                  work_time_id: workTimeId,
+                  work_id: workId,
+                  _token: '{{ csrf_token() }}'
+              },
+              success: function(response) {
+                  swal({
+                    title: "Success!",
+                    text: "Timer stopped",
+                    icon: "success",
+                    button: "OK",
+                });
+                window.setTimeout(function(){location.reload()},2000);
+              },
+              error: function(xhr) {
+                  console.error(xhr.responseText);
+              }
+          });
+      });
+  });
+</script>
 
 @endsection

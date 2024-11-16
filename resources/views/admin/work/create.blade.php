@@ -50,13 +50,13 @@
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="form-group">
-                        <label>Name</label>
+                        <label>Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="name" class="form-control">
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
-                        <label for="email"> Email</label>
+                        <label for="email">Email <span class="text-danger">*</span></label>
                         <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control">
                       </div>
                     </div>
@@ -65,13 +65,13 @@
                   <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="phone">Phone</label>
+                            <label for="phone">Phone <span class="text-danger">*</span></label>
                             <input type="number" name="phone" id="phone" class="form-control" required>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="category_id">Category</label>
+                            <label for="category_id">Select Category <span class="text-danger">*</span></label>
                             <select name="category_id" id="category_id" class="form-control">
                                 <option value="">Select Category</option>
                                 @foreach ($categories as $category)
@@ -84,7 +84,7 @@
 
                   <div class="row">
                     <div class="col-lg-4 col-12">
-                        <label for="address_first_line"> Address First Line</label>
+                        <label for="address_first_line"> Address First Line <span class="text-danger">*</span></label>
                         <input type="text" name="address_first_line" id="address_first_line" class="form-control" required>
                     </div>
                     <div class="col-lg-4 col-12">
@@ -100,7 +100,7 @@
                         <input type="text" name="town" id="town" class="form-control">
                     </div>
                     <div class="col-lg-6 col-12">
-                        <label for="post_code"> Post Code</label>
+                        <label for="post_code">Post Code <span class="text-danger">*</span></label>
                         <input type="text" name="post_code" id="post_code" class="form-control">
                         <div class="perrmsg"></div>
                     </div>
@@ -109,17 +109,20 @@
                 <div id="imageContainer">
                     <div class="row image-row" style="margin-top: 10px;">
                         <div class="col-lg-6 col-12">
+                            <label for="">Image/Video <span class="text-danger">*</span></label>
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control image-upload" name="images[]" accept="image/*,video/*" required>
                             </div>
                         </div>
                         <div class="col-lg-5 col-8">
+                            <label for="">Description <span class="text-danger">*</span></label>
                             <div class="input-group mb-3">
                                 <textarea class="form-control description resizable" placeholder="Description" rows="3" name="descriptions[]" required></textarea>
                             </div>
                         </div>
                         <div class="col-lg-1 col-2 text-end">
-                            <button class="btn btn-success add-row" type="button">+</button>
+                            <label for="add-row" class="form-label" style="visibility: hidden;">Action</label>
+                            <button class="btn btn-success add-row" id="add-row" type="button">+</button>
                         </div>
                     </div>
                 </div>
