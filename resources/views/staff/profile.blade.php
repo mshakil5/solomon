@@ -138,6 +138,7 @@
             success: function (response) {
                 if (response.status === 300) {
                     $(".ermsg").html(response.message).removeClass('alert-warning').addClass('alert-success');
+                    window.setTimeout(function(){location.reload()},2000)
                 } else {
                     $(".ermsg").html(response.message).removeClass('alert-success').addClass('alert-warning');
                 }

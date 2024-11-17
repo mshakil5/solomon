@@ -106,7 +106,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2024 <a href="https://www.mentosoftware.co.uk/">Mento Software</a>.</strong>
+    <strong>Copyright &copy; 2024 <a href="https://www.mentosoftware.co.uk/" target="_blank">Mento Software</a>.</strong>
     All rights reserved.
   </footer>
 

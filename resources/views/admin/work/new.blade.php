@@ -269,6 +269,23 @@
               _token: '{{ csrf_token() }}'
           };
 
+          var requiredFields = [];
+          if (!formData.staff_id) {
+              requiredFields.push('Staff');
+          }
+          if (!formData.start_date) {
+              requiredFields.push('Start Date');
+          }
+          if (!formData.end_date) {
+              requiredFields.push('End Date');
+          }
+
+          if (requiredFields.length > 0) {
+              $('#loading').hide();
+              alert('Please fill in the following required fields: ' + requiredFields.join(', '));
+              return;
+          }
+
           $.ajax({
               url: '/admin/assign-staff',
               type: 'POST',
