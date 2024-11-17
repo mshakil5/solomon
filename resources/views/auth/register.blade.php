@@ -61,7 +61,7 @@
 
         <div class="row">
             <div class="col-12">
-                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="{{ __('Name') }}">
+                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="{{ __('Name *') }}">
                 @error('name')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -73,7 +73,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="surname" type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" required autocomplete="surname" placeholder="{{ __('Company Name') }}">
+                <input id="surname" type="text" class="form-control @error('surname') is-invalid @enderror" name="surname" value="{{ old('surname') }}" autocomplete="surname" placeholder="{{ __('Company Name') }}">
                 @error('surname')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -82,7 +82,7 @@
             </div>
 
             <div class="col-6">
-                <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone" placeholder="{{ __('Mobile') }}">
+                <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone" placeholder="{{ __('Phone * ') }}">
                 @error('phone')
                     <span class="invalid-feedback d-block mb-2" role="alert">
                         <strong>{{ $message }}</strong>
@@ -95,7 +95,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror" name="address_first_line" value="{{ old('address_first_line') }}" required autocomplete="address_first_line" placeholder="{{ __('Address First Line') }}">
+                <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror" name="address_first_line" value="{{ old('address_first_line') }}" required autocomplete="address_first_line" placeholder="{{ __('Address First Line *') }}">
                 @error('address_first_line')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -127,7 +127,7 @@
 
 
             <div class="col-6">
-                <input id="town" type="text" class="form-control @error('town') is-invalid @enderror" name="town" value="{{ old('town') }}" autocomplete="town" placeholder="{{ __('Town') }}">
+                <input id="town" type="text" class="form-control @error('town') is-invalid @enderror" name="town" value="{{ old('town') }}" autocomplete="town" placeholder="{{ __('Town / City') }}">
                 @error('town')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -140,7 +140,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" name="postcode" value="{{ old('postcode') }}" autocomplete="postcode" placeholder="{{ __('Post Code') }}">
+                <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" name="postcode" value="{{ old('postcode') }}" required autocomplete="postcode" placeholder="{{ __('Post Code *') }}">
                 @error('postcode')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -149,7 +149,7 @@
             </div>
 
             <div class="col-6">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="{{ __('Email Address') }}">
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="{{ __('Email Address *') }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -162,7 +162,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="{{ __('Password') }}">
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="{{ __('Password *') }}">
                 @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -171,7 +171,7 @@
             </div>
 
             <div class="col-6">
-                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="{{ __('Confirm Password') }}">
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="{{ __('Confirm Password *') }}">
             </div>
         </div>
 
