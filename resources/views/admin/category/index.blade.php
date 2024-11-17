@@ -43,14 +43,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6 d-none">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="feature-img">Category Image</label>
                                         <input type="file" class="form-control-file" id="image" accept="image/*">
                                         <img id="preview-image" src="#" alt="" style="max-width: 300px; width: 100%; height: auto; margin-top: 20px;">
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6 d-none">
                                     <div class="form-group">
                                         <label for="feature-img">Category Icon</label>
                                         <input type="text" class="form-control" name="icon_class" placeholder="Enter icon name" id="icon_class">
@@ -86,8 +86,8 @@
                                 <tr>
                                     <th>Sl</th>
                                     <th>Name</th>
-                                    <!-- <th>Image</th> -->
-                                    <th>Icon</th>
+                                    <th>Image</th>
+                                    <!-- <th>Icon</th> -->
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -97,12 +97,12 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $data->name }}</td>
-                                    <!-- <td>
-                                        <img src="{{ asset('images/category/' . $data->image) }}" alt="{{ $data->name }}" style="width: 50px; height: 50px;">
-                                    </td> -->
                                     <td>
-                                        <i class="{{ $data->icon_class }}" style="color: red; font-size: 24px;"></i>
+                                        <img src="{{ asset('images/category/' . $data->image) }}" alt="{{ $data->name }}" style="width: 50px; height: 50px;">
                                     </td>
+                                    <!-- <td>
+                                        <i class="{{ $data->icon_class }}" style="color: red; font-size: 24px;"></i>
+                                    </td> -->
                                     <td>
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $data->id }}" data-id="{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}>
