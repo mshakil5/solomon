@@ -15,6 +15,11 @@ use App\Http\Controllers\Api\PaypalController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\Api\WorkTimeController;
 
+Route::post('register', [PassportAuthController::class, 'register']);
+Route::post('login', [PassportAuthController::class, 'login']);
+Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
+
+Route::post('/review', [FrontendController::class, 'reviewStore']);
 
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
@@ -62,10 +67,3 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
     Route::get('/break-time', [WorkTimeController::class, 'breakTime']);
 
 });
-
-
-Route::post('register', [PassportAuthController::class, 'register']);
-Route::post('login', [PassportAuthController::class, 'login']);
-Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
-
-

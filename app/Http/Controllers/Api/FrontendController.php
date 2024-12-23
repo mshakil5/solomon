@@ -14,6 +14,8 @@ use App\Models\Transaction;
 use App\Mail\JobOrderMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Review;
 
 class FrontendController extends Controller
 {
@@ -236,6 +238,37 @@ class FrontendController extends Controller
             return response()->json(['success' => false, 'response' => $success], 202);
         }
         
+    }
+
+    public function reviewStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'stars' => 'required|integer|min:1|max:5',
+            'review' => 'required|string|max:1000',
+        ], [
+            'review.max' => 'The review may not be greater than 1000 characters.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
+        $validatedData['status'] = 0;
+
+        $review = Review::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Review submitted successfully!',
+            'data' => $review,
+        ], 201);
     }
 
 }
