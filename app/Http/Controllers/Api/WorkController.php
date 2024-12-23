@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Upload;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Contact;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\JobOrderMail;
 
 class WorkController extends Controller
 {
@@ -176,6 +180,93 @@ class WorkController extends Controller
                 'data' => $uploads
             ]
         ], 200);
+    }
+
+    public function storeWork(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'name' => ['required', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'address_first_line' => ['required'],
+            'post_code' => ['required'],
+            'town' => ['nullable'],
+            'phone' => ['required', 'regex:/^\d{11}$/'],
+            'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
+            'descriptions.*' => ['required', 'string'],
+        ], [
+            'phone.regex' => 'The phone number must be exactly 11 digits.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = new Work();
+        $data->user_id = Auth::id();
+        $data->orderid = mt_rand(100000, 999999);
+        $data->date = date('Y-m-d');
+        $data->name = $request->name;
+        $data->category_id = $request->category_id;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address_first_line = $request->address_first_line;
+        $data->address_second_line = $request->address_second_line;
+        $data->address_third_line = $request->address_third_line;
+        $data->town = $request->town;
+        $data->post_code = $request->post_code;
+        $data->created_by = Auth::id();
+        $data->save();
+
+        $categoryName = $data->category->name;
+
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            $descriptions = $request->input('descriptions');
+
+            foreach ($files as $index => $image) {
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $storagePath = public_path('images/works');
+                $image->move($storagePath, $filename);
+
+                $workImg = new WorkImage();
+                $workImg->work_id = $data->id;
+                $workImg->name = 'images/works/' . $filename;
+                $workImg->description = $descriptions[$index] ?? null;
+                $workImg->save();
+            }
+        }
+
+        $adminMail = Contact::where('id', 1)->first()->email;
+        $contactMail = $request->email;
+        $msg = "Thank you for telling us about your work.";
+
+        $mailData = [
+            'firstname' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address1' => $request->address_first_line,
+            'address2' => $request->address_second_line,
+            'address3' => $request->address_third_line,
+            'town' => $request->town,
+            'postcode' => $request->post_code,
+            'subject' => "Order Booking Confirmation",
+            'message' => $msg,
+            'contactmail' => $contactMail,
+            'category_name' => $categoryName,
+        ];
+
+        Mail::to($contactMail)->send(new JobOrderMail($mailData));
+        Mail::to($adminMail)->send(new JobOrderMail($mailData));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your work has been submitted successfully!',
+            'data' => $data,
+        ], 201);
     }
 
 }

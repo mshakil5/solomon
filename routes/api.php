@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('all-transaction', [FrontendController::class, 'getAllTransaction']);
     Route::post('paypal-payment', [PaypalController::class, 'payment']);
     Route::post('account-delete-request', [CallBackController::class, 'accountDeleteRequest']);
+
+    Route::post('work-store', [WorkController::class, 'storeWork']);
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
