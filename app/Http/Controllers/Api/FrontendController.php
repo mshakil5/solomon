@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
+use App\Models\Career;
 
 class FrontendController extends Controller
 {
@@ -268,6 +269,59 @@ class FrontendController extends Controller
             'success' => true,
             'message' => 'Review submitted successfully!',
             'data' => $review,
+        ], 201);
+    }
+
+    public function joinUsStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'address_first_line' => 'required|string|max:255',
+            'address_second_line' => 'nullable|string|max:255',
+            'address_third_line' => 'nullable|string|max:255',
+            'town' => 'required|string|max:255',
+            'postcode' => 'required|string|max:10',
+            'category_ids' => 'required|array',
+            'category_ids.*' => 'exists:categories,id',
+            'cv' => 'required|file|mimes:pdf,docx|max:3000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
+
+        $career = new Career();
+        $career->name = $validatedData['name'];
+        $career->email = $validatedData['email'];
+        $career->phone = $validatedData['phone'];
+        $career->address_first_line = $validatedData['address_first_line'];
+        $career->address_second_line = $validatedData['address_second_line'] ?? null;
+        $career->address_third_line = $validatedData['address_third_line'] ?? null;
+        $career->town = $validatedData['town'];
+        $career->postcode = $validatedData['postcode'];
+        $career->category_ids = json_encode($validatedData['category_ids']);
+        $career->created_by = auth()->id() ?? null;
+
+        if ($request->hasFile('cv')) {
+            $file = $request->file('cv');
+            $filename = time() . '_' . rand(100000, 999999) . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/career'), $filename);
+            $career->cv = '/images/career/' . $filename;
+        }
+
+        $career->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your data has been submitted successfully!',
+            'data' => $career,
         ], 201);
     }
 

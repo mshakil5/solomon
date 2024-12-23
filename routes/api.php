@@ -20,6 +20,7 @@ Route::post('login', [PassportAuthController::class, 'login']);
 Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
 
 Route::post('/review', [FrontendController::class, 'reviewStore']);
+Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
 
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
