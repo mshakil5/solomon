@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
 use App\Models\Career;
+use App\Models\Quote;
 
 class FrontendController extends Controller
 {
@@ -322,6 +323,34 @@ class FrontendController extends Controller
             'success' => true,
             'message' => 'Your data has been submitted successfully!',
             'data' => $career,
+        ], 201);
+    }
+
+    public function requestQuoteStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'city' => 'required|string|max:255',
+            'address' => 'nullable|string|max:400',
+            'details' => 'required|string|min:10|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
+        $quote = Quote::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your quote request has been submitted successfully!',
+            'data' => $quote,
         ], 201);
     }
 
