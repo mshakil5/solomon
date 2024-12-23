@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\JobOrderMail;
+use App\Models\ReviewAnswer;
+use App\Models\ReviewQuestion;
+use App\Models\WorkReview;
+use App\Models\WorkReviewReply;
 
 class WorkController extends Controller
 {
@@ -266,6 +270,80 @@ class WorkController extends Controller
             'success' => true,
             'message' => 'Your work has been submitted successfully!',
             'data' => $data,
+        ], 201);
+    }
+
+    public function showReviewForm($id)
+    {
+        $work = Work::findOrFail($id);
+        $questions = ReviewQuestion::where('status', 1)->latest()->get();
+
+        $existingReview = WorkReview::with(['answers.question', 'replies.user'])
+            ->where('work_id', $work->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        return response()->json([
+            'work' => $work,
+            'questions' => $questions,
+            'existingReview' => $existingReview,
+        ]);
+    }
+
+    public function storeReview(Request $request)
+    {
+        $validatedData = $request->validate([
+            'work_id' => 'required|exists:works,id',
+            'answers' => 'required|array',
+            'note' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $uploadedFile = $request->file('image');
+            $randomName = mt_rand(10000000, 99999999) . '.' . $uploadedFile->getClientOriginalExtension();
+            $destinationPath = public_path('images/reviews/');
+            $uploadedFile->move($destinationPath, $randomName);
+            $imageName = $randomName;
+        }
+
+        $workReview = WorkReview::create([
+            'work_id' => $request->work_id,
+            'user_id' => Auth::id(),
+            'note' => $request->note,
+            'image' => $imageName,
+        ]);
+
+        foreach ($request->answers as $questionId => $answer) {
+            ReviewAnswer::create([
+                'work_review_id' => $workReview->id,
+                'review_question_id' => $questionId,
+                'answer' => $answer,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Review submitted successfully.',
+            'data' => $workReview,
+        ], 201);
+    }
+
+    public function storeReply(Request $request, $reviewId)
+    {
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $reply = WorkReviewReply::create([
+            'work_review_id' => $reviewId,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return response()->json([
+            'message' => 'Reply added successfully!',
+            'data' => $reply,
         ], 201);
     }
 

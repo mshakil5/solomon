@@ -48,6 +48,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('account-delete-request', [CallBackController::class, 'accountDeleteRequest']);
 
     Route::post('work-store', [WorkController::class, 'storeWork']);
+
+    Route::get('/work/{id}/review', [WorkController::class, 'showReviewForm']);
+    Route::post('/work-review/store', [WorkController::class, 'storeReview']);
+    Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply']);
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
