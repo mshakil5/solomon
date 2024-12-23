@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
 use App\Models\Career;
 use App\Models\Quote;
+use App\Models\CompanyDetails;
 
 class FrontendController extends Controller
 {
@@ -352,6 +353,14 @@ class FrontendController extends Controller
             'message' => 'Your quote request has been submitted successfully!',
             'data' => $quote,
         ], 201);
+    }
+
+    public function aboutUs()
+    {
+        $aboutUs = CompanyDetails::select('about_us')->first()->about_us;
+        return response()->json([
+            'about_us' => $aboutUs
+        ], 200);
     }
 
 }
