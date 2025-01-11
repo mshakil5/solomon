@@ -16,9 +16,11 @@ class CompanyDetailsController extends Controller
 
     public function update(Request $request)
     {
+        
+        dd( $request->all() );
+
         $data = CompanyDetails::find($request->codeid);
 
-        dd( $data );
         $request->validate([
             'company_name' => 'required|string|max:255',
             'email1' => 'nullable|email|max:255',
