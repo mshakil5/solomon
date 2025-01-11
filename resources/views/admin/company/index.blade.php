@@ -10,13 +10,13 @@
       <div class="col-md-12">
         <!-- general form elements disabled -->
 
-    @if(session()->has('success'))
-        <div class="alert alert-success pt-3 mb-3" id="successMessage">{{ session()->get('success') }}</div>
-    @endif
+        @if(session()->has('success'))
+            <div class="alert alert-success pt-3 mb-3" id="successMessage">{{ session()->get('success') }}</div>
+        @endif
 
-    @if(session()->has('error'))
-        <div class="alert alert-danger pt-3 mb-3" id="errMessage">{{ session()->get('error') }}</div>
-    @endif
+        @if(session()->has('error'))
+            <div class="alert alert-danger pt-3 mb-3" id="errMessage">{{ session()->get('error') }}</div>
+        @endif
 
         <div class="card card-secondary">
           <div class="card-header">
@@ -352,7 +352,7 @@
 <script>
 
     
-  $(document).ready(function () {
+$(document).ready(function () {
 
 
     //header for csrf-token is must in laravel
@@ -368,6 +368,9 @@
             type: 'POST',
             url: "{{ route('admin.companyinfo') }}",
             data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             cache: false,
             contentType: false,
             processData: false,
@@ -391,7 +394,7 @@
         });
     });
 
-    });
+});
 
 
 
