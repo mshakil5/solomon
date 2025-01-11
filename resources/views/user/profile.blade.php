@@ -35,8 +35,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="surname" class="form-label">Company Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="surname" name="surname" value="{{ $user->surname }}" required>
+                                <label for="surname" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="surname" name="surname" value="{{ $user->surname }}">
                             </div>
                         </div>
                     </div>
@@ -72,8 +72,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="town" class="form-label">Town <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="town" name="town" value="{{ $user->town }}" required>
+                                <label for="town" class="form-label">Town</label>
+                                <input type="text" class="form-control" id="town" name="town" value="{{ $user->town }}">
                             </div>
                         </div>
                         <div class="col-md-6">

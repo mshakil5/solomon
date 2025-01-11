@@ -53,15 +53,15 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
         'name' => ['required', 'string', 'max:255'],
-        'surname' => ['required', 'string', 'max:255'],
+        'surname' => ['nullable', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         'phone' => ['required', 'regex:/^\d{11}$/'],
         'address_first_line' => ['required', 'string', 'max:255'],
         'address_second_line' => ['nullable', 'string', 'max:255'],
         'address_third_line' => ['nullable', 'string', 'max:255'],
         'town' => ['nullable', 'string', 'max:255'],
-        'postcode' => ['nullable', 'string', 'max:255'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'postcode' => ['required', 'string', 'max:255'],
+        'password' => ['required', 'string', 'min:6', 'confirmed'],
         ], 
         [
             'phone.regex' => 'The phone number must be exactly 11 digits.',

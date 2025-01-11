@@ -24,9 +24,8 @@
                     @foreach ($categories as $category)
                         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4 d-flex justify-content-center">
                             <a href="{{ route('category.show', $category->slug) }}" class="custom-category text-center mx-auto">
-                                @if ($category->icon_class)
-                                    <i class="{{ $category->icon_class }}"></i>
-                                @endif
+                                {{-- <i class=""></i> --}}
+                                <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
                                 <p class="custom-category-title">{{ $category->name }}</p>
                             </a>
                         </div>

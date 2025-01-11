@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Upload;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Contact;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\JobOrderMail;
+use App\Models\ReviewAnswer;
+use App\Models\ReviewQuestion;
+use App\Models\WorkReview;
+use App\Models\WorkReviewReply;
 
 class WorkController extends Controller
 {
@@ -176,6 +184,167 @@ class WorkController extends Controller
                 'data' => $uploads
             ]
         ], 200);
+    }
+
+    public function storeWork(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'name' => ['required', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'address_first_line' => ['required'],
+            'post_code' => ['required'],
+            'town' => ['nullable'],
+            'phone' => ['required', 'regex:/^\d{11}$/'],
+            'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
+            'descriptions.*' => ['required', 'string'],
+        ], [
+            'phone.regex' => 'The phone number must be exactly 11 digits.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $data = new Work();
+        $data->user_id = Auth::id();
+        $data->orderid = mt_rand(100000, 999999);
+        $data->date = date('Y-m-d');
+        $data->name = $request->name;
+        $data->category_id = $request->category_id;
+        $data->email = $request->email;
+        $data->phone = $request->phone;
+        $data->address_first_line = $request->address_first_line;
+        $data->address_second_line = $request->address_second_line;
+        $data->address_third_line = $request->address_third_line;
+        $data->town = $request->town;
+        $data->post_code = $request->post_code;
+        $data->created_by = Auth::id();
+        $data->save();
+
+        $categoryName = $data->category->name;
+
+        if ($request->hasFile('images')) {
+            $files = $request->file('images');
+            $descriptions = $request->input('descriptions');
+
+            foreach ($files as $index => $image) {
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $storagePath = public_path('images/works');
+                $image->move($storagePath, $filename);
+
+                $workImg = new WorkImage();
+                $workImg->work_id = $data->id;
+                $workImg->name = 'images/works/' . $filename;
+                $workImg->description = $descriptions[$index] ?? null;
+                $workImg->save();
+            }
+        }
+
+        $adminMail = Contact::where('id', 1)->first()->email;
+        $contactMail = $request->email;
+        $msg = "Thank you for telling us about your work.";
+
+        $mailData = [
+            'firstname' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address1' => $request->address_first_line,
+            'address2' => $request->address_second_line,
+            'address3' => $request->address_third_line,
+            'town' => $request->town,
+            'postcode' => $request->post_code,
+            'subject' => "Order Booking Confirmation",
+            'message' => $msg,
+            'contactmail' => $contactMail,
+            'category_name' => $categoryName,
+        ];
+
+        Mail::to($contactMail)->send(new JobOrderMail($mailData));
+        Mail::to($adminMail)->send(new JobOrderMail($mailData));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your work has been submitted successfully!',
+            'data' => $data,
+        ], 201);
+    }
+
+    public function showReviewForm($id)
+    {
+        $work = Work::findOrFail($id);
+        $questions = ReviewQuestion::where('status', 1)->latest()->get();
+
+        $existingReview = WorkReview::with(['answers.question', 'replies.user'])
+            ->where('work_id', $work->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        return response()->json([
+            'work' => $work,
+            'questions' => $questions,
+            'existingReview' => $existingReview,
+        ]);
+    }
+
+    public function storeReview(Request $request)
+    {
+        $validatedData = $request->validate([
+            'work_id' => 'required|exists:works,id',
+            'answers' => 'required|array',
+            'note' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $uploadedFile = $request->file('image');
+            $randomName = mt_rand(10000000, 99999999) . '.' . $uploadedFile->getClientOriginalExtension();
+            $destinationPath = public_path('images/reviews/');
+            $uploadedFile->move($destinationPath, $randomName);
+            $imageName = $randomName;
+        }
+
+        $workReview = WorkReview::create([
+            'work_id' => $request->work_id,
+            'user_id' => Auth::id(),
+            'note' => $request->note,
+            'image' => $imageName,
+        ]);
+
+        foreach ($request->answers as $questionId => $answer) {
+            ReviewAnswer::create([
+                'work_review_id' => $workReview->id,
+                'review_question_id' => $questionId,
+                'answer' => $answer,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Review submitted successfully.',
+            'data' => $workReview,
+        ], 201);
+    }
+
+    public function storeReply(Request $request, $reviewId)
+    {
+        $validatedData = $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $reply = WorkReviewReply::create([
+            'work_review_id' => $reviewId,
+            'user_id' => Auth::id(),
+            'content' => $request->content,
+        ]);
+
+        return response()->json([
+            'message' => 'Reply added successfully!',
+            'data' => $reply,
+        ], 201);
     }
 
 }

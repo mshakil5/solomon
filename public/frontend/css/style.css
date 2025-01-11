@@ -405,6 +405,14 @@ body > .skiptranslate > iframe.skiptranslate {
     margin-bottom: 10px;
 }
 
+.custom-category-image {
+    width: 50px; 
+    height: 50px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
+
 .category-list {
     width: 100%;
 }

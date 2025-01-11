@@ -15,6 +15,14 @@ use App\Http\Controllers\Api\PaypalController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\Api\WorkTimeController;
 
+Route::post('register', [PassportAuthController::class, 'register']);
+Route::post('login', [PassportAuthController::class, 'login']);
+Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
+
+Route::get('/consumer', [FrontendController::class, 'aboutUs']);
+Route::post('/review', [FrontendController::class, 'reviewStore']);
+Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
+Route::post('/request-quote', [FrontendController::class, 'requestQuoteStore']);
 
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
@@ -39,6 +47,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('all-transaction', [FrontendController::class, 'getAllTransaction']);
     Route::post('paypal-payment', [PaypalController::class, 'payment']);
     Route::post('account-delete-request', [CallBackController::class, 'accountDeleteRequest']);
+
+    Route::post('work-store', [WorkController::class, 'storeWork']);
+
+    Route::get('/work/{id}/review', [WorkController::class, 'showReviewForm']);
+    Route::post('/work-review/store', [WorkController::class, 'storeReview']);
+    Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply']);
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
@@ -62,10 +76,3 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
     Route::get('/break-time', [WorkTimeController::class, 'breakTime']);
 
 });
-
-
-Route::post('register', [PassportAuthController::class, 'register']);
-Route::post('login', [PassportAuthController::class, 'login']);
-Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
-
-
