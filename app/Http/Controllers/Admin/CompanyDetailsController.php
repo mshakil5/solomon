@@ -14,7 +14,7 @@ class CompanyDetailsController extends Controller
         return view('admin.company.index',compact('data'));
     }
 
-    public function update(Request $request)
+    public function updateCompanyInfo(Request $request)
     {
 
 
