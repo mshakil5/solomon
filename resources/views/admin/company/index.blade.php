@@ -299,14 +299,14 @@
         });
     });
 
-    function previewImage(event, previewId) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById(previewId);
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
+    // function previewImage(event, previewId) {
+    //     const reader = new FileReader();
+    //     reader.onload = function(){
+    //         const output = document.getElementById(previewId);
+    //         output.src = reader.result;
+    //     };
+    //     reader.readAsDataURL(event.target.files[0]);
+    // }
 </script>
 
 <script>
@@ -361,7 +361,7 @@
 
 
     $('#companyForm').submit(function(e){
-        console.log('submit');
+        console.log('submit2');
         e.preventDefault();
         var formData = new FormData(this);
         $.ajax({
