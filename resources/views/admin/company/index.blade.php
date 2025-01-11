@@ -20,7 +20,7 @@
 
         <div class="card card-secondary">
           <div class="card-header">
-            <h3 class="card-title">Comapny Informations</h3>
+            <h3 class="card-title">Comapny Informations test</h3>
           </div>
           
  
