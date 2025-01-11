@@ -28,7 +28,7 @@
           <!-- /.card-header -->
           <div class="card-body">
             <div class="ermsg"></div>
-            <form action="{{ route('admin.companyinfo') }}" method="POST" enctype="multipart/form-data">
+            <form id="companyForm" action="{{ route('admin.companyinfo') }}" method="POST" enctype="multipart/form-data">
                 
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <input type="hidden" class="form-control" id="codeid" name="codeid" value="{{$data->id}}">
@@ -308,6 +308,47 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#companyForm').validate({
+            rules: {
+                company_name: {
+                    required: true,
+                },
+                fav_icon: {
+                    required: true,
+                },
+                company_logo: {
+                    required: true,
+                },
+            },
+            messages: {
+                company_name: {
+                    required: "Company name is required",
+                },
+                fav_icon: {
+                    required: "Fav icon is required",
+                },
+                company_logo: {
+                    required: "Company logo is required",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+    
 </script>
 
 @endsection

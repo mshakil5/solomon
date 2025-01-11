@@ -14,7 +14,7 @@ class CompanyDetailsController extends Controller
         return view('admin.company.index',compact('data'));
     }
 
-    public function update(Request $request)
+    public function updatetterte(Request $request)
     {
 
 
@@ -49,7 +49,7 @@ class CompanyDetailsController extends Controller
         ]);
 
         $data = CompanyDetails::find($request->codeid);
-        
+
         if ($request->hasFile('fav_icon')) {
             if ($data->fav_icon && file_exists(public_path('images/company/' . $data->fav_icon))) {
                 unlink(public_path('images/company/' . $data->fav_icon));
@@ -106,4 +106,6 @@ class CompanyDetailsController extends Controller
 
         return redirect()->back()->with('success', 'Company details updated successfully.');
     }
+
+    
 }
