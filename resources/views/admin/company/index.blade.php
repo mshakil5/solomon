@@ -29,8 +29,8 @@
           <div class="card-body">
             <div class="ermsg"></div>
             <form action="{{ route('admin.companyinfo') }}" method="POST" enctype="multipart/form-data">
-              
-                @csrf
+                
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <input type="hidden" class="form-control" id="codeid" name="codeid" value="{{$data->id}}">
               <div class="row">
 
