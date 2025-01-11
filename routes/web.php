@@ -12,6 +12,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\WorkTimeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\CompanyDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::get('/clear', function () {
 });
 //  cache clear
 
+Route::post('/company-info-update', [CompanyDetailsController::class, 'updateCompanyInfo'])->name('admin.companyinfo');
 
 Auth::routes();
 Route::get('/', [FrontendController::class, 'index'])->name('homepage');
