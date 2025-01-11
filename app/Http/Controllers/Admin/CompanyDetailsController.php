@@ -48,6 +48,8 @@ class CompanyDetailsController extends Controller
             'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+        
+
         $data = CompanyDetails::find($request->codeid);
 
         if ($request->hasFile('fav_icon')) {
@@ -103,8 +105,14 @@ class CompanyDetailsController extends Controller
         $data->google_map = $request->google_map;
 
         $data->save();
-
-        return redirect()->back()->with('success', 'Company details updated successfully.');
+        if ($data->wasChanged()) {
+            $success = "<div class='alert alert-success'>Company details updated successfully.</div>";
+            return response()->json(['success' => $success, 'status' => 'success']);
+        } else {
+            $error = "<div class='alert alert-danger'>No changes were made to the company details.</div>";
+            return response()->json(['error' => $error]);
+        }
+        
     }
 
     

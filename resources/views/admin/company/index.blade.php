@@ -27,8 +27,8 @@
 
           <!-- /.card-header -->
           <div class="card-body">
-            <div class="ermsg"></div>
-            <form id="companyForm" action="{{ route('admin.companyinfo') }}" method="POST" enctype="multipart/form-data">
+            <div class="successMessage errMessage"></div>
+            <form id="companyForm" method="POST" enctype="multipart/form-data">
                 @csrf
               <input type="hidden" class="form-control" id="codeid" name="codeid" value="{{$data->id}}">
               <div class="row">
@@ -353,6 +353,41 @@
     //header for csrf-token is must in laravel
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
       //ajax request
+
+
+    $('#companyForm').submit(function(e){
+        console.log('submit');
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('admin.companyinfo') }}",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data){
+                console.log(data);
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
+                if(data.status == 'success'){
+                    $('.successMessage').html(data.success);
+                    $('.successMessage').show();
+                    setTimeout(function(){
+                        $('.successMessage').hide();
+                    }, 3000);
+                }else{
+                    $('.errMessage').html(data.error);
+                    $('.errMessage').show();
+                    setTimeout(function(){
+                        $('.errMessage').hide();
+                    }, 3000);
+                }
+            }
+        });
+    });
+
+
+
 </script>
 
 @endsection
