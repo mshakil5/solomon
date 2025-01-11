@@ -10,7 +10,7 @@ class CompanyDetailsController extends Controller
 {
     public function index()
     {
-        $data = CompanyDetails::all()->first();
+        $data = CompanyDetails::where('id', 1)->first();
         return view('admin.company.index',compact('data'));
     }
 
