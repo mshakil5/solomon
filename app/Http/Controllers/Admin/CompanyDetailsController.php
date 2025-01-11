@@ -16,10 +16,7 @@ class CompanyDetailsController extends Controller
 
     public function update(Request $request)
     {
-        
-        dd( $request->all() );
 
-        $data = CompanyDetails::find($request->codeid);
 
         $request->validate([
             'company_name' => 'required|string|max:255',
@@ -51,6 +48,8 @@ class CompanyDetailsController extends Controller
             'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+        $data = CompanyDetails::find($request->codeid);
+        
         if ($request->hasFile('fav_icon')) {
             if ($data->fav_icon && file_exists(public_path('images/company/' . $data->fav_icon))) {
                 unlink(public_path('images/company/' . $data->fav_icon));
