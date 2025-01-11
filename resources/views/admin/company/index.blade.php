@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="content pt-3" id="addThisFormContainer">
+<section class="content pt-3" style="background-color: #f4f6f9">
 
   <div class="container-fluid">
     <div class="row justify-content-md-center">
@@ -20,7 +20,7 @@
 
         <div class="card card-secondary">
           <div class="card-header">
-            <h3 class="card-title">Comapny Informations test</h3>
+            <h3 class="card-title">Comapny Informations</h3>
           </div>
           
  
@@ -28,8 +28,9 @@
           <!-- /.card-header -->
           <div class="card-body">
             <div class="ermsg"></div>
-            <form id="createThisForm" action="{{ route('admin.companyDetails') }}" method="POST" enctype="multipart/form-data">
-              @csrf
+            <form action="{{ route('admin.companyinfo') }}" method="POST" enctype="multipart/form-data">
+              
+                @csrf
               <input type="hidden" class="form-control" id="codeid" name="codeid" value="{{$data->id}}">
               <div class="row">
 

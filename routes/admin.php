@@ -123,7 +123,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     // company information
     Route::get('/company-details', [CompanyDetailsController::class, 'index'])->name('admin.companyDetail');
-    Route::post('/company-details', [CompanyDetailsController::class, 'update'])->name('admin.companyDetails');
+    Route::post('/company-details', [CompanyDetailsController::class, 'update'])->name('admin.companyinfo');
 
     // Category crud
     Route::get('/category', [CategoryController::class, 'getCategory'])->name('allcategory');
