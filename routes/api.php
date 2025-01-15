@@ -20,9 +20,12 @@ Route::post('login', [PassportAuthController::class, 'login']);
 Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
 
 Route::get('/consumer', [FrontendController::class, 'aboutUs']);
-Route::post('/review', [FrontendController::class, 'reviewStore']);
-Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
-Route::post('/request-quote', [FrontendController::class, 'requestQuoteStore']);
+
+Route::get('/api/get-category', [FrontendController::class, 'getCategory']);
+Route::post('/api/review', [FrontendController::class, 'reviewStore']);
+Route::post('/api/join-us', [FrontendController::class, 'joinUsStore']);
+Route::post('/api/request-quote', [FrontendController::class, 'requestQuoteStore']);
+Route::post('/api/contact-us', [FrontendController::class, 'contactUs']);
 
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 

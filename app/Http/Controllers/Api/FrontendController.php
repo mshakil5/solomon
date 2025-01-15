@@ -10,6 +10,7 @@ use App\Models\WorkImage;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMessageMail;
 use App\Models\Transaction;
 use App\Mail\JobOrderMail;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
 use App\Models\Career;
+use App\Models\Category;
 use App\Models\Quote;
 use App\Models\CompanyDetails;
 
@@ -35,6 +37,19 @@ class FrontendController extends Controller
         } else {
             $message ="This location is out of our service.";
             return response()->json(['status'=> 303,'message'=>$message]);
+        }
+        
+    }
+
+    public function getCategory()
+    {
+        $data = Category::orderby('id', 'DESC')->get();
+        if ($data){
+            $success['data'] = $data;
+            return response()->json(['success' => true, 'response' => $success], 200);
+        }else{
+            $success['Message'] = 'No data found.';
+            return response()->json(['success' => false, 'response' => $success], 202);
         }
         
     }
@@ -361,6 +376,54 @@ class FrontendController extends Controller
         return response()->json([
             'about_us' => $aboutUs
         ], 200);
+    }
+
+    public function contactUs(Request $request)
+    {
+        $request->validate([
+            'contactemail' => ['required', 'email'],
+            'firstname' => ['required', 'string'],
+            'lastname' => ['required', 'string'],
+            'contactmessage' => ['required'],
+        ], [
+            'firstname.required' => 'First Name field is required.',
+            'lastname.required' => 'Last Name field is required.',
+            'contactmessage.required' => 'Message field is required.',
+            'contactemail.required' => 'Email field is required.'
+        ]);
+
+        $adminmail = Contact::where('id', 1)->first()->email;
+        $contactmail = $request->contactemail;
+        $ccEmails = $adminmail;
+        $msg = $request->contactmessage; 
+
+        if (isset($msg)) {
+            $array['firstname'] = $request->firstname; 
+            $array['lastname'] = $request->lastname; 
+            $array['email'] = $request->contactemail;
+            $array['subject'] = "Order Booking Confirmation";
+            $array['message'] = $msg;
+            $array['contactmail'] = $contactmail;
+
+            Mail::to($ccEmails)
+                ->send(new ContactMessageMail($array));
+                
+                
+            Mail::to($adminmail)
+                ->send(new ContactMessageMail($array));
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Message sent successfully!',
+                ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error!',
+            ], 401);
+        }
+
+
     }
 
 }
