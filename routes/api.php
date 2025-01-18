@@ -21,11 +21,11 @@ Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUs
 
 Route::get('/consumer', [FrontendController::class, 'aboutUs']);
 
-Route::get('/api/get-category', [FrontendController::class, 'getCategory']);
-Route::post('/api/review', [FrontendController::class, 'reviewStore']);
-Route::post('/api/join-us', [FrontendController::class, 'joinUsStore']);
-Route::post('/api/request-quote', [FrontendController::class, 'requestQuoteStore']);
-Route::post('/api/contact-us', [FrontendController::class, 'contactUs']);
+Route::get('/get-category', [FrontendController::class, 'getCategory']);
+Route::post('/review', [FrontendController::class, 'reviewStore']);
+Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
+Route::post('/request-quote', [FrontendController::class, 'requestQuoteStore']);
+Route::post('/contact-us', [FrontendController::class, 'contactUs']);
 
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 

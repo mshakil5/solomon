@@ -260,10 +260,11 @@ class FrontendController extends Controller
 
     public function reviewStore(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
             'review' => 'required|string|max:1000',
         ], [
