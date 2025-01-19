@@ -26,7 +26,7 @@ Route::post('/review', [FrontendController::class, 'reviewStore']);
 Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
 Route::post('/request-quote', [FrontendController::class, 'requestQuoteStore']);
 Route::post('/contact-us', [FrontendController::class, 'contactUs']);
-
+Route::get('/about-us', [FrontendController::class, 'getInTouch']);
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
 Route::group(['middleware' => ['auth:api']], function () {

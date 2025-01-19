@@ -103,7 +103,7 @@ class FrontendController extends Controller
     }
     
     
-    public function workStore(Request $request)
+    public function workStore(Request $request, $catId = null)
     {
         $request->validate([
             'email' => ['required', 'email'],
@@ -126,7 +126,8 @@ class FrontendController extends Controller
         $data->address_third_line = $request->address_third_line;
         $data->town = $request->town;
         $data->post_code = $request->post_code;
-        $data->created_by = Auth::id();
+        // $data->created_by = Auth::id();
+        $data->category_id = $catId;
         $data->save();
 
         if ($request->hasFile('images')) {
@@ -425,6 +426,22 @@ class FrontendController extends Controller
         }
 
 
+    }
+
+    public function getInTouch()
+    {
+        $companyDetails = CompanyDetails::select('company_logo', 'address1', 'phone1', 'email1')->first();
+
+        if (!$companyDetails) {
+            return response()->json(['message' => 'Company details not found'], 404);
+        }
+
+        return response()->json([
+            'company_logo' => $companyDetails->company_logo,
+            'address1'     => $companyDetails->address1,
+            'phone1'       => $companyDetails->phone1,
+            'email1'       => $companyDetails->email1,
+        ], 200);
     }
 
 }
