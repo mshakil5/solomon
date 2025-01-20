@@ -154,6 +154,7 @@ class FrontendController extends Controller
         
         
         $adminmail = Contact::where('id', 1)->first()->email;
+        $category = Category::find($catId);
         $contactmail = $request->email;
         $ccEmails = $adminmail;
         $msg = "Thank you for telling us about your work.";
@@ -168,6 +169,7 @@ class FrontendController extends Controller
         $array['subject'] = "Order Booking Confirmation";
         $array['message'] = $msg;
         $array['contactmail'] = $contactmail;
+        $array['category_name'] = $category->name;
         
         
         Mail::to($contactmail)
@@ -437,7 +439,7 @@ class FrontendController extends Controller
         }
 
         return response()->json([
-            'company_logo' => $companyDetails->company_logo,
+            'company_logo' => url('images/company/' . $companyDetails->company_logo),
             'address1'     => $companyDetails->address1,
             'phone1'       => $companyDetails->phone1,
             'email1'       => $companyDetails->email1,

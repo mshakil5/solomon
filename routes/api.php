@@ -40,7 +40,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('additional-addresses/{id}', [UserController::class, 'destroy']);
     Route::get('works', [WorkController::class, 'userWorks']);
     Route::get('works/{id}', [WorkController::class, 'workDetails']);
-    Route::post('work/{catId?}', [FrontendController::class, 'workStore']);
+    Route::post('work-store/{catId?}', [FrontendController::class, 'workStore']);
     Route::post('work/{id}', [FrontendController::class, 'workUpdate']);
     Route::delete('work/{id}', [FrontendController::class, 'deleteWork']);
     Route::get('work/invoice/{id}', [WorkController::class, 'showInvoiceApi']);
