@@ -1,6 +1,6 @@
 <div class="header navbar navbar-expand-md navbar-light bg-white">
     <a class="logo" href="{{ route('homepage') }}">
-        <i class="fas fa-tools"></i> {{ $companyDetails->company_name }}
+      <img src="{{ asset('images/company/'.$companyDetails->company_logo)}}" alt="Logo" style="height: 40px; width: auto;">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

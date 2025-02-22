@@ -95,7 +95,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror" name="address_first_line" value="{{ old('address_first_line') }}" required autocomplete="address_first_line" placeholder="{{ __('Address First Line *') }}">
+                <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror" name="address_first_line" value="{{ old('address_first_line') }}" required autocomplete="address_first_line" placeholder="{{ __('Address First Line') }}">
                 @error('address_first_line')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -140,7 +140,7 @@
         <div class="row">
 
             <div class="col-6">
-                <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" name="postcode" value="{{ old('postcode') }}" required autocomplete="postcode" placeholder="{{ __('Post Code *') }}">
+                <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" name="postcode" value="{{ old('postcode') }}" autocomplete="postcode" placeholder="{{ __('Post Code') }}">
                 @error('postcode')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

@@ -11,6 +11,14 @@
         <a href="{{ route('homepage') }}#contact">
             Contact us
         </a>
+        |
+        <a href="{{ route('privacy') }}">
+            Privacy Policy
+        </a>
+        |
+        <a href="{{ route('terms') }}">
+            Terms & Conditions
+        </a>
     </p>
     <div class="social-icons">
         @if($companyDetails->facebook)

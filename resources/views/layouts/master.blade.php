@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 @php
-    $companyDetails = \App\Models\CompanyDetails::select('fav_icon', 'footer_content', 'company_name')->first();
+    $companyDetails = \App\Models\CompanyDetails::select('fav_icon', 'footer_content', 'company_name', 'company_logo')->first();
 @endphp
 
 <head>
