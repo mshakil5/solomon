@@ -19,7 +19,7 @@ class PassportAuthController extends Controller
             'name' => 'required|string|max:255',
             'surname' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|regex:/^\d{11}$/',
+            'phone' => 'nullable|regex:/^\d{11}$/',
             'address_first_line' => 'nullable|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
