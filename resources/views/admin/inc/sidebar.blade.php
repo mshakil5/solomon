@@ -137,6 +137,20 @@
         </a>
       </li>
 
+      <li class="nav-item">
+        <a href="{{ route('admin.aboutUs') }}" class="nav-link {{ (request()->is('admin/about-us*')) ? 'active' : '' }}">
+            <i class="nav-icon fas fa-info-circle"></i>
+            <p>About Us</p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+          <a href="{{ route('admin.homeFooter') }}" class="nav-link {{ (request()->is('admin/home-footer*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-home"></i>
+              <p>Hero Content</p>
+          </a>
+      </li>
+
       <li class="nav-item dropdown {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'menu-open' : '' }}">
           <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-th"></i>

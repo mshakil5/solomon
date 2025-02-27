@@ -124,6 +124,13 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     // company information
     Route::get('/company-details', [CompanyDetailsController::class, 'index'])->name('admin.companyDetail');
 
+    Route::get('/about-us', [CompanyDetailsController::class, 'aboutUs'])->name('admin.aboutUs');
+    Route::post('/about-us', [CompanyDetailsController::class, 'aboutUsUpdate'])->name('admin.aboutUs');
+
+    Route::get('/home-footer', [CompanyDetailsController::class, 'homeFooter'])->name('admin.homeFooter');
+    Route::post('/home-footer', [CompanyDetailsController::class, 'homeFooterUpdate'])->name('admin.homeFooter');
+    
+
     // Category crud
     Route::get('/category', [CategoryController::class, 'getCategory'])->name('allcategory');
     Route::post('/category', [CategoryController::class, 'categoryStore']);

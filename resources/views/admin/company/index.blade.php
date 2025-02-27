@@ -190,19 +190,19 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12">
+                {{-- <div class="col-sm-12">
                     <div class="form-group">
                     <label>About Us</label>
                         <textarea name="about_us" id="about_us" class="form-control @error('about_us') is-invalid @enderror summernote" cols="30" rows="3">{{$data->about_us}}</textarea>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-sm-12">
+                {{-- <div class="col-sm-12">
                     <div class="form-group">
                     <label>Hero Content</label>
                     <textarea name="footer_content" id="footer_content" class="form-control @error('footer_content') is-invalid @enderror summernote" cols="30" rows="3">{{$data->footer_content}}</textarea>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -361,7 +361,7 @@ $(document).ready(function () {
 
 
     $('#companyForm').submit(function(e){
-        console.log('submit2');
+        // console.log('submit2');
         e.preventDefault();
         var formData = new FormData(this);
         $.ajax({
@@ -375,7 +375,7 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function(data){
-                console.log(data);
+                // console.log(data);
                 $('html, body').animate({ scrollTop: 0 }, 'slow');
                 if(data.status == 'success'){
                     $('.successMessage').html(data.success);
@@ -390,6 +390,9 @@ $(document).ready(function () {
                         $('.errMessage').hide();
                     }, 3000);
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
             }
         });
     });

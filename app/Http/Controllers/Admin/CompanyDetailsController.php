@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CompanyDetails;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyDetailsController extends Controller
 {
@@ -40,8 +41,8 @@ class CompanyDetailsController extends Controller
             'opening_time' => 'nullable|string|max:10',
             'footer_link' => 'nullable|string|max:255',
             'currency' => 'nullable|string|max:10',
-            'about_us' => 'nullable|string',
-            'footer_content' => 'nullable|string',
+            // 'about_us' => 'nullable|string',
+            // 'footer_content' => 'nullable|string',
             'google_map' => 'nullable|string',
             'fav_icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -100,8 +101,8 @@ class CompanyDetailsController extends Controller
         $data->opening_time = $request->opening_time;
         $data->footer_link = $request->footer_link;
         $data->currency = $request->currency;
-        $data->about_us = $request->about_us;
-        $data->footer_content = $request->footer_content;
+        // $data->about_us = $request->about_us;
+        // $data->footer_content = $request->footer_content;
         $data->google_map = $request->google_map;
 
         $data->save();
@@ -113,6 +114,52 @@ class CompanyDetailsController extends Controller
             return response()->json(['error' => $error]);
         }
         
+    }
+
+    public function aboutUs()
+    {
+        $companyDetails = CompanyDetails::select('about_us')->first();
+        return view('admin.company.about_us', compact('companyDetails'));
+    }
+
+    public function aboutUsUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'about_us' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $companyDetails = CompanyDetails::first();
+        $companyDetails->about_us = $request->about_us;
+        $companyDetails->save();
+
+        return response()->json(['success' => 'About us updated successfully!']);
+    }
+
+    public function homeFooter()
+    {
+        $companyDetails = CompanyDetails::select('footer_content')->first();
+        return view('admin.company.home_footer', compact('companyDetails'));
+    }
+
+    public function homeFooterUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'footer_content' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $companyDetails = CompanyDetails::first();
+        $companyDetails->footer_content = $request->footer_content;
+        $companyDetails->save();
+
+        return response()->json(['success' => 'Home footer updated successfully!']);
     }
 
     
