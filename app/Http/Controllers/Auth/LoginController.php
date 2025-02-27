@@ -67,7 +67,7 @@ class LoginController extends Controller
                 return redirect()->route('homepage');
             }
         }else{
-            return redirect()->route('login')->with('error', 'Wrong credentials. Please try again.');
+            return redirect()->route('login')->withInput()->with('error', 'Wrong credentials. Please try again.');
         }
           
     }

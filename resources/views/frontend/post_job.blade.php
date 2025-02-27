@@ -60,41 +60,48 @@
                         @endauth
 
                         <div class="row mt-3">
-                            <div class="col-lg-4 col-12">
-                                <label for="name">Name <span class="text-danger">*</span></label>
-                                <input type="text" name="name" class="form-control" placeholder="Your Name" value="{{ auth()->user()->name ?? '' }}" required>
-                            </div>
-                            <div class="col-lg-4 col-12">
-                                <label for="email">Email <span class="text-danger">*</span></label>
-                                <input type="email" name="email" class="form-control" placeholder="you@example.com" value="{{ auth()->user()->email ?? '' }}" required>
-                            </div>
-                            <div class="col-lg-4 col-12">
-                                <label for="phone">Phone <span class="text-danger">*</span></label>
-                                <input type="number" name="phone" id="phone" class="form-control" required>
-                            </div>
+                          <div class="col-lg-4 col-12">
+                            <label for="name">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="Your Name" value="{{ old('name', auth()->user()->name ?? '') }}" required>
+                          </div>
+                        
+                          <div class="col-lg-4 col-12">
+                              <label for="email">Email <span class="text-danger">*</span></label>
+                              <input type="email" name="email" class="form-control" placeholder="you@example.com" value="{{ old('email', auth()->user()->email ?? '') }}" required>
+                          </div>
+                        
+                          <div class="col-lg-4 col-12">
+                              <label for="phone">Phone <span class="text-danger">*</span></label>
+                              <input type="number" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" required>
+                          </div>    
                         </div>
 
                         <div class="row mt-3">
-                            <div class="col-lg-4 col-12">
-                                <label for="address_first_line">Address First Line <span class="text-danger">*</span></label>
-                                <input type="text" name="address_first_line" id="address_first_line" class="form-control" required>
-                            </div>
-                            <div class="col-lg-4 col-12">
-                                <label for="address_second_line">Address Second Line</label>
-                                <input type="text" name="address_second_line" id="address_second_line" class="form-control">
-                            </div>
-                            <div class="col-lg-4 col-12">
-                                <label for="address_third_line">Address Third Line</label>
-                                <input type="text" name="address_third_line" id="address_third_line" class="form-control">
-                            </div>
-                            <div class="col-lg-6 col-12 mt-3">
-                                <label for="town">Town <span class="text-danger">*</span></label>
-                                <input type="text" name="town" id="town" class="form-control">
-                            </div>
-                            <div class="col-lg-6 col-12 mt-3">
-                                <label for="post_code">Post Code <span class="text-danger">*</span></label>
-                                <input type="text" name="post_code" id="post_code" class="form-control">
-                            </div>
+                          <div class="col-lg-4 col-12">
+                            <label for="address_first_line">Address First Line <span class="text-danger">*</span></label>
+                            <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ old('address_first_line') }}" required>
+                          </div>
+                        
+                          <div class="col-lg-4 col-12">
+                              <label for="address_second_line">Address Second Line</label>
+                              <input type="text" name="address_second_line" id="address_second_line" class="form-control" value="{{ old('address_second_line') }}">
+                          </div>
+                        
+                          <div class="col-lg-4 col-12">
+                              <label for="address_third_line">Address Third Line</label>
+                              <input type="text" name="address_third_line" id="address_third_line" class="form-control" value="{{ old('address_third_line') }}">
+                          </div>
+                        
+                          <div class="col-lg-6 col-12 mt-3">
+                              <label for="town">Town <span class="text-danger">*</span></label>
+                              <input type="text" name="town" id="town" class="form-control" value="{{ old('town') }}">
+                          </div>
+                          
+                          <div class="col-lg-6 col-12 mt-3">
+                              <label for="post_code">Post Code <span class="text-danger">*</span></label>
+                              <input type="text" name="post_code" id="post_code" class="form-control" value="{{ old('post_code') }}">
+                          </div>
+                        
                         </div>
 
                         <div id="imageContainer">
@@ -136,7 +143,7 @@
 </div>
 
 <style>
-        #loading {
+      #loading {
         position: fixed;
         display: flex;
         justify-content: center;
@@ -230,19 +237,4 @@
     });
 </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        IdealPostcodes.AddressFinder.watch({
-            apiKey: "ak_lt4ocv0eHLLo4meBRGHWK4HU0SBxa",
-            outputFields: {
-            line_1: "#address_first_line",
-            line_2: "#address_second_line",
-            line_3: "#address_third_line",
-            post_town: "#town",
-            postcode: "#post_code"
-            }
-        });
-    });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled@4"></script>
 @endsection
