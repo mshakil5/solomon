@@ -30,11 +30,11 @@ class JobController extends Controller
             'post_code' => ['required'],
             'category_id' => ['required'],
             'town' => ['nullable'],
-            'phone' => ['required', 'regex:/^\d{11}$/'],
+            'phone' => ['required', 'regex:/^\d{10}$/'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
             'descriptions.*' => ['required', 'string'],
         ], [
-            'phone.regex' => 'The phone number must be exactly 11 digits.',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
         ]);
                 
         // If validation fails, it will automatically redirect back with errors

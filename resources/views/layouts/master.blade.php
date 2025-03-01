@@ -64,7 +64,7 @@
             var elements = document.querySelectorAll('.google_translate_element');
             elements.forEach(function(element) {
                 new google.translate.TranslateElement({
-                    pageLanguage: 'en',
+                    pageLanguage: 'ro',
                     includedLanguages: 'en,ro',
                     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
                 }, element);

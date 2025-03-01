@@ -195,11 +195,11 @@ class WorkController extends Controller
             'address_first_line' => ['required'],
             'post_code' => ['required'],
             'town' => ['nullable'],
-            'phone' => ['required', 'regex:/^\d{11}$/'],
+            'phone' => ['required', 'regex:/^\d{10}$/'],
             'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
             'descriptions.*' => ['required', 'string'],
         ], [
-            'phone.regex' => 'The phone number must be exactly 11 digits.',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
         ]);
 
         if ($validator->fails()) {

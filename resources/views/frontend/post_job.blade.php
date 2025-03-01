@@ -39,7 +39,7 @@
                         <input type="hidden" name="category_id" value="{{ $category->id }}">
 
                         @auth
-                        <div class="row">
+                        <div class="row d-none">
                             <div class="col-lg-6 col-12" >
                                  <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="useRegisteredAddress">
@@ -105,12 +105,13 @@
                         </div>
 
                         <div id="imageContainer">
+                          <p class="mt-3" ><strong>Picture will help us to know the job</strong></p>
                             <div class="row image-row mt-3">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="image-upload">Upload Image/Video <span class="text-danger">*</span></label>
                                         <div class="input-group mb-3">
-                                            <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*" required>
+                                            <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*">
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +119,7 @@
                                     <div class="form-group">
                                         <label for="description">Description <span class="text-danger">*</span></label>
                                         <div class="input-group mb-3">
-                                            <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]" required></textarea>
+                                            <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]"></textarea>
                                         </div>
                                     </div>
                                 </div>

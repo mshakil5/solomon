@@ -27,7 +27,7 @@ class StaffController extends Controller
             'current_password' => 'nullable|string',
             'password' => 'nullable|string|min:6',
             'password_confirmation' => 'nullable|string|same:password',
-            'phone' => 'required|regex:/^\d{11}$/',
+            'phone' => 'required|regex:/^\d{10}$/',
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
@@ -35,7 +35,7 @@ class StaffController extends Controller
             'postcode' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
-            'phone.regex' => 'The phone number must be exactly 11 digits.',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
             'email.unique' => 'The email has already been taken.'
         ]);
 

@@ -298,7 +298,7 @@ class FrontendController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
@@ -351,7 +351,7 @@ class FrontendController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'city' => 'required|string|max:255',
             'address' => 'nullable|string|max:400',
             'details' => 'required|string|min:10|max:500',

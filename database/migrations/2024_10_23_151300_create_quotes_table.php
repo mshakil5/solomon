@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->longText('address')->nullable();
             $table->longText('details')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

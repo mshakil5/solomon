@@ -22,6 +22,7 @@
                   <th>City</th>
                   <th>Address</th>
                   <th>Quote</th>
+                  <th>Image/Video</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,27 @@
                     <td>{{$data->city}}</td>
                     <td>{!!$data->address!!}</td>
                     <td>{!! $data->details !!}</td>
+                    <td>
+                      @if (!empty($data->file))
+                          @php 
+                              $fileExt = pathinfo($data->file, PATHINFO_EXTENSION);
+                              $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'];
+                              $videoExtensions = ['mp4', 'mov', 'avi', 'mkv', 'wmv', 'flv'];
+                          @endphp
+                  
+                          @if (in_array($fileExt, $imageExtensions))
+                              <a href="{{ asset($data->file) }}" target="_blank">
+                                  <img src="{{ asset($data->file) }}" alt="Uploaded File" width="50">
+                              </a>
+                          @elseif (in_array($fileExt, $videoExtensions))
+                              <a href="{{ asset($data->file) }}" target="_blank">View Video</a>
+                          @else
+                              <a href="{{ asset($data->file) }}" target="_blank">Download File</a>
+                          @endif
+                      @else
+                          No file uploaded
+                      @endif
+                    </td> 
                   </tr>
                   @endforeach
                 

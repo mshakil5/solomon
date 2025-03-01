@@ -49,11 +49,11 @@ class FrontendController extends Controller
             'address_first_line' => ['required'],
             'post_code' => ['required'],
             'town' => ['nullable'],
-            'phone' => ['required', 'regex:/^\d{11}$/'],
-            'images.*' => ['required', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
-            'descriptions.*' => ['required', 'string'],
+            'phone' => ['required', 'regex:/^\d{10}$/'],
+            'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
+            'descriptions.*' => ['nullable', 'string'],
         ], [
-            'phone.regex' => 'The phone number must be exactly 11 digits.',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
         ]);
                 
         // If validation fails, it will automatically redirect back with errors
@@ -214,7 +214,7 @@ class FrontendController extends Controller
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
             'review' => 'required|max:1000'
         ], [
@@ -237,13 +237,29 @@ class FrontendController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'city' => 'required|string|max:255',
             'address' => 'nullable|string|max:400',
-            'details' => 'required|string|min:10|max:500'
+            'details' => 'required|string|min:10|max:500',
+            'file' => 'nullable|max:10240'
         ]);
-        
-        Quote::create($validatedData);
+
+        $quote = new Quote();
+        $quote->name = $validatedData['name'];
+        $quote->email = $validatedData['email'];
+        $quote->phone = $validatedData['phone'];
+        $quote->city = $validatedData['city'];
+        $quote->address = $validatedData['address'] ?? null;
+        $quote->details = $validatedData['details'];
+        $quote->save();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '_' . rand(100000, 999999) . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/quotes'), $filename);
+            $quote->file = '/images/quotes/' . $filename;
+            $quote->save();
+        }
 
         return redirect()->back()->with('success', 'Your quote request has been submitted successfully!');
     }
@@ -288,7 +304,7 @@ class FrontendController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:11|regex:/^[0-9]+$/',
+            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',

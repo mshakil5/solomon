@@ -55,7 +55,7 @@ class RegisterController extends Controller
         'name' => ['required', 'string', 'max:255'],
         'surname' => ['nullable', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'phone' => ['required', 'regex:/^\d{11}$/'],
+        'phone' => ['required', 'regex:/^\d{10}$/'],
         'address_first_line' => ['nullable', 'string', 'max:255'],
         'address_second_line' => ['nullable', 'string', 'max:255'],
         'address_third_line' => ['nullable', 'string', 'max:255'],
@@ -64,7 +64,7 @@ class RegisterController extends Controller
         'password' => ['required', 'string', 'min:6', 'confirmed'],
         ], 
         [
-            'phone.regex' => 'The phone number must be exactly 11 digits.',
+            'phone.regex' => 'The phone number must be exactly 10 digits.',
             'email.unique' => 'The email has already been taken.',
         ]);
     }

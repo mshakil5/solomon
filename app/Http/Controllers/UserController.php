@@ -25,7 +25,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'surname' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'phone' => ['required', 'string', 'regex:/^\d{11}$/'],
+            'phone' => ['required', 'string', 'regex:/^\d{10}$/'],
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
@@ -33,7 +33,7 @@ class UserController extends Controller
             'postcode' => 'required|string|max:255',
  
             ], [
-                'phone.regex' => 'The phone number must be exactly 11 digits.',
+                'phone.regex' => 'The phone number must be exactly 10 digits.',
                 'email.unique' => 'The email has already been taken.',
             ]);
 
