@@ -68,6 +68,8 @@ Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 Route::get('/join-us', [FrontendController::class, 'joinUs'])->name('join.us');
 Route::post('/join-us', [FrontendController::class, 'joinUsStore'])->name('join.us.store');
 
+Route::post('/callback-request', [FrontendController::class, 'callBack'])->name('callRequest');
+
 // payment
 Route::post('pay/{id}', [PaypalController::class, 'pay'])->name('payment');
 Route::get('success', [PaypalController::class, 'success']);

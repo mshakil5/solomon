@@ -87,93 +87,124 @@
 </div>
 
 <section class="contact-section section-padding" id="contact">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-12 ms-auto mb-5 mb-lg-0">
-                <div class="contact-info-wrap">
-                    <h2>Get in touch</h2>
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-4 col-12 ms-auto mb-5 mb-lg-0">
+              <div class="contact-info-wrap">
+                  <h2>Get in touch</h2>
 
-                    <div class="contact-info">
-                        <h5 class="mb-3">Contact Infomation</h5>
+                  <div class="contact-info">
+                      <h5 class="mb-3">Contact Information</h5>
 
-                        <p class="d-flex mt-3">
-                            <i class="bi-geo-alt me-2"></i>
-                            {!! $companyDetails->address1 !!}
-                        </p>
+                      <p class="d-flex mt-3">
+                          <i class="bi-geo-alt me-2"></i>
+                          {!! $companyDetails->address1 !!}
+                      </p>
 
-                        <p class="d-flex mb-2">
-                            <i class="bi-telephone me-2"></i>
+                      <p class="d-flex mb-2">
+                          <i class="bi-telephone me-2"></i>
+                          <a href="tel:{{ $companyDetails->phone1 }}">
+                              {{ $companyDetails->phone1 }}
+                          </a>
+                      </p>
 
-                            <a href="tel: 0203-994-7611">
-                                {{ $companyDetails->phone1 }}
-                            </a>
-                        </p>
+                      <p class="d-flex">
+                          <i class="bi-envelope me-2"></i>
+                          <a href="mailto:{{ $companyDetails->email1 }}">
+                              {{ $companyDetails->email1 }}
+                          </a>
+                      </p>
+                  </div>
+              </div>
 
-                        <p class="d-flex">
-                            <i class="bi-envelope me-2"></i>
+              <div class="contact-info-wrap mt-2">
+                <h2>Call Us</h2>
+            
+                <div class="contact-info">
+                    <h5 class="mb-3">Need Help? Call Us</h5>
 
-                            <a href="mailto:solomon@.co.uk">
-                            {{ $companyDetails->email1 }}
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5 col-12 mx-auto">
-                <form class="custom-form contact-form" id="contactForm" action="{{route('contactMessage')}}" method="post" role="form">
-                    @csrf
-                    <h2>Contact form</h2>
-
-                    @if ($message = Session::get('message'))
-                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                            <strong>{{ $message }}</strong>
-                            <button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    @if(session('callback_message'))
+                        <div class="alert alert-success">
+                            {{ session('callback_message') }}
                         </div>
                     @endif
-
                     
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Jack" value="{{ auth()->check() ? auth()->user()->name : '' }}" required>
-                            @error('firstname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                    @if(session('callback_error'))
+                        <div class="alert alert-danger">
+                            {{ session('callback_error') }}
                         </div>
+                    @endif     
+            
+                    @if(Auth::check())
+                        <form action="{{ route('callRequest') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+            
+                            <button type="submit" class="btn btn-primary w-100 mt-3">
+                                Request a Call
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-warning w-100 mt-3">
+                            Login to Call Us
+                        </a>
+                    @endif
+                </div>
+            </div>            
+          </div>
 
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Doe" value="{{ auth()->check() ? auth()->user()->surname : '' }}" required>
+          <div class="col-lg-5 col-12 mx-auto">
+              <form class="custom-form contact-form" id="contactForm" action="{{route('contactMessage')}}" method="post" role="form">
+                  @csrf
+                  <h2>Contact form</h2>
 
-                            @error('lastname')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                  @if ($message = Session::get('message'))
+                      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                          <strong>{{ $message }}</strong>
+                          <button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                  @endif
 
-                        </div>
-                    </div>
+                  <div class="row">
+                      <div class="col-lg-6 col-md-6 col-12">
+                          <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Jack" value="{{ old('firstname', auth()->check() ? auth()->user()->name : '') }}" required>
+                          @error('firstname')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                          @enderror
+                      </div>
 
-                    <input type="email" name="contactemail" id="contactemail" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jackdoe@gmail.com" value="{{ auth()->check() ? auth()->user()->email : '' }}" required>
-                    @error('contactemail')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                      <div class="col-lg-6 col-md-6 col-12">
+                          <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Doe" value="{{ old('lastname', auth()->check() ? auth()->user()->surname : '') }}" required>
+                          @error('lastname')
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
+                          @enderror
+                      </div>
+                  </div>
 
-                    <textarea name="contactmessage" rows="5" class="form-control" id="contactmessage" placeholder="How can we help you?" required></textarea>
+                  <input type="email" name="contactemail" id="contactemail" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jackdoe@gmail.com" value="{{ old('contactemail', auth()->check() ? auth()->user()->email : '') }}" required>
+                  @error('contactemail')
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                      </span>
+                  @enderror
 
-                    <button type="submit" class="form-control">Send Message</button>
+                  <textarea name="contactmessage" rows="5" class="form-control" id="contactmessage" placeholder="How can we help you?" required>{{ old('contactmessage') }}</textarea>
 
-                    <div id='loading' style='display:none ;'>
-                        <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                  <button type="submit" class="form-control">Send Message</button>
+
+                  <div id='loading' style='display:none ;'>
+                      <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
 </section>
 
 <style>
@@ -200,13 +231,15 @@
 
 @section('script')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('contactForm');
-        const loadingDiv = document.getElementById('loading');
+  document.addEventListener('DOMContentLoaded', function() {
+      const forms = document.querySelectorAll('form');
+      const loadingDiv = document.getElementById('loading');
 
-        form.addEventListener('submit', function() {
-            loadingDiv.style.display = 'flex';
-        });
-    });
+      forms.forEach(form => {
+          form.addEventListener('submit', function() {
+              loadingDiv.style.display = 'flex';
+          });
+      });
+  });
 </script>
 @endsection

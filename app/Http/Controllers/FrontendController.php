@@ -19,6 +19,9 @@ use App\Models\Review;
 use App\Models\Quote;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Career;
+use App\Models\CallBack;
+use Illuminate\Support\Carbon;
+use App\Mail\CallbackMail;
 
 class FrontendController extends Controller
 {
@@ -341,6 +344,31 @@ class FrontendController extends Controller
         $career->save();
 
         return redirect()->back()->with('success', 'Your data has been submitted successfully!');
+    }
+
+    public function callBack(Request $request)
+    {
+        $callback = new CallBack();
+        $callback->user_id = Auth::id();
+        $callback->date = Carbon::now()->format('Y-m-d');
+        $callback->save();
+
+        if ($callback->exists) {
+            $userData = [
+                'name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+                'phone' => Auth::user()->phone,
+                'subject' => 'Callback Request', 
+            ];
+
+            $adminEmail = Contact::where('id', 1)->value('email');
+
+            Mail::to($adminEmail)->send(new CallbackMail($userData));
+
+            return redirect()->back()->with('callback_message', 'Callback request sent successfully.');
+        } else {
+          return redirect()->back()->with('callback_error', 'Failed to request a callback.');
+      }
     }
 
 }
