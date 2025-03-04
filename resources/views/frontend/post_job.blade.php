@@ -72,52 +72,52 @@
                         
                           <div class="col-lg-4 col-12">
                               <label for="phone">Phone <span class="text-danger">*</span></label>
-                              <input type="number" name="phone" id="phone" class="form-control" value="{{ old('phone') }}" required>
+                              <input type="number" name="phone" id="phone" class="form-control" value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
                           </div>    
                         </div>
 
                         <div class="row mt-3">
                           <div class="col-lg-4 col-12">
                             <label for="address_first_line">Address First Line <span class="text-danger">*</span></label>
-                            <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ old('address_first_line') }}" required>
+                            <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ old('address_first_line', auth()->user()->address_first_line ?? '') }}" required>
                           </div>
                         
                           <div class="col-lg-4 col-12">
                               <label for="address_second_line">Address Second Line</label>
-                              <input type="text" name="address_second_line" id="address_second_line" class="form-control" value="{{ old('address_second_line') }}">
+                              <input type="text" name="address_second_line" id="address_second_line" class="form-control" value="{{ old('address_second_line', auth()->user()->address_second_line ?? '') }}">
                           </div>
                         
                           <div class="col-lg-4 col-12">
                               <label for="address_third_line">Address Third Line</label>
-                              <input type="text" name="address_third_line" id="address_third_line" class="form-control" value="{{ old('address_third_line') }}">
+                              <input type="text" name="address_third_line" id="address_third_line" class="form-control" value="{{ old('address_third_line', auth()->user()->address_third_line ?? '') }}">
                           </div>
                         
                           <div class="col-lg-6 col-12 mt-3">
                               <label for="town">Town <span class="text-danger">*</span></label>
-                              <input type="text" name="town" id="town" class="form-control" value="{{ old('town') }}">
+                              <input type="text" name="town" id="town" class="form-control" value="{{ old('town', auth()->user()->town ?? '') }}">
                           </div>
                           
                           <div class="col-lg-6 col-12 mt-3">
                               <label for="post_code">Post Code <span class="text-danger">*</span></label>
-                              <input type="text" name="post_code" id="post_code" class="form-control" value="{{ old('post_code') }}">
+                              <input type="text" name="post_code" id="post_code" class="form-control" value="{{ old('post_code', auth()->user()->postcode ?? '') }}">
                           </div>
                         
                         </div>
 
                         <div id="imageContainer">
-                          <p class="mt-3" ><strong>Picture will help us to know the job</strong></p>
                             <div class="row image-row mt-3">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="image-upload">Upload Image/Video <span class="text-danger">*</span></label>
+                                        <label for="image-upload">Upload Image/Video  </label>
                                         <div class="input-group mb-3">
                                             <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*">
                                         </div>
+                                        <span style="color: red">*<small>Picture will help us to know the job.</small></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-5">
                                     <div class="form-group">
-                                        <label for="description">Description <span class="text-danger">*</span></label>
+                                        <label for="description">Description </label>
                                         <div class="input-group mb-3">
                                             <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]"></textarea>
                                         </div>
@@ -129,8 +129,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="form-control btn btn-primary mt-3">Submit</button>
+                            </div>
+                        </div>
 
                         <div id='loading' style='display:none ;'>
                             <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
@@ -176,6 +179,7 @@
                         <div class="input-group mb-3">
                             <input type="file" class="form-control image-upload" name="images[]" accept="image/*,video/*" required>
                         </div>
+                        <span style="color: red">*<small>Picture will help us to know the job.</small></span>
                     </div>
                     <div class="col-lg-5 col-12">
                         <div class="input-group mb-3">

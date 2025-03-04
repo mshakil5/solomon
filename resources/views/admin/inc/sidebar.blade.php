@@ -111,6 +111,15 @@
       </li>
 
       <li class="nav-item">
+        <a href="{{route('allsubcategory')}}" class="nav-link {{ (request()->is('admin/sub-category*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Work Sub Categories
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{route('admin.location')}}" class="nav-link {{ (request()->is('admin/location*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>

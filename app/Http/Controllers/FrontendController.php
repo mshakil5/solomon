@@ -195,6 +195,7 @@ class FrontendController extends Controller
 
     public function showCategoryDetails($slug)
     {
+        
         $category = Category::where('slug', $slug)->select('id', 'name')->firstOrFail();
         $companyDetails = CompanyDetails::select('footer_content')->first();
         return view('frontend.post_job', compact('category', 'companyDetails'));
@@ -241,9 +242,12 @@ class FrontendController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
-            'city' => 'required|string|max:255',
-            'address' => 'nullable|string|max:400',
-            'details' => 'required|string|min:10|max:500',
+            'address_first_line' => 'required|string|max:255',
+            'address_second_line' => 'nullable|string|max:255',
+            'address_third_line' => 'nullable|string|max:255',
+            'town' => 'nullable|string|max:400',
+            'postcode' => 'nullable|string|max:400',
+            'details' => 'required|string|min:10|max:1500',
             'file' => 'nullable|max:10240'
         ]);
 
@@ -251,8 +255,11 @@ class FrontendController extends Controller
         $quote->name = $validatedData['name'];
         $quote->email = $validatedData['email'];
         $quote->phone = $validatedData['phone'];
-        $quote->city = $validatedData['city'];
-        $quote->address = $validatedData['address'] ?? null;
+        $quote->address_first_line = $validatedData['address_first_line'];
+        $quote->address_second_line = $validatedData['address_second_line'];
+        $quote->address_third_line = $validatedData['address_third_line'];
+        $quote->postcode = $validatedData['postcode'];
+        $quote->town = $validatedData['town'] ?? null;
         $quote->details = $validatedData['details'];
         $quote->save();
 

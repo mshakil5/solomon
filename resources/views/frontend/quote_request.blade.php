@@ -35,16 +35,29 @@
                         </div>
                     </div>
 
+                    
                     <div class="row mt-3">
                         <div class="col-lg-12 col-md-6 col-12">
-                            <input type="text" name="city" id="city" class="form-control" placeholder="Area/City *" value="{{ old('city') }}" required>
-                            <ul id="suggestions-list" class="list-unstyled mt-2"></ul>
+                            <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ old('address_first_line', auth()->user()->address_first_line ?? '') }}"  placeholder="Address Line 1 *" required>
                         </div>
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-12">
-                            <textarea name="address" id="details" class="form-control" rows="3" placeholder="Your Address">{{ old('address') }}</textarea>
+                        <div class="col-lg-6 col-md-6 col-6">
+                            <input type="text" name="address_second_line" id="address_second_line" class="form-control" placeholder="Address Line 2" value="{{ old('address_second_line', auth()->user()->address_second_line ?? '') }}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-6">
+                            <input type="text" name="address_third_line" id="address_third_line" class="form-control" placeholder="Address Line 3" value="{{ old('address_third_line', auth()->user()->address_third_line ?? '') }}">
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <input type="text" name="town" id="town" class="form-control" placeholder="Town *" required value="{{ old('town', auth()->user()->town ?? '') }}">
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <input type="text" name="postcode" id="postcode" class="form-control" placeholder="Postcode *" required value="{{ old('postcode', auth()->user()->postcode ?? '') }}">
                         </div>
                     </div>
 

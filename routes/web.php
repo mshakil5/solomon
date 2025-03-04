@@ -40,7 +40,7 @@ Route::post('/company-info-update', [CompanyDetailsController::class, 'updateCom
 Auth::routes();
 Route::get('/', [FrontendController::class, 'index'])->name('homepage');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/consumer', [FrontendController::class, 'aboutUs'])->name('aboutUs');
+Route::get('/about-us', [FrontendController::class, 'aboutUs'])->name('aboutUs');
 Route::post('/work', [FrontendController::class, 'workStore'])->name('work.store');
 // Route::get('/contact', [FrontendController::class, 'showContactForm'])->name('contact.show');
 Route::post('/contact-message', [FrontendController::class, 'contactMessage'])->name('contactMessage');
@@ -159,4 +159,9 @@ Route::group(['prefix' => 'staff/', 'middleware' => ['auth', 'is_manager']], fun
     Route::get('/upload/{id}', [WorkController::class, 'uploadPage'])->name('upload.page');
     Route::post('/upload-file', [WorkController::class, 'uploadFile'])->name('upload-file');
     Route::delete('/upload/{id}', [WorkController::class, 'deleteFile'])->name('upload.delete');
+
+
+    
+
+
 });

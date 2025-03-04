@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\WorkTimeController;
+use App\Http\Controllers\Admin\SubCategoryController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -138,6 +139,16 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/category-update', [CategoryController::class, 'categoryUpdate']);
     Route::get('/category/{id}', [CategoryController::class, 'categoryDelete']);
     Route::post('/category-status', [CategoryController::class, 'toggleStatus']);
+
+    
+    // Sub-Category crud
+    Route::get('/sub-category', [SubCategoryController::class, 'getSubCategory'])->name('allsubcategory');
+    Route::post('/sub-category', [SubCategoryController::class, 'subCategoryStore']);
+    Route::get('/sub-category/{id}/edit', [SubCategoryController::class, 'subCategoryEdit']);
+    Route::post('/sub-category-update', [SubCategoryController::class, 'subCategoryUpdate']);
+    Route::get('/sub-category/{id}', [SubCategoryController::class, 'subCategoryDelete']);
+
+    Route::post('/sub-category-status', [SubCategoryController::class, 'toggleStatus'])->name('subcat.status');
 
     //Feedbacks
     Route::get('/reviews', [FeedbackController::class, 'getReviews'])->name('allReviews');
