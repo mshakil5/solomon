@@ -43,7 +43,7 @@ class FrontendController extends Controller
 
     public function getCategory()
     {
-        $data = Category::orderby('id', 'DESC')->get();
+        $data = Category::with('subcategories')->orderby('id', 'DESC')->get();
         if ($data){
             $success['data'] = $data;
             return response()->json(['success' => true, 'response' => $success], 200);
@@ -127,7 +127,8 @@ class FrontendController extends Controller
         $data->town = $request->town;
         $data->post_code = $request->post_code;
         // $data->created_by = Auth::id();
-        $data->category_id = $catId;
+        $data->category_id = $catId ?? $request->category_id;
+        $data->sub_category_id = $request->sub_category_id;
         $data->save();
 
         if ($request->hasFile('images')) {
@@ -348,13 +349,18 @@ class FrontendController extends Controller
 
     public function requestQuoteStore(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
-            'city' => 'required|string|max:255',
-            'address' => 'nullable|string|max:400',
-            'details' => 'required|string|min:10|max:500',
+            'address_first_line' => 'required|string|max:255',
+            'address_second_line' => 'nullable|string|max:255',
+            'address_third_line' => 'nullable|string|max:255',
+            'town' => 'nullable|string|max:400',
+            'postcode' => 'nullable|string|max:400',
+            'details' => 'required|string|min:10|max:1500',
+            'file' => 'nullable|max:10240'
         ]);
 
         if ($validator->fails()) {
@@ -366,6 +372,14 @@ class FrontendController extends Controller
 
         $validatedData = $validator->validated();
         $quote = Quote::create($validatedData);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $filename = time() . '_' . rand(100000, 999999) . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/quotes'), $filename);
+            $quote->file = '/images/quotes/' . $filename;
+            $quote->save();
+        }
 
         return response()->json([
             'success' => true,

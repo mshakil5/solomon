@@ -13,4 +13,9 @@ class Category extends Model
     {
         return $this->hasMany(Work::class);
     }
+
+    public function subcategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
 }

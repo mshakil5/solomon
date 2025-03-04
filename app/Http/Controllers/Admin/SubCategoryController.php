@@ -39,7 +39,8 @@ class SubCategoryController extends Controller
         
         $data = new SubCategory;
         $data->name = $request->name;
-        $data->category_id = $request->category_id;
+        $data->name = $request->romanian_name;
+        $data->romanian_name = $request->category_id;
         $data->description = $request->description;
         $data->meta_title = $request->meta_title;
         $data->meta_description = $request->meta_description;
@@ -89,6 +90,7 @@ class SubCategoryController extends Controller
 
          $data = SubCategory::find($request->codeid);
          $data->name = $request->name;     
+         $data->romanian_name = $request->romanian_name;     
          $category = Category::find($request->category_id);
          $data->slug = Str::slug($request->name . '-' . $category->name);
          $data->category_id = $request->category_id;

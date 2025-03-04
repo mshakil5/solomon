@@ -37,6 +37,12 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
+                                        <label>Romanian Name</label>
+                                        <input type="text" class="form-control" id="romanian_name" name="romanian_name" placeholder="Enter category romanian name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
                                         <label>Description</label>
                                         <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter description"></textarea>
                                     </div>
@@ -86,6 +92,7 @@
                                 <tr>
                                     <th>Sl</th>
                                     <th>Name</th>
+                                    <th>Romaian Name</th>
                                     <th>Image</th>
                                     <!-- <th>Icon</th> -->
                                     <th>Status</th>
@@ -97,6 +104,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $data->name }}</td>
+                                    <td>{{ $data->romanian_name }}</td>
                                     <td>
                                         <img src="{{ asset('images/category/' . $data->image) }}" alt="{{ $data->name }}" style="width: 50px; height: 50px;">
                                     </td>
@@ -200,6 +208,7 @@
           if($(this).val() == 'Create') {
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
+              form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("description", $("#description").val());
               form_data.append("icon_class", $("#icon_class").val());
 
@@ -241,6 +250,7 @@
           if($(this).val() == 'Update'){
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
+              form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("description", $("#description").val());
               form_data.append("icon_class", $("#icon_class").val());
 

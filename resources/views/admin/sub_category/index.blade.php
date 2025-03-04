@@ -44,6 +44,12 @@
                                             <input type="text" class="form-control" id="name" name="name" placeholder="Enter subcategory name">
                                         </div>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Sub Category Romanian Name</label>
+                                            <input type="text" class="form-control" id="romanian_name" name="romanian_name" >
+                                        </div>
+                                    </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Sub Category Description</label>
@@ -96,6 +102,7 @@
                                         <th>Sl</th>
                                         <th>Category</th>
                                         <th>Sub Category</th>
+                                        <th>Sub Category (Romanian)</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -106,6 +113,7 @@
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $item->category->name ?? " " }}</td>
                                             <td>{{ $item->name ?? " " }}</td>
+                                            <td>{{ $item->romanian_name ?? " " }}</td>
                                             <td>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input toggle-status" id="customSwitchStatus{{ $item->id }}" data-id="{{ $item->id }}" {{ $item->status == 1 ? 'checked' : '' }}>
@@ -196,6 +204,7 @@
           if($(this).val() == 'Create') {
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
+              form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("category_id", $("#category_id").val());
               form_data.append("description", $("#description").val());
               form_data.append("meta_title", $("#meta_title").val());
@@ -235,6 +244,7 @@
           if($(this).val() == 'Update'){
               var form_data = new FormData();
               form_data.append("name", $("#name").val());
+              form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("category_id", $("#category_id").val());
               form_data.append("description", $("#description").val());
               form_data.append("meta_title", $("#meta_title").val());
