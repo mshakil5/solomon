@@ -3,6 +3,18 @@
 
 @include('frontend.inc.hero')
 
+<style>
+    .sub-category{
+        padding: 2px;
+        margin: 5px;
+    }
+
+    .sub-category:hover{
+        padding: 5px;
+        margin: 0px;
+    }
+</style>
+
 <div class="categories mt-5">
 
     <div class="container col-10">
@@ -17,17 +29,51 @@
         Browse our most popular categories
     </h2>
 
+
     <div class="category-container">
         <div class="row justify-content-center">
             <div class="category-list col-12">
                 <div class="row justify-content-center">
-                    @foreach ($categories as $category)
+
+                    
+
+
+                    @foreach ($categories as $key => $category)
                         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4 d-flex justify-content-center">
-                            <a href="{{ route('category.show', $category->slug) }}" class="custom-category text-center mx-auto">
-                                {{-- <i class=""></i> --}}
+                            
+                            @if ($category->subcategories->isEmpty())
+                            <a href="{{ route('category.show', ['category' => $category->slug]) }}" class="btn w-100 bg-white text-left p-2">
                                 <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
                                 <p class="custom-category-title">{{ $category->name }}</p>
                             </a>
+                            @else 
+                            <a type="button" class="custom-category text-center mx-auto" data-toggle="modal" data-target="#exampleModal{{ $key }}">
+                                <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
+                                <p class="custom-category-title">{{ $category->name }}</p>
+                            </a>
+                            @endif
+
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ $category->name }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @foreach ($category->subcategories as $subcat)
+                                        <div class="card sub-category">
+                                            <a href="{{ route('category.show', ['category' => $category->slug, 'subcategory' => $subcat->slug]) }}" class="btn w-100 bg-white text-left p-2">{{$subcat->name}}</a>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                 </div>

@@ -22,12 +22,14 @@ use App\Models\Career;
 use App\Models\CallBack;
 use Illuminate\Support\Carbon;
 use App\Mail\CallbackMail;
+use App\Models\SubCategory;
 
 class FrontendController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('status', 1)->select('name', 'slug', 'image', 'icon_class')->get();
+        $categories = Category::with('subcategories')->where('status', 1)->get();
+        
         $companyDetails = CompanyDetails::select('footer_content', 'company_name', 'address1', 'phone1', 'email1')->first();
         return view('frontend.index', compact('categories', 'companyDetails'));
     }
@@ -49,6 +51,7 @@ class FrontendController extends Controller
             'email' => ['required', 'email'],
             'name' => ['required', 'string'],
             'category_id' => ['required'],
+            'sub_category_id' => ['nullable'],
             'address_first_line' => ['required'],
             'post_code' => ['required'],
             'town' => ['nullable'],
@@ -66,6 +69,7 @@ class FrontendController extends Controller
         $data->date = date('Y-m-d');
         $data->name = $request->name;
         $data->category_id = $request->category_id;
+        $data->sub_category_id = $request->sub_category_id;
         $data->email = $request->email;
         $data->phone = $request->phone;
         $data->address_first_line = $request->address_first_line;
@@ -193,12 +197,20 @@ class FrontendController extends Controller
         }
     }
 
-    public function showCategoryDetails($slug)
+    public function showCategoryDetails($category, $subcategory = null)
     {
         
-        $category = Category::where('slug', $slug)->select('id', 'name')->firstOrFail();
+        $category = Category::where('slug', $category)->select('id', 'name')->firstOrFail();
+
+        if ($subcategory) {
+            $subcategory = SubCategory::where('slug', $subcategory)->select('id', 'name')->firstOrFail();
+        } else {
+            $subcategory = null;
+        }
+        
+
         $companyDetails = CompanyDetails::select('footer_content')->first();
-        return view('frontend.post_job', compact('category', 'companyDetails'));
+        return view('frontend.post_job', compact('category', 'companyDetails','subcategory'));
     }
 
     public function aboutUs()

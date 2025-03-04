@@ -39,8 +39,8 @@ class SubCategoryController extends Controller
         
         $data = new SubCategory;
         $data->name = $request->name;
-        $data->name = $request->romanian_name;
-        $data->romanian_name = $request->category_id;
+        $data->romanian_name = $request->romanian_name;
+        $data->category_id = $request->category_id;
         $data->description = $request->description;
         $data->meta_title = $request->meta_title;
         $data->meta_description = $request->meta_description;

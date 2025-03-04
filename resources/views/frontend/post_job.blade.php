@@ -37,6 +37,7 @@
                     <form id="categoryForm" action="{{route('work.store')}}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="category_id" value="{{ $category->id }}">
+                        <input type="hidden" name="sub_category_id" value="{{ $subcategory->id ?? '' }}">
 
                         @auth
                         <div class="row d-none">
