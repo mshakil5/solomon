@@ -271,6 +271,7 @@ class FrontendController extends Controller
             'phone' => 'required|string|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
             'review' => 'required|string|max:1000',
+            'work_id' => 'nullable|string|max:1000',
         ], [
             'review.max' => 'The review may not be greater than 1000 characters.',
         ]);
@@ -285,6 +286,7 @@ class FrontendController extends Controller
         $validatedData = $validator->validated();
         $validatedData['status'] = 0;
 
+        $validatedData['user_id'] = Auth::user()->id ?? null;
         $review = Review::create($validatedData);
 
         return response()->json([
