@@ -57,20 +57,25 @@
 
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"> <!-- Added modal-dialog-centered class for vertical centering -->
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">{{ $category->name }}</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            What type of {{ $category->name }} do you need?
+                                        </h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        @foreach ($category->subcategories as $subcat)
-                                        <div class="card sub-category">
-                                            <a href="{{ route('category.show', ['category' => $category->slug, 'subcategory' => $subcat->slug]) }}" class="btn w-100 bg-white text-left p-2">{{$subcat->name}}</a>
+                                        <div class="p-2">
+
+                                            @foreach ($category->subcategories as $subcat)
+                                            <div class="card sub-category">
+                                                <a href="{{ route('category.show', ['category' => $category->slug, 'subcategory' => $subcat->slug]) }}" class="btn w-100 bg-white text-left p-2">{{$subcat->name}}</a>
+                                            </div>
+                                            @endforeach
                                         </div>
-                                        @endforeach
                                     </div>
                                 </div>
                             </div>
