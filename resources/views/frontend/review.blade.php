@@ -21,17 +21,18 @@
                     
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-12">
-                            <input type="text" name="name" id="name" class="form-control" placeholder="Your Name *" value="{{ auth()->check() ? auth()->user()->name : '' }}" required>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Your Name *" value="{{ old('name', auth()->check() ? auth()->user()->name : '') }}" required>
                         </div>
                     </div>
 
                     <div class="row mt-3">
                         <div class="col-lg-6 col-md-6 col-12">
-                            <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email *" value="{{ auth()->check() ? auth()->user()->email : '' }}" required>
+                            <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email *"
+                          value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}" required>     
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-12">
-                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone Number *" value="{{ auth()->check() ? auth()->user()->phone : '' }}" required>
+                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone Number *" value="{{ old('phone', auth()->check() ? auth()->user()->phone : '') }}" required>   
                         </div>
                     </div>
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('cv')->nullable();
             $table->json('category_ids')->nullable();
+            $table->json('sub_category_ids')->nullable();
             $table->string('address_first_line')->nullable();
             $table->string('address_second_line')->nullable();
             $table->string('address_third_line')->nullable();

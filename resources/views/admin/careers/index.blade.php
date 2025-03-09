@@ -21,6 +21,7 @@
                   <th>Email/Phone</th>
                   <th>Address</th>
                   <th>Categories</th>
+                  <th>Sub Categories</th>
                   <th>CV</th>
                 </tr>
                 </thead>
@@ -46,6 +47,24 @@
                             @endif
                         @endforeach
                     </td>
+                    <td>
+                        @php
+                            $subCategoryIds = json_decode($data->sub_category_ids);
+                        @endphp
+                    
+                        @if ($subCategoryIds && is_array($subCategoryIds))
+                            @foreach ($subCategoryIds as $subCategoryId)
+                                @php
+                                    $subCategory = $subCategories->firstWhere('id', $subCategoryId);
+                                @endphp
+                    
+                                @if ($subCategory)
+                                    {{ $subCategory->name }} <br>
+                                @endif
+                            @endforeach
+                        @endif
+                    </td>
+                
                     <td><a class="btn btn-secondary" href="{{ asset($data->cv) }}" target="_blank">View CV</a></td>
                   </tr>
                   @endforeach

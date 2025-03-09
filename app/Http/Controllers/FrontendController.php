@@ -333,7 +333,11 @@ class FrontendController extends Controller
 
     public function joinUs()
     {
-        $categories = Category::where('status', 1)->select('id', 'name')->get();
+        $categories = Category::where('status', 1)
+          ->with(['subcategories' => function ($query) {
+            $query->select('id', 'name', 'category_id');
+          }])
+          ->select('id', 'name')->get();
         return view('frontend.join_us', compact('categories'));
     }
 
@@ -367,6 +371,7 @@ class FrontendController extends Controller
         $career->town = $request->town;
         $career->postcode = $request->postcode;
         $career->category_ids = json_encode($request->category_ids);
+        $career->sub_category_ids = json_encode($request->sub_category_ids);
         $career->created_by = auth()->id();
 
         if ($request->hasFile('cv')) {

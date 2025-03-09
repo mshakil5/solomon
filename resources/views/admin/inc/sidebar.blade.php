@@ -183,6 +183,13 @@
               </li>
           </ul>
       </li>
+
+      <li class="nav-item">
+          <a href="{{ route('admin.careers.index') }}" class="nav-link {{ (request()->is('admin/careers*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>Career</p>
+          </a>
+      </li>
   
     </ul>
   </nav>
