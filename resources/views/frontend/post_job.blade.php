@@ -60,6 +60,32 @@
                         </div>
                         @endauth
 
+                        <div id="imageContainer">
+                            <div class="row image-row mt-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="image-upload">Upload Image/Video  </label>
+                                        <div class="input-group mb-3">
+                                            <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*">
+                                        </div>
+                                        <span style="color: red">*<small>Picture will help us to know the job.</small></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label for="description">Description </label>
+                                        <div class="input-group mb-3">
+                                            <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-1 text-end">
+                                    <label for="add-row" class="form-label" style="visibility: hidden;">Action</label>
+                                    <button id="add-row" class="btn btn-primary add-row" type="button">+</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mt-3">
                           <div class="col-lg-4 col-12">
                             <label for="name">Name <span class="text-danger">*</span></label>
@@ -105,31 +131,42 @@
                         
                         </div>
 
-                        <div id="imageContainer">
-                            <div class="row image-row mt-3">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="image-upload">Upload Image/Video  </label>
-                                        <div class="input-group mb-3">
-                                            <input type="file" class="form-control image-upload" id="image-upload" name="images[]" accept="image/*,video/*">
-                                        </div>
-                                        <span style="color: red">*<small>Picture will help us to know the job.</small></span>
-                                    </div>
+                        <div class="form-group mt-3">
+                            <label for="use_different_address">
+                                <input type="checkbox" id="use_different_address" name="use_different_address" value="0" onchange="this.value = this.checked ? 1 : 0;"> Use Different Address
+                            </label>
+                        </div>
+
+                        <div id="different_address_section" style="display: none;">
+                            <h5>Different Address</h5>
+                            <div class="row">
+                                <div class="col-lg-4 col-12">
+                                    <label for="different_address_first_line">Address First Line <span class="text-danger">*</span></label>
+                                    <input type="text" name="different_address_first_line" id="different_address_first_line" class="form-control" value="{{ old('different_address_first_line') }}">
                                 </div>
-                                <div class="col-lg-5">
-                                    <div class="form-group">
-                                        <label for="description">Description </label>
-                                        <div class="input-group mb-3">
-                                            <textarea class="form-control description resizable" id="description" placeholder="Description" rows="3" name="descriptions[]"></textarea>
-                                        </div>
-                                    </div>
+                        
+                                <div class="col-lg-4 col-12">
+                                    <label for="different_address_second_line">Address Second Line</label>
+                                    <input type="text" name="different_address_second_line" id="different_address_second_line" class="form-control" value="{{ old('different_address_second_line') }}">
                                 </div>
-                                <div class="col-lg-1 text-end">
-                                    <label for="add-row" class="form-label" style="visibility: hidden;">Action</label>
-                                    <button id="add-row" class="btn btn-primary add-row" type="button">+</button>
+                        
+                                <div class="col-lg-4 col-12">
+                                    <label for="different_address_third_line">Address Third Line</label>
+                                    <input type="text" name="different_address_third_line" id="different_address_third_line" class="form-control" value="{{ old('different_address_third_line') }}">
+                                </div>
+                        
+                                <div class="col-lg-6 col-12 mt-3">
+                                    <label for="different_town">Town <span class="text-danger">*</span></label>
+                                    <input type="text" name="different_town" id="different_town" class="form-control" value="{{ old('different_town') }}">
+                                </div>
+                        
+                                <div class="col-lg-6 col-12 mt-3">
+                                    <label for="different_post_code">Post Code <span class="text-danger">*</span></label>
+                                    <input type="text" name="different_post_code" id="different_post_code" class="form-control" value="{{ old('different_post_code') }}">
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="form-control btn btn-primary mt-3">Submit</button>
@@ -171,6 +208,19 @@
 @endsection
 
 @section('script')
+
+<script>
+  $(document).ready(function() {
+      $('#use_different_address').change(function() {
+          if ($(this).is(':checked')) {
+              $('#different_address_section').show();
+          } else {
+              $('#different_address_section').hide();
+          }
+      });
+  });
+</script>
+
 <script>
     $(document).ready(function() {
         function addNewRow() {

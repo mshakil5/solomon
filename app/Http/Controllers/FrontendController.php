@@ -46,8 +46,8 @@ class FrontendController extends Controller
 
     public function workStore(Request $request)
     {
-        
-        $request->validate([
+
+          $rules = [
             'email' => ['required', 'email'],
             'name' => ['required', 'string'],
             'category_id' => ['required'],
@@ -58,11 +58,18 @@ class FrontendController extends Controller
             'phone' => ['required', 'regex:/^\d{10}$/'],
             'images.*' => ['nullable', 'mimes:jpeg,png,jpg,gif,svg,mp4,avi,mov,wmv', 'max:102400'],
             'descriptions.*' => ['nullable', 'string'],
-        ], [
+        ];
+
+        if ($request->use_different_address == 1) {
+            $rules['different_address_first_line'] = ['required'];
+            $rules['different_town'] = ['required'];
+            $rules['different_post_code'] = ['required'];
+        }
+        
+        $request->validate($rules, [
             'phone.regex' => 'The phone number must be exactly 10 digits.',
         ]);
                 
-        // If validation fails, it will automatically redirect back with errors
         $data = new Work();
         $data->user_id = auth()->id();
         $data->orderid = mt_rand(100000, 999999);
@@ -78,6 +85,15 @@ class FrontendController extends Controller
         $data->town = $request->town;
         $data->post_code = $request->post_code;
         $data->created_by = Auth::id();
+
+        if ($request->use_different_address == 1) {
+            $data->different_address_first_line = $request->different_address_first_line;
+            $data->different_address_second_line = $request->different_address_second_line;
+            $data->different_address_third_line = $request->different_address_third_line;
+            $data->different_town = $request->different_town;
+            $data->different_post_code = $request->different_post_code;
+        }
+
         $data->save();
 
         $categoryName = $data->category->name;

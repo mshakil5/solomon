@@ -25,6 +25,12 @@ return new class extends Migration
             $table->string('address_third_line')->nullable();
             $table->string('town')->nullable();
             $table->longText('post_code')->nullable();
+            $table->boolean('use_different_address')->default(0);
+            $table->string('different_address_first_line')->nullable();
+            $table->string('different_address_second_line')->nullable();
+            $table->string('different_address_third_line')->nullable();
+            $table->string('different_town')->nullable();
+            $table->string('different_post_code')->nullable();
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->foreign('assigned_to')->references('id')->on('users')->where('is_type', 2)->onDelete('cascade');
             $table->boolean('status')->default(1);
