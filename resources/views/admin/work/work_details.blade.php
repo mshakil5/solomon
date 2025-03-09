@@ -27,6 +27,14 @@
             <label for="name">Category:</label>
             <input type="text" class="form-control" id="name" name="name" value="{{ $work->category->name }}" disabled>
         </div>
+
+        @if($work->subCategory)
+        <div class="col-md-6">
+            <label for="name">Sub Category:</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ $work->subCategory->name }}" disabled>
+        </div>
+        @endif
+
         <div class="col-md-6">
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" value="{{ $work->name }}" disabled>
@@ -35,6 +43,11 @@
         <div class="col-md-6">
             <label for="email">Email:</label>
             <input type="email" class="form-control" id="email" name="email" value="{{ $work->email }}" disabled>
+        </div>
+
+        <div class="col-md-6">
+            <label for="phone">Phone:</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ $work->phone }}" disabled>
         </div>
 
         <div class="col-md-6">
@@ -62,15 +75,44 @@
             <input type="text" class="form-control" id="post_code" name="post_code" value="{{ $work->post_code }}" disabled>
         </div>
 
-        <div class="col-md-6">
-            <label for="phone">Phone:</label>
-            <input type="text" class="form-control" id="phone" name="phone" value="{{ $work->phone }}" disabled>
-        </div>
+        @if($work->use_different_address == 1)
 
+            <div class="col-md-12 mt-3">
+                <h4>Different Address Details</h4>
+            </div>
+
+          <div class="col-md-6">
+              <label for="different_address_first_line">Address First Line:</label>
+              <input type="text" class="form-control" id="different_address_first_line" name="different_address_first_line" value="{{ $work->different_address_first_line }}" disabled>
+          </div>
+
+          <div class="col-md-6">
+              <label for="different_address_second_line">Address Second Line:</label>
+              <input type="text" class="form-control" id="different_address_second_line" name="different_address_second_line" value="{{ $work->different_address_second_line }}" disabled>
+          </div>
+
+          <div class="col-md-6">
+              <label for="different_address_third_line">Address Third Line:</label>
+              <input type="text" class="form-control" id="different_address_third_line" name="different_address_third_line" value="{{ $work->different_address_third_line }}" disabled>
+          </div>
+
+          <div class="col-md-6">
+              <label for="different_town">Town:</label>
+              <input type="text" class="form-control" id="different_town" name="different_town" value="{{ $work->different_town }}" disabled>
+          </div>
+
+          <div class="col-md-6">
+              <label for="different_post_code">Post Code:</label>
+              <input type="text" class="form-control" id="different_post_code" name="different_post_code" value="{{ $work->different_post_code }}" disabled>
+          </div>
+        @endif
+
+        @if ($work->workAssign)
         <div class="col-md-6">
             <label for="phone">Staff:</label>
             <input type="text" class="form-control" id="staff" name="staff" value="@if ($work->workAssign) {{ $work->workAssign->staff->name }} {{ $work->workAssign->staff->surname }} @endif" disabled>
         </div>
+        @endif
     </div>
 
     @if ($work->workAssign)

@@ -34,74 +34,120 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-1">
-                                <label class="mb-1" for="name">Name:</label>
-                                <p>{{ $work->name }}</p>
+                                <label class="mb-1" for="name">Job Sub Category:</label>
+                                <p>{{ $work->subCategory->name ?? '' }}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
+                        <div class="col-md-6">
+                            <div class="form-group mb-1">
+                                <label class="mb-1" for="name">Name:</label>
+                                <p>{{ $work->name }}</p>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="email">Email:</label>
                                 <p>{{ $work->email }}</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="phone">Phone:</label>
                                 <p>{{ $work->phone }}</p>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
-                        <div class="col-md-6">
-                            <div class="form-group mb-1">
-                                <label class="mb-1" for="address_first_line">Address First Line:</label>
-                                <p>{{ $work->address_first_line }}</p>
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="address_second_line">Address Second Line:</label>
                                 <p>{{ $work->address_second_line }}</p>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="address_third_line">Address Third Line:</label>
                                 <p>{{ $work->address_third_line }}</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="town">Town:</label>
                                 <p>{{ $work->town }}</p>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
                         <div class="col-md-6">
                             <div class="form-group mb-1">
                                 <label class="mb-1" for="post_code">Post Code:</label>
                                 <p>{{ $work->post_code }}</p>
                             </div>
                         </div>
+                    </div>
+
+                    @if($work->use_different_address == 1)
+                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
+                        <div class="col-md-12 mt-3">
+                            <h4>Different Address Details</h4>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group mb-1">
-                                <label class="mb-1" for="transaction_id">Transaction ID:</label>
-                                @if ($work->transactions->isNotEmpty())
-                                    <p>{{ $work->transactions->first()->tranid }}</p>
-                                @else
-                                    <p>No transaction generated</p>
-                                @endif
+                                <label class="mb-1" for="different_address_first_line">Address First Line:</label>
+                                <p>{{ $work->different_address_first_line }}</p>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-1">
+                                <label class="mb-1" for="different_address_second_line">Address Second Line:</label>
+                                <p>{{ $work->different_address_second_line }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-1">
+                                <label class="mb-1" for="different_address_third_line">Address Third Line:</label>
+                                <p>{{ $work->different_address_third_line }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-1">
+                                <label class="mb-1" for="different_town">Town:</label>
+                                <p>{{ $work->different_town }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-1">
+                                <label class="mb-1" for="different_post_code">Post Code:</label>
+                                <p>{{ $work->different_post_code }}</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    @endif
+
+                    <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
+
+                      <div class="col-md-6">
+                          <div class="form-group mb-1">
+                              <label class="mb-1" for="transaction_id">Transaction ID:</label>
+                              @if ($work->transactions->isNotEmpty())
+                                  <p>{{ $work->transactions->first()->tranid }}</p>
+                              @else
+                                  <p>No transaction generated</p>
+                              @endif
+                          </div>
+                      </div>
+
                     </div>
                     @if ($work->workAssign)
                     <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">

@@ -49,6 +49,11 @@ class Work extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategory::class);
+    }
+
     public function workAssign()
     {
         return $this->hasOne(WorkAssign::class, 'work_id');

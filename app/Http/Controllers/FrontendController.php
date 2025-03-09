@@ -85,6 +85,7 @@ class FrontendController extends Controller
         $data->town = $request->town;
         $data->post_code = $request->post_code;
         $data->created_by = Auth::id();
+        $data->use_different_address = $request->use_different_address;
 
         if ($request->use_different_address == 1) {
             $data->different_address_first_line = $request->different_address_first_line;
