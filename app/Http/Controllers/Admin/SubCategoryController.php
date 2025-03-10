@@ -42,6 +42,7 @@ class SubCategoryController extends Controller
         $data->romanian_name = $request->romanian_name;
         $data->category_id = $request->category_id;
         $data->description = $request->description;
+        $data->romanian_description = $request->romanian_description;
         $data->meta_title = $request->meta_title;
         $data->meta_description = $request->meta_description;
         $data->meta_keywords = $request->meta_keywords;
@@ -95,6 +96,7 @@ class SubCategoryController extends Controller
          $data->slug = Str::slug($request->name . '-' . $category->name);
          $data->category_id = $request->category_id;
          $data->description = $request->description;
+         $data->romanian_description = $request->romanian_description;
          $data->meta_title = $request->meta_title;
          $data->meta_description = $request->meta_description;
          $data->meta_keywords = $request->meta_keywords;        

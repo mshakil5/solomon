@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('romanian_name')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->longText('description')->nullable();
+            $table->longText('romanian_description')->nullable();
             $table->string('image')->nullable();
             $table->string('icon_class')->nullable();
             $table->boolean('status')->default(1);

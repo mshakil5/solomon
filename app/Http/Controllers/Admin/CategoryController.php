@@ -33,6 +33,7 @@ class CategoryController extends Controller
         $data->name = $request->name;
         $data->romanian_name = $request->romanian_name;
         $data->description = $request->description;
+        $data->romanian_description = $request->romanian_description;
         $data->icon_class = $request->icon_class;
         $data->slug = Str::slug($request->name);
         $data->created_by = auth()->id(); 
@@ -81,6 +82,7 @@ class CategoryController extends Controller
          $brand->name = $request->name;
          $brand->romanian_name = $request->romanian_name;
          $brand->description = $request->description;   
+         $brand->romanian_description = $request->romanian_description;   
          $brand->icon_class = $request->icon_class;     
          $brand->updated_by = auth()->id();
 

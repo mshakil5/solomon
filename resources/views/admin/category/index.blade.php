@@ -47,6 +47,12 @@
                                         <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter description"></textarea>
                                     </div>
                                 </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Romanian Description</label>
+                                        <textarea class="form-control" id="romanian_description" name="romanian_description" rows="3" placeholder="Enter romanian description"></textarea>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -210,6 +216,7 @@
               form_data.append("name", $("#name").val());
               form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("description", $("#description").val());
+              form_data.append("romanian_description", $("#romanian_description").val());
               form_data.append("icon_class", $("#icon_class").val());
 
               var featureImgInput = document.getElementById('image');
@@ -252,6 +259,7 @@
               form_data.append("name", $("#name").val());
               form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("description", $("#description").val());
+              form_data.append("romanian_description", $("#romanian_description").val());
               form_data.append("icon_class", $("#icon_class").val());
 
               var featureImgInput = document.getElementById('image');
@@ -338,7 +346,9 @@
       //Delete  
       function populateForm(data){
           $("#name").val(data.name);
+          $("#romanian_name").val(data.romanian_name);
           $("#description").val(data.description);
+          $("#romanian_description").val(data.romanian_description);
           $("#icon_class").val(data.icon_class);
           $("#codeid").val(data.id);
           $("#addBtn").val('Update');

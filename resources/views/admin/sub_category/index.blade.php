@@ -58,6 +58,12 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
+                                            <label>Sub Category Romanian Description</label>
+                                            <textarea class="form-control" id="romanian_description" name="romanian_description" rows="3" placeholder="Enter description"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
                                             <label>Meta Title</label>
                                             <input type="text" class="form-control" id="meta_title" name="meta_title">
                                         </div>
@@ -207,6 +213,7 @@
               form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("category_id", $("#category_id").val());
               form_data.append("description", $("#description").val());
+              form_data.append("romanian_description", $("#romanian_description").val());
               form_data.append("meta_title", $("#meta_title").val());
               form_data.append("meta_description", $("#meta_description").val());
               form_data.append("meta_keywords", $("#meta_keywords").val());
@@ -247,6 +254,7 @@
               form_data.append("romanian_name", $("#romanian_name").val());
               form_data.append("category_id", $("#category_id").val());
               form_data.append("description", $("#description").val());
+              form_data.append("romanian_description", $("#romanian_description").val());
               form_data.append("meta_title", $("#meta_title").val());
               form_data.append("meta_description", $("#meta_description").val());
               form_data.append("meta_keywords", $("#meta_keywords").val());
@@ -330,7 +338,9 @@
       //Delete  
       function populateForm(data){
           $("#name").val(data.name);
+          $("#romanian_name").val(data.romanian_name);
           $("#description").val(data.description);
+          $("#romanian_description").val(data.romanian_description);
           $("#category_id").val(data.category_id);
           $("#meta_title").val(data.meta_title);
           $("#meta_description").val(data.meta_description);

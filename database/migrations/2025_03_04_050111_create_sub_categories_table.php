@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->string('name')->nullable();
+            $table->string('romanian_name')->nullable();
             $table->string('slug')->unique()->nullable();
             $table->longText('description')->nullable();
+            $table->longText('romanian_description')->nullable();
             $table->string('image')->nullable();
             $table->string('meta_title')->nullable();
             $table->longText('meta_description')->nullable();
