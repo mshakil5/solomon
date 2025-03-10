@@ -105,14 +105,22 @@ class FrontendController extends Controller
     
     public function workStore(Request $request, $catId = null)
     {
-        $request->validate([
+        $rules = [
             'email' => ['required', 'email'],
             'name' => ['required', 'string'],
             'address_first_line' => ['required'],
             'post_code' => ['required'],
             'town' => ['nullable'],
             'phone' => ['required']
-        ]);
+        ];
+
+        if ($request->use_different_address == 1) {
+            $rules['different_address_first_line'] = ['required'];
+            $rules['different_town'] = ['required'];
+            $rules['different_post_code'] = ['required'];
+        }
+
+        $request->validate($rules);
 
         $data = new Work();
         $data->user_id = auth()->id();
@@ -129,6 +137,16 @@ class FrontendController extends Controller
         // $data->created_by = Auth::id();
         $data->category_id = $catId ?? $request->category_id;
         $data->sub_category_id = $request->sub_category_id;
+        $data->use_different_address = $request->use_different_address;
+
+          if ($request->use_different_address == 1) {
+            $data->different_address_first_line = $request->different_address_first_line;
+            $data->different_address_second_line = $request->different_address_second_line;
+            $data->different_address_third_line = $request->different_address_third_line;
+            $data->different_town = $request->different_town;
+            $data->different_post_code = $request->different_post_code;
+        }
+
         $data->save();
 
         if ($request->hasFile('images')) {
