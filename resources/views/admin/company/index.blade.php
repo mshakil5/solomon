@@ -177,6 +177,16 @@
                     </div>
                 </div>
 
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select class="form-control @error('language') is-invalid @enderror" id="language" name="language">
+                            <option value="1" {{ $data->language == 1 ? 'selected' : '' }}>English</option>
+                            <option value="2" {{ $data->language == 2 ? 'selected' : '' }}>Romanian</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="col-sm-4 d-none">
                     <div class="form-group">
                     <label>Currency</label>

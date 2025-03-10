@@ -41,6 +41,7 @@ class CompanyDetailsController extends Controller
             'opening_time' => 'nullable|string|max:10',
             'footer_link' => 'nullable|string|max:255',
             'currency' => 'nullable|string|max:10',
+            'language' => 'nullable',
             // 'about_us' => 'nullable|string',
             // 'footer_content' => 'nullable|string',
             'google_map' => 'nullable|string',
@@ -101,6 +102,7 @@ class CompanyDetailsController extends Controller
         $data->opening_time = $request->opening_time;
         $data->footer_link = $request->footer_link;
         $data->currency = $request->currency;
+        $data->language = $request->language;
         // $data->about_us = $request->about_us;
         // $data->footer_content = $request->footer_content;
         $data->google_map = $request->google_map;

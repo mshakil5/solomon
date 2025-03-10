@@ -41,6 +41,7 @@ return new class extends Migration
             $table->longText('google_map')->nullable();
             $table->longText('about_us')->nullable();
             $table->string('currency',191)->nullable();
+            $table->integer('language')->default(1); //1 = English, 2 = Romanian
             $table->string('created_by',191)->nullable();
             $table->string('updated_by',191)->nullable();
             $table->timestamps();
