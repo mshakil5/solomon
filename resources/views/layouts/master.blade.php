@@ -59,7 +59,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         function googleTranslateElementInit() {
             var elements = document.querySelectorAll('.google_translate_element');
             elements.forEach(function(element) {
@@ -71,7 +71,7 @@
             });
         }
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> --}}
 
     @yield('script')
 

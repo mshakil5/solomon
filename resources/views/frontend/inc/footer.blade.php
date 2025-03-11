@@ -5,19 +5,19 @@
 <div class="footer">
     <p>
         <a href="{{ route('aboutUs') }}">
-            About us
+            {{ session('app_locale', 'ro') == 'ro' ? 'Despre noi' : 'About Us' }}
         </a>
         |
         <a href="{{ route('homepage') }}#contact">
-            Contact us
+            {{ session('app_locale', 'ro') == 'ro' ? 'Contactați-ne' : 'Contact Us' }}
         </a>
         |
         <a href="{{ route('privacy') }}">
-            Privacy Policy
+            {{ session('app_locale', 'ro') == 'ro' ? 'Politica de confidențialitate' : 'Privacy Policy' }}
         </a>
         |
         <a href="{{ route('terms') }}">
-            Terms & Conditions
+            {{ session('app_locale', 'ro') == 'ro' ? 'Termeni și condiții' : 'Terms & Conditions' }}
         </a>
     </p>
     <div class="social-icons">
@@ -52,6 +52,7 @@
         @endif
     </div>
     <p>
-        ©  {{ $companyDetails->company_name }} {{ date('Y') }} all rights reserved
+        © {{ $companyDetails->company_name }} {{ date('Y') }}
+        {{ session('app_locale', 'ro') == 'ro' ? 'Toate drepturile rezervate' : 'All rights reserved' }}
     </p>
 </div>

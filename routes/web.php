@@ -38,6 +38,12 @@ Route::get('/clear', function () {
 Route::post('/company-info-update', [CompanyDetailsController::class, 'updateCompanyInfo'])->name('admin.companyinfo');
 
 Auth::routes();
+
+Route::get('/change-language/{lang}', function ($lang) {
+    session(['app_locale' => $lang]);
+    return redirect()->back();
+  })->name('change.language');
+
 Route::get('/', [FrontendController::class, 'index'])->name('homepage');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/about-us', [FrontendController::class, 'aboutUs'])->name('aboutUs');

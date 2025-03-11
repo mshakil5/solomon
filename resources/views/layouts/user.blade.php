@@ -71,7 +71,7 @@
                 </li>
                 @endif
             </nav>
-            <div class="nav-item nav-link">
+            <div class="nav-item nav-link d-none">
                 <div class="google_translate_element"></div>
             </div>
             <nav class="navbar-nav d-md-none">
@@ -116,7 +116,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled@4"></script>
     <script src="{{ asset('assets/admin/lightbox/lightbox.min.js')}}"></script>
 
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         function googleTranslateElementInit() {
             var elements = document.querySelectorAll('.google_translate_element');
             elements.forEach(function(element) {
@@ -128,7 +128,7 @@
             });
         }
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> --}}
 
     @yield('script')
 

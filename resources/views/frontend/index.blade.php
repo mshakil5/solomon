@@ -26,42 +26,39 @@
     </div>
 
     <h2>
-        Browse our most popular categories
+        {{ session('app_locale', 'en') == 'ro' ? 'Răsfoiește cele mai populare categorii ale noastre' : 'Browse our most popular categories' }}
     </h2>
-
 
     <div class="category-container">
         <div class="row justify-content-center">
             <div class="category-list col-12">
                 <div class="row justify-content-center">
-
-                    
-
-
                     @foreach ($categories as $key => $category)
                         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-4 d-flex justify-content-center">
-                            
                             @if ($category->subcategories->isEmpty())
-                            <a href="{{ route('category.show', ['category' => $category->slug]) }}" class="btn w-100 bg-white text-left p-2">
-                                <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
-                                <p class="custom-category-title">{{ $category->name }}</p>
-                            </a>
+                                <a href="{{ route('category.show', ['category' => $category->slug]) }}" class="btn w-100 bg-white text-left p-2">
+                                    <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
+                                    <p class="custom-category-title">
+                                        {{ session('app_locale', 'en') == 'ro' ? $category->romanian_name : $category->name }}
+                                    </p>
+                                </a>
                             @else 
-                            <a type="button" class="custom-category text-center mx-auto" data-toggle="modal" data-target="#exampleModal{{ $key }}">
-                                <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
-                                <p class="custom-category-title">{{ $category->name }}</p>
-                            </a>
+                                <a type="button" class="custom-category text-center mx-auto" data-toggle="modal" data-target="#exampleModal{{ $key }}">
+                                    <img src="{{ asset('images/category/' . $category->image) }}" alt="{{ $category->name }}" class="custom-category-image">
+                                    <p class="custom-category-title">
+                                        {{ session('app_locale', 'en') == 'ro' ? $category->romanian_name : $category->name }}
+                                    </p>
+                                </a>
                             @endif
-
                         </div>
-
+                    
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal{{ $key }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"> <!-- Added modal-dialog-centered class for vertical centering -->
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">
-                                            What type of {{ $category->name }} do you need?
+                                            {{ session('app_locale', 'en') == 'ro' ? 'De ce tip de ' . $category->romanian_name . ' ai nevoie?' : 'What type of ' . $category->name . ' do you need?' }}
                                         </h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -69,18 +66,19 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="p-2">
-
                                             @foreach ($category->subcategories as $subcat)
-                                            <div class="card sub-category">
-                                                <a href="{{ route('category.show', ['category' => $category->slug, 'subcategory' => $subcat->slug]) }}" class="btn w-100 bg-white text-left p-2">{{$subcat->name}}</a>
-                                            </div>
+                                                <div class="card sub-category">
+                                                    <a href="{{ route('category.show', ['category' => $category->slug, 'subcategory' => $subcat->slug]) }}" class="btn w-100 bg-white text-left p-2">
+                                                        {{ session('app_locale', 'en') == 'ro' ? $subcat->romanian_name : $subcat->name }}
+                                                    </a>
+                                                </div>
                                             @endforeach
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        </div>        
+                    @endforeach    
                 </div>
             </div>
         </div>
@@ -112,29 +110,33 @@
 </div>
 
 <div class="info-section">
-    <div class="info-box">
-        <img alt="Leave a Review" src="{{ asset('frontend/images/review.jpg') }}"/>
-        <p>Have you completed a project recently? Let your tradesperson know how they did.</p>
-        <a href="{{ route('review') }}">Leave A Review</a>
-    </div>
-    <div class="info-box">
-        <img alt="Tradesperson Sign Up Image" height="200" src="{{ asset('frontend/images/join-with-us.jpg') }}"/>
-        <p>
-            Over 1 million homeowners visit our site looking for approved and quality tradespeople like you.
-        </p>
-        <a href="{{ route('join.us') }}">
-            Join Us
-        </a>
-    </div>
-    <div class="info-box">
-        <img alt="Request a Quote Image" height="200" src="{{ asset('frontend/images/Request-for-Quotation.jpg') }}"/>
-        <p>
-            Tell us what you're looking for and we'll pass your request on to three approved tradespeople.
-        </p>
-        <a href="{{ route('quote.form') }}">
-            Request A Quote
-        </a>
-    </div>
+  <div class="info-box">
+      <img alt="{{ session('app_locale', 'en') == 'ro' ? 'Lasă un Review' : 'Leave a Review' }}" src="{{ asset('frontend/images/review.jpg') }}"/>
+      <p>
+          {{ session('app_locale', 'en') == 'ro' ? 'Ai finalizat recent un proiect? Spune-i meșteșugarului cum s-a descurcat.' : 'Have you completed a project recently? Let your tradesperson know how they did.' }}
+      </p>
+      <a href="{{ route('review') }}">
+          {{ session('app_locale', 'en') == 'ro' ? 'Lasă un Review' : 'Leave A Review' }}
+      </a>
+  </div>
+  <div class="info-box">
+      <img alt="{{ session('app_locale', 'en') == 'ro' ? 'Înregistrează-te ca meșteșugar' : 'Tradesperson Sign Up Image' }}" height="200" src="{{ asset('frontend/images/join-with-us.jpg') }}"/>
+      <p>
+          {{ session('app_locale', 'en') == 'ro' ? 'Peste 1 milion de proprietari vizitează site-ul nostru căutând meșteșugari aprobați și de calitate, ca tine.' : 'Over 1 million homeowners visit our site looking for approved and quality tradespeople like you.' }}
+      </p>
+      <a href="{{ route('join.us') }}">
+          {{ session('app_locale', 'en') == 'ro' ? 'Alătură-te nouă' : 'Join Us' }}
+      </a>
+  </div>
+  <div class="info-box">
+      <img alt="{{ session('app_locale', 'en') == 'ro' ? 'Cere un Ofertă' : 'Request a Quote Image' }}" height="200" src="{{ asset('frontend/images/Request-for-Quotation.jpg') }}"/>
+      <p>
+          {{ session('app_locale', 'en') == 'ro' ? 'Spune-ne ce îți dorești și vom trimite cererea ta celor trei meșteșugari aprobați.' : 'Tell us what you\'re looking for and we\'ll pass your request on to three approved tradespeople.' }}
+      </p>
+      <a href="{{ route('quote.form') }}">
+          {{ session('app_locale', 'en') == 'ro' ? 'Cere o Ofertă' : 'Request A Quote' }}
+      </a>
+  </div>
 </div>
 
 <section class="contact-section section-padding" id="contact">
@@ -142,14 +144,14 @@
       <div class="row">
           <div class="col-lg-4 col-12 ms-auto mb-5 mb-lg-0">
               <div class="contact-info-wrap">
-                  <h2>Get in touch</h2>
+                  <h2>{{ session('app_locale', 'en') == 'ro' ? 'Contactează-ne' : 'Get in touch' }}</h2>
 
                   <div class="contact-info">
-                      <h5 class="mb-3">Contact Information</h5>
+                      <h5 class="mb-3">{{ session('app_locale', 'en') == 'ro' ? 'Informații de contact' : 'Contact Information' }}</h5>
 
                       <p class="d-flex mt-3">
                           <i class="bi-geo-alt me-2"></i>
-                          {!! $companyDetails->address1 !!}
+                          {!! session('app_locale', 'en') == 'ro' ? $companyDetails->address1 : $companyDetails->address1 !!}
                       </p>
 
                       <p class="d-flex mb-2">
@@ -169,10 +171,10 @@
               </div>
 
               <div class="contact-info-wrap mt-2">
-                <h2>Call Us</h2>
+                <h2>{{ session('app_locale', 'en') == 'ro' ? 'Sună-ne' : 'Call Us' }}</h2>
             
                 <div class="contact-info">
-                    <h5 class="mb-3">Need Help? Call Us</h5>
+                    <h5 class="mb-3">{{ session('app_locale', 'en') == 'ro' ? 'Ai nevoie de ajutor? Sună-ne' : 'Need Help? Call Us' }}</h5>
 
                     @if(session('callback_message'))
                         <div class="alert alert-success">
@@ -192,12 +194,12 @@
                             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
             
                             <button type="submit" class="btn btn-primary w-100 mt-3">
-                                Request a Call
+                                {{ session('app_locale', 'en') == 'ro' ? 'Solicită un apel' : 'Request a Call' }}
                             </button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-warning w-100 mt-3">
-                            Login to Call Us
+                            {{ session('app_locale', 'en') == 'ro' ? 'Autentifică-te pentru a ne suna' : 'Login to Call Us' }}
                         </a>
                     @endif
                 </div>
@@ -207,7 +209,7 @@
           <div class="col-lg-5 col-12 mx-auto">
               <form class="custom-form contact-form" id="contactForm" action="{{route('contactMessage')}}" method="post" role="form">
                   @csrf
-                  <h2>Contact form</h2>
+                  <h2>{{ session('app_locale', 'en') == 'ro' ? 'Formular de contact' : 'Contact form' }}</h2>
 
                   @if ($message = Session::get('message'))
                       <div class="alert alert-primary alert-dismissible fade show" role="alert">
@@ -220,7 +222,7 @@
 
                   <div class="row">
                       <div class="col-lg-6 col-md-6 col-12">
-                          <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Jack" value="{{ old('firstname', auth()->check() ? auth()->user()->name : '') }}" required>
+                          <input type="text" name="firstname" id="firstname" class="form-control" placeholder="{{ session('app_locale', 'en') == 'ro' ? 'Jack' : 'First Name' }}" value="{{ old('firstname', auth()->check() ? auth()->user()->name : '') }}" required>
                           @error('firstname')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>
@@ -229,7 +231,7 @@
                       </div>
 
                       <div class="col-lg-6 col-md-6 col-12">
-                          <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Doe" value="{{ old('lastname', auth()->check() ? auth()->user()->surname : '') }}" required>
+                          <input type="text" name="lastname" id="lastname" class="form-control" placeholder="{{ session('app_locale', 'en') == 'ro' ? 'Doe' : 'Last Name' }}" value="{{ old('lastname', auth()->check() ? auth()->user()->surname : '') }}" required>
                           @error('lastname')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>
@@ -238,16 +240,18 @@
                       </div>
                   </div>
 
-                  <input type="email" name="contactemail" id="contactemail" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jackdoe@gmail.com" value="{{ old('contactemail', auth()->check() ? auth()->user()->email : '') }}" required>
+                  <input type="email" name="contactemail" id="contactemail" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="{{ session('app_locale', 'en') == 'ro' ? 'Jackdoe@gmail.com' : 'Email Address' }}" value="{{ old('contactemail', auth()->check() ? auth()->user()->email : '') }}" required>
                   @error('contactemail')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
                       </span>
                   @enderror
 
-                  <textarea name="contactmessage" rows="5" class="form-control" id="contactmessage" placeholder="How can we help you?" required>{{ old('contactmessage') }}</textarea>
+                  <textarea name="contactmessage" rows="5" class="form-control" id="contactmessage" placeholder="{{ session('app_locale', 'en') == 'ro' ? 'Cum te putem ajuta?' : 'How can we help you?' }}" required>{{ old('contactmessage') }}</textarea>
 
-                  <button type="submit" class="form-control">Send Message</button>
+                  <button type="submit" class="form-control">
+                      {{ session('app_locale', 'en') == 'ro' ? 'Trimite mesajul' : 'Send Message' }}
+                  </button>
 
                   <div id='loading' style='display:none ;'>
                       <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
