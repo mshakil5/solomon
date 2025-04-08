@@ -19,17 +19,22 @@ Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
 
-Route::get('/consumer', [FrontendController::class, 'aboutUs']);
+Route::get('/about-us', [FrontendController::class, 'aboutUs']);
+Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy']);
 
 Route::get('/get-category', [FrontendController::class, 'getCategory']);
 Route::post('/review', [FrontendController::class, 'reviewStore']);
 Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
 Route::post('/request-quote', [FrontendController::class, 'requestQuoteStore']);
 Route::post('/contact-us', [FrontendController::class, 'contactUs']);
-Route::get('/about-us', [FrontendController::class, 'getInTouch']);
+Route::get('/get-in-touch', [FrontendController::class, 'getInTouch']);
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('request-password-reset', [PassportAuthController::class, 'requestPasswordReset']);
+    Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp']);
+    Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
+
     Route::put('password-change',[PassportAuthController::class, 'changePassword']);
     Route::post('logout',[PassportAuthController::class, 'logout']);
     Route::get('user-details', [UserController::class, 'index']);

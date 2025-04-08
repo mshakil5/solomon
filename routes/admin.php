@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\WorkTimeController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\SoftCodeController;
+use App\Http\Controllers\Admin\MasterController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -167,6 +169,20 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/questions/{id}/edit', [QuestionController::class, 'edit']);
     Route::post('/questions-update', [QuestionController::class, 'update']);
     Route::get('/questions/{id}', [QuestionController::class, 'delete']);
+
+    //SoftCode crud
+    Route::get('/soft-code', [SoftCodeController::class, 'index'])->name('allSoftCode');    
+    Route::post('/soft-code', [SoftCodeController::class, 'store']);
+    Route::get('/soft-code/{id}/edit', [SoftCodeController::class, 'edit']);
+    Route::post('/soft-code-update', [SoftCodeController::class, 'update']);
+    Route::get('/soft-code/{id}', [SoftCodeController::class, 'delete']);
+
+    //Master crud
+    Route::get('/master', [MasterController::class, 'index'])->name('allMaster');    
+    Route::post('/master', [MasterController::class, 'store']);
+    Route::get('/master/{id}/edit', [MasterController::class, 'edit']);
+    Route::post('/master-update', [MasterController::class, 'update']);
+    Route::get('/master/{id}', [MasterController::class, 'delete']);
 
 });
   
