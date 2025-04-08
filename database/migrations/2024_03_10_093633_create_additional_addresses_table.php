@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('town')->nullable();
             $table->string('post_code')->nullable();
             $table->boolean('status')->default(0);
+            $table->boolean('type')->default(1); 
             $table->timestamps();
         });
     }
