@@ -103,7 +103,7 @@
                     <td style="text-align: center">{{ $key + 1 }}</td>
                     <td style="text-align: center">
                       @if ($data->image != null)
-                        <img src="{{ asset('images/type/'.$data->image) }}" alt="Image" style="width: 50px; height: 50px;">
+                        <img src="{{ asset('images/service/'.$data->image) }}" alt="Image" style="width: 50px; height: 50px;">
                       @else
                         
                       @endif
@@ -168,8 +168,8 @@
       });
       //header for csrf-token is must in laravel
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-      var url = "{{URL::to('/admin/type')}}";
-      var upurl = "{{URL::to('/admin/type-update')}}";
+      var url = "{{URL::to('/admin/service')}}";
+      var upurl = "{{URL::to('/admin/service-update')}}";
       // console.log(url);
       $("#addBtn").click(function(){
       //   alert("#addBtn");
@@ -280,7 +280,7 @@
         $("#des_english").summernote('code', data.des_english);
         $("#des_romanian").summernote('code', data.des_romanian);
         if (data.image) {
-            var imageUrl = '/images/type/' + data.image;
+            var imageUrl = '/images/service/' + data.image;
             console.log(imageUrl);
             $("#meta_image_preview").attr("src", imageUrl).show();
         } else {
@@ -306,7 +306,7 @@
 
           $.ajax({
               type: "GET",
-              url: "{{ route('admin.type.status') }}",
+              url: "{{ route('admin.service.status') }}",
               data: {status: status, id: id},
               success: function(res) {
                 alert(res.message);

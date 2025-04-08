@@ -18,6 +18,8 @@ use App\Http\Controllers\WorkTimeController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\SoftCodeController;
 use App\Http\Controllers\Admin\MasterController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\TypeController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -183,6 +185,22 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/master/{id}/edit', [MasterController::class, 'edit']);
     Route::post('/master-update', [MasterController::class, 'update']);
     Route::get('/master/{id}', [MasterController::class, 'delete']);
+
+    //Type crud
+    Route::get('/type', [TypeController::class, 'index'])->name('alltypes');    
+    Route::post('/type', [TypeController::class, 'store']);
+    Route::get('/type/{id}/edit', [TypeController::class, 'edit']);
+    Route::post('/type-update', [TypeController::class, 'update']);
+    Route::get('/type/{id}', [TypeController::class, 'delete']);
+    Route::get('/type-status', [TypeController::class, 'toggleStatus'])->name('admin.type.status');
+
+    //Service crud
+    Route::get('/service', [ServiceController::class, 'index'])->name('allservices');    
+    Route::post('/service', [ServiceController::class, 'store']);
+    Route::get('/service/{id}/edit', [ServiceController::class, 'edit']);
+    Route::post('/service-update', [ServiceController::class, 'update']);
+    Route::get('/service/{id}', [ServiceController::class, 'delete']);
+    Route::get('/service-status', [ServiceController::class, 'toggleStatus'])->name('admin.service.status');
 
 });
   

@@ -101,12 +101,14 @@ class TypeController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $data = Type::find($id);
-        $oldImage = public_path('images/type/' . $data->image);
-        if (file_exists($oldImage)) {
-            unlink($oldImage);
+        if($data->image){
+          $oldImage = public_path('images/type/' . $data->image);
+          if (file_exists($oldImage)) {
+              unlink($oldImage);
+          }
         }
         if ($data->delete()) {
             $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Deleted successfully.</b></div>";

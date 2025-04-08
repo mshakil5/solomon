@@ -120,6 +120,24 @@
       </li>
 
       <li class="nav-item">
+        <a href="{{route('alltypes')}}" class="nav-link {{ (request()->is('admin/type*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Types
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{route('allservices')}}" class="nav-link {{ (request()->is('admin/type*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Services
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{route('admin.location')}}" class="nav-link {{ (request()->is('admin/location*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
