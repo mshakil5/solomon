@@ -21,9 +21,42 @@ use App\Models\Career;
 use App\Models\Category;
 use App\Models\Quote;
 use App\Models\CompanyDetails;
+use App\Models\Softcode;
+use App\Models\Master;
 
 class FrontendController extends Controller
 {
+
+    public function welcome()
+    {
+        $welcomeSoftCode = Softcode::where('name', 'welcome')->first();
+        if ($welcomeSoftCode) {
+            $welcome = Master::where('softcode_id', $welcomeSoftCode->id)->first();
+        } else {
+            $welcome = null;
+        }
+
+        if ($welcome) {
+      
+            return response()->json([
+              'success' => true,
+              'response' => [
+                  'name' => $welcome->name,
+                  'short_title' => $welcome->short_title,
+                  'short_description' => $welcome->short_description,
+                  'long_description' => $welcome->long_description,
+                  'image' => url('images/meta_image/' . $welcome->meta_image)
+              ]
+          ], 200);
+
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'No data found.'
+            ], 404);
+        }
+    }
+    
     public function checkPostCode(Request $request)
     {
 

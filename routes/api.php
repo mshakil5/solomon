@@ -31,6 +31,7 @@ Route::get('/get-in-touch', [FrontendController::class, 'getInTouch']);
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('welcome', [FrontendController::class, 'welcome']);
     Route::post('request-password-reset', [PassportAuthController::class, 'requestPasswordReset']);
     Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp']);
     Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
