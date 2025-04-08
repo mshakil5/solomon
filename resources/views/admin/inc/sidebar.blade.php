@@ -154,6 +154,13 @@
       </li>
 
       <li class="nav-item">
+          <a href="{{ route('admin.privacy-policy') }}" class="nav-link {{ (request()->is('admin/privacy-policy*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-shield-alt"></i>
+              <p>Privacy Policy</p>
+          </a>
+      </li>
+
+      <li class="nav-item">
           <a href="{{ route('admin.homeFooter') }}" class="nav-link {{ (request()->is('admin/home-footer*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-home"></i>
               <p>Hero Content</p>

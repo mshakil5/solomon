@@ -164,5 +164,28 @@ class CompanyDetailsController extends Controller
         return response()->json(['success' => 'Home footer updated successfully!']);
     }
 
+    public function privacyPolicy()
+    {
+        $companyDetails = CompanyDetails::select('privacy_policy')->first();
+        return view('admin.company.privacy', compact('companyDetails'));
+    }
+
+    public function privacyPolicyUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'privacy_policy' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $companyDetails = CompanyDetails::first();
+        $companyDetails->privacy_policy = $request->privacy_policy;
+        $companyDetails->save();
+
+        return response()->json(['success' => 'Privacy policy updated successfully!']);
+    }
+
     
 }

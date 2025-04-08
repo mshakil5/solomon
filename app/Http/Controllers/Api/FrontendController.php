@@ -416,6 +416,14 @@ class FrontendController extends Controller
         ], 200);
     }
 
+    public function privacyPolicy()
+    {
+        $privacyPolicy = CompanyDetails::select('privacy_policy')->first()->privacy_policy;
+        return response()->json([
+            'about_us' => $privacyPolicy
+        ], 200);
+    }
+
     public function contactUs(Request $request)
     {
         $request->validate([

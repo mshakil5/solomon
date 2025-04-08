@@ -128,6 +128,9 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/about-us', [CompanyDetailsController::class, 'aboutUs'])->name('admin.aboutUs');
     Route::post('/about-us', [CompanyDetailsController::class, 'aboutUsUpdate'])->name('admin.aboutUs');
 
+    Route::get('/privacy-policy', [CompanyDetailsController::class, 'privacyPolicy'])->name('admin.privacy-policy');
+    Route::post('/privacy-policy', [CompanyDetailsController::class, 'privacyPolicyUpdate'])->name('admin.privacy-policy');
+
     Route::get('/home-footer', [CompanyDetailsController::class, 'homeFooter'])->name('admin.homeFooter');
     Route::post('/home-footer', [CompanyDetailsController::class, 'homeFooterUpdate'])->name('admin.homeFooter');
     

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 
 
 class PassportAuthController extends Controller
@@ -118,6 +120,64 @@ class PassportAuthController extends Controller
                 'message' => 'Inactive user or User name not found.',
             ], 200);
         }
+    }
+
+    public function requestPasswordReset(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) return response()->json(['message' => 'User not found.'], 404);
+
+        $otp = rand(100000, 999999);
+        Cache::put('otp_' . $request->email, $otp, now()->addMinutes(10));
+
+        Mail::raw("Your OTP is: $otp", function ($msg) use ($request) {
+            $msg->to($request->email)->subject('Password Reset OTP');
+        });
+
+        return response()->json(['message' => 'OTP sent to your email. Please check your inbox. OTP will expire in 10 minutes.']);
+    }
+
+    public function verifyResetOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required|digits:6',
+        ]);
+
+        $cachedOtp = Cache::get('otp_' . $request->email);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            return response()->json(['message' => 'Invalid or expired OTP.'], 400);
+        }
+
+        Cache::put('otp_verified_' . $request->email, true, now()->addMinutes(10));
+
+        return response()->json(['message' => 'OTP verified. You can now reset your password.']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        if (!Cache::get('otp_verified_' . $request->email)) {
+            return response()->json(['message' => 'OTP not verified.'], 401);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) return response()->json(['message' => 'User not found.'], 404);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        Cache::forget('otp_' . $request->email);
+        Cache::forget('otp_verified_' . $request->email);
+
+        return response()->json(['message' => 'Password reset successful.']);
     }
 
 }
