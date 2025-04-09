@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Models\Type;
 
 class ServiceController extends Controller
 {
   public function index()
-  {
+  { 
+      $types = Type::where('status', 1)->latest()->get();
       $data = Service::orderBy('id', 'DESC')->get();
-      return view('admin.service.index', compact('data'));
+      return view('admin.service.index', compact('data', 'types'));
   }
 
   public function store(Request $request)
@@ -26,12 +28,27 @@ class ServiceController extends Controller
           return response()->json(['status'=> 303,'message'=>$message]);
           exit();
       }
+
+      if(empty($request->type_id)){
+          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Type \" field..!</b></div>";
+          return response()->json(['status'=> 303,'message'=>$message]);
+          exit();
+      }
+
+      if(empty($request->price)){
+          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Price \" field..!</b></div>";
+          return response()->json(['status'=> 303,'message'=>$message]);
+          exit();
+      }
       
       $data = new Service;
       $data->title_english = $request->title_english;
       $data->title_romanian = $request->title_romanian;
+      $data->type_id = $request->type_id;
       $data->des_english = $request->des_english;
       $data->des_romanian = $request->des_romanian;
+      $data->information = $request->information;
+      $data->price = $request->price;
 
       if ($request->hasFile('image')) {
           $image = $request->file('image');
@@ -53,7 +70,7 @@ class ServiceController extends Controller
       $where = [
           'id'=>$id
       ];
-      $info = Type::where($where)->get()->first();
+      $info = Service::where($where)->get()->first();
       return response()->json($info);
   }
 
@@ -69,6 +86,16 @@ class ServiceController extends Controller
           return response()->json(['status'=> 303,'message'=>$message]);
           exit();
       }
+      if(empty($request->type_id)){
+          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Type \" field..!</b></div>";
+          return response()->json(['status'=> 303,'message'=>$message]);
+          exit();
+      }
+      if(empty($request->price)){
+          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Price \" field..!</b></div>";
+          return response()->json(['status'=> 303,'message'=>$message]);
+          exit();
+      }
       if(empty($request->codeid)){
           $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Code ID \" field..!</b></div>";
           return response()->json(['status'=> 303,'message'=>$message]);
@@ -79,9 +106,12 @@ class ServiceController extends Controller
       $data = Service::find($request->codeid);
       $data->title_english = $request->title_english;
       $data->title_romanian = $request->title_romanian;
+      $data->type_id = $request->type_id;
       $data->des_english = $request->des_english;
       $data->des_romanian = $request->des_romanian;
-
+      $data->information = $request->information;
+      $data->price = $request->price;
+      
       if ($request->hasFile('image')) {
           $oldImage = public_path('images/service/' . $data->image);
           if (file_exists($oldImage)) {

@@ -15,7 +15,7 @@
 <section class="content" id="addThisFormContainer">
   <div class="container-fluid">
     <div class="row justify-content-md-center">
-      <div class="col-md-8">
+      <div class="col-md-10">
         <div class="card card-secondary border-theme border-2">
           <div class="card-header">
             <h3 class="card-title">Add new</h3>
@@ -26,31 +26,54 @@
               @csrf
               <input type="hidden" class="form-control" id="codeid" name="codeid">     
               <div class="row">
-                <div class="col-sm-6">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Type <span class="text-danger">*</span></label>
+                        <select class="form-control" id="type_id" name="type_id" required>
+                            <option value="">Select Type</option>
+                            @foreach($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->title_english }}( {{ $type->title_romanian }} )</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4">
                   <div class="form-group">
                     <label>Title English <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="title_english" name="title_english" placeholder="Enter title english">
                   </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-4">
                   <div class="form-group">
                     <label>Title Romanian <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="title_romanian" name="title_romanian" placeholder="Enter title romanian">
                   </div>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-4">
                   <div class="form-group">
                         <label>English Description</label>
                         <textarea class="form-control summernote" id="des_english" name="des_english" placeholder="Enter description"></textarea>
                     </div>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-4">
                   <div class="form-group">
                         <label>Romanian Description</label>
                         <textarea class="form-control summernote" id="des_romanian" name="des_romanian" placeholder="Enter description"></textarea>
                     </div>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-4">
+                  <div class="form-group">
+                        <label>Information</label>
+                        <textarea class="form-control summernote" id="information" name="information" placeholder="Enter description"></textarea>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="price" name="price" class="form-control" placeholder="Enter price" min="0">
+                    </div>
+                </div>
+                <div class="col-6">
                     <div class="form-group">
                         <label>Image</label>
                         <input type="file" id="image" name="image" class="form-control" onchange="previewMetaImage(event)" accept="image/*">
@@ -85,13 +108,19 @@
                 <tr>
                   <th style="text-align: center">Sl</th>
                   <th style="text-align: center">Image</th>
+                  <th style="text-align: center">Type</th>
+                  <th style="text-align: center">Price</th>
                   <th style="text-align: center">
-                    Title English <br>
-                    Title Romanian
+                    Title En
                   </th>
                   <th style="text-align: center">
-                    Description English <br>
-                    Description Romanian
+                    Title Ro
+                  </th>
+                  <th style="text-align: center">
+                    Description En
+                  </th>
+                  <th style="text-align: center">
+                    Description Ro
                   </th>
                   <th>Status </th>
                   <th style="text-align: center">Action</th>
@@ -107,9 +136,23 @@
                       @else
                         
                       @endif
+                    <td style="text-align: center">
+                      {{$data->type->title_english}} ({{$data->type->title_romanian}})
                     </td>
-                    <td style="text-align: center">{{$data->title_english}} <br> {{$data->title_romanian}}</td>
-                    <td style="text-align: center">{!! $data->des_english !!} <br> {!! $data->des_romanian !!}</td>
+                    <td style="text-align: center">
+                      {{$data->price}}
+                    </td>
+                    <td style="text-align: center">
+                      {{$data->title_english}}
+                    </td>
+                    <td style="text-align: center">
+                      {{$data->title_romanian}}
+                    </td>
+                    <td style="text-align: center">
+                      {!! $data->des_english !!} 
+                    </td>
+                    <td style="text-align: center">
+                       {!! $data->des_romanian !!}</td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input toggle-status" id="status{{ $data->id }}" data-id="{{ $data->id }}"
@@ -144,7 +187,12 @@
 
   $(document).ready(function() {
       $('.summernote').summernote({
-          height: 200, 
+          height: 200,
+          toolbar: [
+              ['style', ['bold', 'italic', 'underline']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['view', ['fullscreen', 'codeview']]
+          ],
       });
   });
 
@@ -177,9 +225,12 @@
               var form_data = new FormData();
               form_data.append("title_english", $("#title_english").val());
               form_data.append("title_romanian", $("#title_romanian").val());
+              form_data.append("type_id", $("#type_id").val());
               form_data.append("des_english", $("#des_english").summernote('code'));
               form_data.append("des_romanian", $("#des_romanian").summernote('code'));
+              form_data.append("information", $("#information").summernote('code'));
               form_data.append("image", $("#image")[0].files[0]);
+              form_data.append("price", $("#price").val());
               $.ajax({
                 url: url,
                 method: "POST",
@@ -205,14 +256,17 @@
               var form_data = new FormData();
               form_data.append("title_english", $("#title_english").val());
               form_data.append("title_romanian", $("#title_romanian").val());
+              form_data.append("type_id", $("#type_id").val());
               form_data.append("des_english", $("#des_english").summernote('code'));
               form_data.append("des_romanian", $("#des_romanian").summernote('code'));
+              form_data.append("information", $("#information").summernote('code'));
               form_data.append("image", $("#image")[0].files[0]);
+              form_data.append("price", $("#price").val());
               form_data.append("codeid", $("#codeid").val());
 
-              form_data.forEach((value, key) => {
-                  console.log(key + ':', value);
-              });
+              // form_data.forEach((value, key) => {
+              //     console.log(key + ':', value);
+              // });
 
               
               $.ajax({
@@ -277,11 +331,13 @@
       function populateForm(data){
         $("#title_english").val(data.title_english);
         $("#title_romanian").val(data.title_romanian);
+        $("#type_id").val(data.type_id);
         $("#des_english").summernote('code', data.des_english);
         $("#des_romanian").summernote('code', data.des_romanian);
+        $("#information").summernote('code', data.information);
+        $("#price").val(data.price);
         if (data.image) {
             var imageUrl = '/images/service/' + data.image;
-            console.log(imageUrl);
             $("#meta_image_preview").attr("src", imageUrl).show();
         } else {
             $("#meta_image_preview").attr("src", "").hide();
@@ -296,6 +352,7 @@
         $('#createThisForm')[0].reset();
         $("#des_english").summernote('code', '');
         $("#des_english").summernote('code', '');
+        $("#information").summernote('code', '');
         $('#meta_image_preview').attr('src', '#').hide();
         $("#addBtn").val('Create');
       }

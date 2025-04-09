@@ -129,7 +129,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="{{route('allservices')}}" class="nav-link {{ (request()->is('admin/type*')) ? 'active' : '' }}">
+        <a href="{{route('allservices')}}" class="nav-link {{ (request()->is('admin/service*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
             Services

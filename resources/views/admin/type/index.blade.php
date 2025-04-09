@@ -85,13 +85,15 @@
                 <tr>
                   <th style="text-align: center">Sl</th>
                   <th style="text-align: center">Image</th>
-                  <th style="text-align: center">
-                    Title English <br>
-                    Title Romanian
+                  <th style="text-align: center">Title En
+                  </th>
+                  <th style="text-align: center">Title Ro
                   </th>
                   <th style="text-align: center">
-                    Description English <br>
-                    Description Romanian
+                    Description En
+                  </th>
+                  <th style="text-align: center">
+                    Description Ro
                   </th>
                   <th>Status </th>
                   <th style="text-align: center">Action</th>
@@ -108,8 +110,11 @@
                         
                       @endif
                     </td>
-                    <td style="text-align: center">{{$data->title_english}} <br> {{$data->title_romanian}}</td>
-                    <td style="text-align: center">{!! $data->des_english !!} <br> {!! $data->des_romanian !!}</td>
+                    <td style="text-align: center">{{$data->title_english}}</td>
+                    <td style="text-align: center">{{$data->title_romanian}}</td>
+
+                    <td style="text-align: center">{!! $data->des_english !!}</td> 
+                    <td style="text-align: center">{!! $data->des_romanian !!}</td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input toggle-status" id="status{{ $data->id }}" data-id="{{ $data->id }}"
