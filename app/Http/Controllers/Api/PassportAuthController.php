@@ -83,8 +83,8 @@ class PassportAuthController extends Controller
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string|min:8',
-            'new_password' => 'required|string|min:8',
+            'current_password' => 'required|string|min:6',
+            'new_password' => 'required|string|min:6',
             'new_password_confirmation' => 'required|string|same:new_password',
         ]);
 
