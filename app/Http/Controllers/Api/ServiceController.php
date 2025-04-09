@@ -37,7 +37,7 @@ class ServiceController extends Controller
             'date' => 'required|date',
             'time' => 'required',
             'additional_address_id' => 'required|exists:additional_addresses,id',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'images.*' => 'nullable|file|max:10240',
         ]);
     
         $booking = ServiceBooking::create([
@@ -116,7 +116,7 @@ class ServiceController extends Controller
             'date' => 'required|date',
             'time' => 'required',
             'additional_address_id' => 'required|exists:additional_addresses,id',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'images.*' => 'nullable|file|max:10240',
         ]);
 
         $booking = ServiceBooking::where('id', $id)
