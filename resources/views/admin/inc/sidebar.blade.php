@@ -138,6 +138,13 @@
       </li>
 
       <li class="nav-item">
+          <a href="{{ route('allslider') }}" class="nav-link {{ (request()->is('admin/slider*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-sliders-h"></i>
+              <p>Slider</p>
+          </a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{route('admin.location')}}" class="nav-link {{ (request()->is('admin/location*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>

@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\SoftCodeController;
 use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TypeController;
+use App\Http\Controllers\Admin\SliderController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -201,6 +202,14 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/service-update', [ServiceController::class, 'update']);
     Route::get('/service/{id}', [ServiceController::class, 'delete']);
     Route::get('/service-status', [ServiceController::class, 'toggleStatus'])->name('admin.service.status');
+
+    // Slider crud
+    Route::get('/slider', [SliderController::class, 'getSlider'])->name('allslider');
+    Route::post('/slider', [SliderController::class, 'sliderStore']);
+    Route::get('/slider/{id}/edit', [SliderController::class, 'sliderEdit']);
+    Route::post('/slider-update', [SliderController::class, 'sliderUpdate']);
+    Route::get('/slider/{id}', [SliderController::class, 'sliderDelete']);
+
 
 });
   

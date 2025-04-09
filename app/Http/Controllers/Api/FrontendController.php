@@ -23,10 +23,10 @@ use App\Models\Quote;
 use App\Models\CompanyDetails;
 use App\Models\Softcode;
 use App\Models\Master;
+use App\Models\Slider;
 
 class FrontendController extends Controller
 {
-
     public function welcome()
     {
         $welcomeSoftCode = Softcode::where('name', 'welcome')->first();
@@ -56,6 +56,30 @@ class FrontendController extends Controller
             ], 404);
         }
     }
+
+    public function slider()
+    {
+        $slider = Slider::where('status', 1)->latest()->select('image')->get();
+    
+        if ($slider->isNotEmpty()) {
+            $slider = $slider->map(function ($item) {
+                $item->image = url('images/slider/' . $item->image);
+                return $item;
+            });
+    
+            return response()->json([
+                'success' => true,
+                'response' => [
+                    'slider' => $slider
+                ]
+            ], 200);
+        }
+    
+        return response()->json([
+            'success' => false,
+            'message' => 'No data found.'
+        ]);
+    }    
     
     public function checkPostCode(Request $request)
     {

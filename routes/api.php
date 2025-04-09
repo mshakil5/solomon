@@ -32,6 +32,7 @@ Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('welcome', [FrontendController::class, 'welcome']);
+    Route::get('slider', [FrontendController::class, 'slider']);
     Route::post('request-password-reset', [PassportAuthController::class, 'requestPasswordReset']);
     Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp']);
     Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
@@ -62,6 +63,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/work/{id}/review', [WorkController::class, 'showReviewForm']);
     Route::post('/work-review/store', [WorkController::class, 'storeReview']);
     Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply']);
+    
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
