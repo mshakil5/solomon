@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\ServiceBooking;
+use App\Models\ServiceBookingReview;
 
 class ServiceController extends Controller
 {
@@ -14,6 +15,13 @@ class ServiceController extends Controller
         $services = Service::with('type')
             ->where('status', 1)
             ->get();
+    
+        if ($services->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No services found.'
+            ], 404);
+        }
     
         return response()->json([
             'success' => true,
@@ -67,9 +75,36 @@ class ServiceController extends Controller
             ->latest()
             ->get();
 
+        if (!$bookings) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No bookings found.',
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'data' => $bookings
+        ], 200);
+    }
+
+    public function serviceBookingDetails($id)
+    {
+        $booking = ServiceBooking::with(['service.type', 'images', 'serviceReview'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+          if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Booking not found or unauthorized access.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $booking
         ], 200);
     }
 
@@ -87,6 +122,13 @@ class ServiceController extends Controller
         $booking = ServiceBooking::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
+
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Booking not found or unauthorized access.',
+            ], 404);
+        }
 
         $booking->update([
             'service_id' => $request->service_id,
@@ -128,6 +170,13 @@ class ServiceController extends Controller
         $booking = ServiceBooking::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
+        
+        if (!$booking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Booking not found or unauthorized access.',
+            ], 404);
+        }
 
         foreach ($booking->images as $img) {
             $imagePath = public_path('images/service/' . $img->image);
@@ -144,5 +193,42 @@ class ServiceController extends Controller
             'message' => 'Booking and images deleted successfully'
         ]);
     }
+
+    public function reviewStore(Request $request, $id)
+    {
+        $request->validate([
+            'review_star' => 'required|integer|min:1|max:5',
+        ]);
+        
+        $serviceBooking = ServiceBooking::find($id);
+        
+        if (!$serviceBooking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Service booking not found.',
+            ], 404);
+        }
+    
+        $existingReview = ServiceBookingReview::where('service_booking_id', $id)
+                                              ->first();
+    
+        if ($existingReview) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already reviewed this service booking.',
+            ], 400);
+        }
+    
+        $review = ServiceBookingReview::create([
+            'service_booking_id' => $id,
+            'review_star' => $request->review_star,
+        ]);
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Review submitted successfully.',
+            'data' => $review
+        ], 201);
+    }  
 
 }

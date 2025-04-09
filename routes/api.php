@@ -71,9 +71,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/service-bookings', [ServiceController::class, 'serviceBookingIndex']);
 
+    Route::get('/service-booking-details/{id}', [ServiceController::class, 'serviceBookingDetails']);
+
     Route::post('/service-booking-update/{id}', [ServiceController::class, 'serviceBookingUpdate']);
 
     Route::delete('/service-booking/{id}', [ServiceController::class, 'serviceBookingDelete']);
+
+    Route::post('/service-booking-review/{id}', [ServiceController::class, 'reviewStore']);
 
 });
 
