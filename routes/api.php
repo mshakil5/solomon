@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\PassportAuthController;
 use App\Http\Controllers\Api\PaypalController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\Api\WorkTimeController;
+use App\Http\Controllers\Api\ServiceController;
 
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
@@ -63,7 +64,17 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/work/{id}/review', [WorkController::class, 'showReviewForm']);
     Route::post('/work-review/store', [WorkController::class, 'storeReview']);
     Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply']);
+
+    Route::get('/services', [ServiceController::class, 'getServices']);
     
+    Route::post('/service-booking', [ServiceController::class, 'serviceBookingStore']);
+
+    Route::get('/service-bookings', [ServiceController::class, 'serviceBookingIndex']);
+
+    Route::post('/service-booking-update/{id}', [ServiceController::class, 'serviceBookingUpdate']);
+
+    Route::delete('/service-booking/{id}', [ServiceController::class, 'serviceBookingDelete']);
+
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
