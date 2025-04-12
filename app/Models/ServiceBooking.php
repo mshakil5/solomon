@@ -16,7 +16,7 @@ class ServiceBooking extends Model
         return $this->belongsTo(Service::class);
     }
 
-    public function images()
+    public function files()
     {
         return $this->hasMany(ServiceImage::class);
     }

@@ -37,7 +37,7 @@ class ServiceController extends Controller
             'date' => 'required|date',
             'time' => 'required',
             'additional_address_id' => 'required|exists:additional_addresses,id',
-            'images.*' => 'nullable|file|max:10240',
+            'files.*' => 'nullable|file|max:10240',
         ]);
     
         $booking = ServiceBooking::create([
@@ -49,14 +49,14 @@ class ServiceController extends Controller
             'time' => $request->time,
         ]);
     
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $storagePath = public_path('images/service');
-                $image->move($storagePath, $filename);
+                $file->move($storagePath, $filename);
     
-                $booking->images()->create([
-                    'image' => $filename
+                $booking->files()->create([
+                    'file' => $filename
                 ]);
             }
         }
@@ -64,13 +64,13 @@ class ServiceController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Booking created successfully',
-            'data' => $booking->load('images')
+            'data' => $booking->load('files')
         ]);
     }
 
     public function serviceBookingIndex()
     {
-        $bookings = ServiceBooking::with(['service.type', 'images'])
+        $bookings = ServiceBooking::with(['service.type', 'files'])
             ->where('user_id', auth()->id())
             ->latest()
             ->get();
@@ -90,7 +90,7 @@ class ServiceController extends Controller
 
     public function serviceBookingDetails($id)
     {
-        $booking = ServiceBooking::with(['service.type', 'images', 'serviceReview'])
+        $booking = ServiceBooking::with(['service.type', 'files', 'serviceReview'])
             ->where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
@@ -116,7 +116,7 @@ class ServiceController extends Controller
             'date' => 'required|date',
             'time' => 'required',
             'additional_address_id' => 'required|exists:additional_addresses,id',
-            'images.*' => 'nullable|file|max:10240',
+            'files.*' => 'nullable|file|max:10240',
         ]);
 
         $booking = ServiceBooking::where('id', $id)
@@ -138,22 +138,22 @@ class ServiceController extends Controller
             'time' => $request->time,
         ]);
 
-        if ($request->hasFile('images')) {
-            foreach ($booking->images as $img) {
-                $imagePath = public_path('images/service/' . $img->image);
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+        if ($request->hasFile('files')) {
+            foreach ($booking->files as $file) {
+                $filePath = public_path('images/service/' . $file->file);
+                if (file_exists($filePath)) {
+                    unlink($filePath);
                 }
-                $img->delete();
+                $file->delete();
             }
 
-            foreach ($request->file('images') as $image) {
-                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            foreach ($request->file('files') as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $storagePath = public_path('images/service');
-                $image->move($storagePath, $filename);
+                $file->move($storagePath, $filename);
 
-                $booking->images()->create([
-                    'image' => $filename
+                $booking->files()->create([
+                    'file' => $filename
                 ]);
             }
         }
@@ -178,12 +178,12 @@ class ServiceController extends Controller
             ], 404);
         }
 
-        foreach ($booking->images as $img) {
-            $imagePath = public_path('images/service/' . $img->image);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+        foreach ($booking->files as $file) {
+            $filePath = public_path('images/service/' . $file->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
-            $img->delete();
+            $file->delete();
         }
 
         $booking->delete();

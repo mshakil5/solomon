@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('service_booking_id')->nullable();
             $table->foreign('service_booking_id')->references('id')->on('service_bookings')->onDelete('cascade');
-            $table->string('image')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }
