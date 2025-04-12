@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\MasterController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TypeController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\MailContentTypeController;
+use App\Http\Controllers\Admin\MailContentController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -210,6 +212,19 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/slider-update', [SliderController::class, 'sliderUpdate']);
     Route::get('/slider/{id}', [SliderController::class, 'sliderDelete']);
 
+    //Mail Content
+    Route::get('/mail-content-type', [MailContentTypeController::class, 'index'])->name('admin.mail-content-type');
+    Route::post('/mail-content-type', [MailContentTypeController::class, 'store']);
+    Route::get('/mail-content-type/{id}/edit', [MailContentTypeController::class, 'edit']);
+    Route::post('/mail-content-type-update', [MailContentTypeController::class, 'update']);
+    Route::get('/mail-content-type/{id}', [MailContentTypeController::class, 'delete']);
+    Route::post('/mail-content-type-status', [MailContentTypeController::class, 'toggleStatus']);
+
+    // mail content
+    Route::get('/mail-content', [MailContentController::class, 'index'])->name('admin.mail-content');
+    Route::post('/mail-content', [MailContentController::class, 'store']);
+    Route::get('/mail-content/{id}/edit', [MailContentController::class, 'edit']);
+    Route::post('/mail-content-update', [MailContentController::class, 'update']);
 
 });
   

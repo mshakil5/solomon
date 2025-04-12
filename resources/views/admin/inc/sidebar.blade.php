@@ -90,6 +90,30 @@
         </a>
       </li>
 
+      <li class="nav-item dropdown {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-envelope"></i>
+              <p>
+                  Mail Content
+                  <i class="fas fa-angle-left right"></i>
+              </p>
+          </a>
+          <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('admin.mail-content-type') }}" class="nav-link {{ (request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Mail Content Type</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.mail-content') }}" class="nav-link {{ (request()->is('admin/mail-content*')  && !request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Mail Content</p>
+                  </a>
+              </li>
+          </ul>
+      </li>
+
      
 
       <li class="nav-item">
