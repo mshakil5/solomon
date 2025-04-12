@@ -15,21 +15,64 @@ use Illuminate\Support\Facades\Cache;
 class PassportAuthController extends Controller
 {
 
-    public function register(Request $request)
+    public function requestRegistrationToken(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'surname' => 'nullable|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'nullable|regex:/^\d{10}$/',
-            'password' => 'required|string|min:6|confirmed',
-        ], [
-            'phone.regex' => 'The phone number must be exactly 10 digits.',
-            'email.unique' => 'The email has already been taken.',
+        $request->validate(['email' => 'required|email']);
+
+        $existingUser  = User::where('email', $request->email)->first();
+        if ($existingUser ) {
+            return response()->json(['message' => 'This email is already registered.'], 409);
+        }
+
+        $otp = rand(100000, 999999);
+        Cache::put('registration_otp_' . $request->email, $otp, now()->addMinutes(10));
+
+        Mail::raw("Your OTP for registration is: $otp", function ($msg) use ($request) {
+            $msg->to($request->email)->subject('Registration OTP');
+        });
+
+        return response()->json(['message' => 'OTP sent to your email. Please check your inbox. OTP will expire in 10 minutes.']);
+    }
+
+    public function verifyRegistrationToken(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required|digits:6',
         ]);
 
+        $cachedOtp = Cache::get('registration_otp_' . $request->email);
+
+        if (!$cachedOtp || $cachedOtp != $request->otp) {
+            return response()->json(['message' => 'Invalid or expired OTP.'], 400);
+        }
+
+        Cache::put('registration_otp_verified_' . $request->email, true, now()->addMinutes(10));
+
+        return response()->json(['message' => 'OTP verified. You can now proceed to register.']);
+    }
+
+    public function register(Request $request)
+    {
+
+        if (!Cache::has('registration_otp_verified_' . $request->email)) {
+            return response()->json(['message' => 'OTP not verified. Please verify your OTP before registering.'], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'name' => 'required|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'phone' => 'nullable|regex:/^\d{11}$/',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+        
         if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed.', 'errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if (!Cache::has('registration_otp_verified_' . $request->email)) {
+            return response()->json(['message' => 'OTP not verified.'], 403);
         }
 
         $user = User::create([
@@ -40,10 +83,12 @@ class PassportAuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('AppName')->accessToken;
-        $userId = $user;
+        Cache::forget('registration_otp_' . $request->email);
+        Cache::forget('registration_otp_verified_' . $request->email);
 
-        return response()->json(['message' => 'Registration successful.', 'token' => $token, 'userId' => $userId], 200);
+        $token = $user->createToken('AppName')->accessToken;
+
+        return response()->json(['message' => 'Registration successful.', 'token' => $token, 'userId' => $user->id], 200);
     }
 
     public function login(Request $request)
