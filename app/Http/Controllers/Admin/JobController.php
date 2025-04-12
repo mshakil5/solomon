@@ -10,14 +10,16 @@ use Mail;
 use App\Models\WorkImage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
+use App\Models\Service;
+use App\Models\User;
 
 class JobController extends Controller
 {
     public function getjob()
     {
-        $data = Work::where('created_by', Auth::user()->id)->orderby('id','DESC')->get();
-        $categories = Category::where('status', 1)->get();
-        return view('admin.work.create', compact('data', 'categories'));
+        $users = User::with('additionalAddresses')->where('is_type', 0)->get();
+        $services = Service::where('status', 1)->get();
+        return view('admin.work.create', compact('users', 'services'));
     }
 
     public function jobStore(Request $request)

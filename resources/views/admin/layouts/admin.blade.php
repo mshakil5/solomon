@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="{{ asset('assets/admin/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/admin/lightbox/lightbox.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/admin/summernote/summernote-bs4.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('assets/admin/select2/select2.min.css')}}">
   
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -156,6 +157,7 @@
 <script src="{{ asset('assets/admin/lightbox/lightbox.min.js')}}"></script>
 <script src="{{ asset('assets/admin/js/sweetalert.min.js')}}"></script>
 <script src="{{ asset('assets/admin/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{ asset('assets/admin/select2/select2.min.js')}}"></script>
 
 <script>
   // page schroll top
@@ -166,6 +168,13 @@
           });
       }
 </script>
+
+<script>
+  $(document).ready(function() {
+    $('.select2').select2();
+  });
+</script>
+
 @yield('script')
 </body>
 </html>

@@ -2,9 +2,6 @@
 
 @section('content')
 
-
-
-<!-- Loader -->
 <div id='loading' style='display:none ;'>
     <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
 </div>
@@ -44,66 +41,43 @@
                 @endif
 
 
-                <form id="createThisForm"  action="{{route('job.store')}}" method="post" role="form" enctype="multipart/form-data">
+                <form id="createThisForm"  action="{{route('job.store')}}" method="post" role="form" enctype="multipart/form-data" class="d-none">
                   @csrf
 
-                  <div class="row">
-                    <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
                       <div class="form-group">
-                        <label>Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" id="name" class="form-control">
+                          <label for="service_id">Select Service <span class="text-danger">*</span></label>
+                          <select name="service_id" id="service_id" class="form-control select2">
+                              <option value="">Select Category</option>
+                              @foreach ($services as $service)
+                                  <option value="{{$service->id}}">{{$service->title_english}}</option>
+                              @endforeach
+                          </select>
                       </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
-                        <label for="email">Email <span class="text-danger">*</span></label>
-                        <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control">
-                      </div>
-                    </div>
                   </div>
-
-                  <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="phone">Phone <span class="text-danger">*</span></label>
-                            <input type="number" name="phone" id="phone" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="category_id">Select Category <span class="text-danger">*</span></label>
-                            <select name="category_id" id="category_id" class="form-control">
-                                <option value="">Select Category</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                  <div class="row">
-                    <div class="col-lg-4 col-12">
-                        <label for="address_first_line"> Address First Line <span class="text-danger">*</span></label>
-                        <input type="text" name="address_first_line" id="address_first_line" class="form-control" required>
-                    </div>
-                    <div class="col-lg-4 col-12">
-                        <label for="address_second_line"> Address Second Line</label>
-                        <input type="text" name="address_second_line" id="address_second_line" class="form-control" readonly>
-                    </div>
-                    <div class="col-lg-4 col-12">
-                        <label for="address_third_line"> Address Third Line</label>
-                        <input type="text" name="address_third_line" id="address_third_line" class="form-control" readonly>
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <label for="town"> Town</label>
-                        <input type="text" name="town" id="town" class="form-control">
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <label for="post_code">Post Code <span class="text-danger">*</span></label>
-                        <input type="text" name="post_code" id="post_code" class="form-control">
-                        <div class="perrmsg"></div>
-                    </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="user_id">Select User <span class="text-danger">*</span></label>
+                          <select name="user_id" id="user_id" class="form-control select2">
+                              <option value="">Select User</option>
+                              @foreach ($users as $user)
+                                  <option value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="user_id">Select Address <span class="text-danger">*</span></label>
+                          <select name="user_id" id="user_id" class="form-control select2">
+                              <option value="">Select Address</option>
+                              @foreach ($users as $user)
+                                  <option value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                  </div>
                 </div>
 
                 <div id="imageContainer">
@@ -126,7 +100,6 @@
                         </div>
                     </div>
                 </div>
-
 
 
                 <!-- /.card-body -->
@@ -172,22 +145,14 @@ $(function () {
     });
 });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@ideal-postcodes/address-finder-bundled@4"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        IdealPostcodes.AddressFinder.watch({
-            apiKey: "ak_lt4ocv0eHLLo4meBRGHWK4HU0SBxa",
-            outputFields: {
-            line_1: "#address_first_line",
-            line_2: "#address_second_line",
-            line_3: "#address_third_line",
-            post_town: "#town",
-            postcode: "#post_code"
-        }
-    });
-});
+  $(document).ready(function() {
+    $('.select2').select2();
+  });
 </script>
+  
+
 <!-- Loader start-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {

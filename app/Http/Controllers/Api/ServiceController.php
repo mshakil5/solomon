@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\ServiceBooking;
 use App\Models\ServiceBookingReview;
+use App\Models\Type;
 
 class ServiceController extends Controller
 {
@@ -26,6 +27,25 @@ class ServiceController extends Controller
         return response()->json([
             'success' => true,
             'data' => $services
+        ], 200);
+    }
+
+    public function getTypes()
+    {
+        $types = Type::with('services')
+            ->where('status', 1)
+            ->get();
+    
+        if ($types->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No types found.'
+            ], 404);
+        }
+    
+        return response()->json([
+            'success' => true,
+            'data' => $types
         ], 200);
     }
 

@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/work/review/{reviewId}/reply', [WorkController::class, 'storeReply']);
 
     Route::get('/services', [ServiceController::class, 'getServices']);
+
+    Route::get('/types', [ServiceController::class, 'getTypes']);
     
     Route::post('/service-booking', [ServiceController::class, 'serviceBookingStore']);
 
