@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use App\Models\MailContentType;
 
 
 class PassportAuthController extends Controller
@@ -27,9 +28,20 @@ class PassportAuthController extends Controller
         $otp = rand(100000, 999999);
         Cache::put('registration_otp_' . $request->email, $otp, now()->addMinutes(10));
 
-        Mail::raw("Your OTP for registration is: $otp", function ($msg) use ($request) {
-            $msg->to($request->email)->subject('Registration OTP');
-        });
+        $mailContentType = MailContentType::where('name', 'OTP')->first();
+        
+        if ($mailContentType && $mailContentType->mailContent) {
+          $mailContent = $mailContentType->mailContent;
+          $subject = $mailContent->subject ?? 'Registration OTP';
+          $body = str_replace('{otp}', $otp, $mailContent->content);
+          Mail::html($body, function ($msg) use ($request, $subject) {
+              $msg->to($request->email)->subject($subject);
+          });
+        } else {
+          Mail::raw("Your OTP for registration is: $otp", function ($msg) use ($request) {
+              $msg->to($request->email)->subject('Registration OTP');
+          });
+        }
 
         return response()->json(['message' => 'OTP sent to your email. Please check your inbox. OTP will expire in 10 minutes.']);
     }
@@ -160,19 +172,32 @@ class PassportAuthController extends Controller
     public function requestPasswordReset(Request $request)
     {
         $request->validate(['email' => 'required|email']);
-
+    
         $user = User::where('email', $request->email)->first();
-        if (!$user) return response()->json(['message' => 'User not found.'], 404);
-
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+    
         $otp = rand(100000, 999999);
         Cache::put('otp_' . $request->email, $otp, now()->addMinutes(10));
-
-        Mail::raw("Your OTP is: $otp", function ($msg) use ($request) {
-            $msg->to($request->email)->subject('Password Reset OTP');
-        });
-
+    
+        $mailContentType = MailContentType::where('name', 'OTP')->first();
+    
+        if ($mailContentType && $mailContentType->mailContent) {
+            $mailContent = $mailContentType->mailContent;
+            $subject = $mailContent->subject ?? 'Password Reset OTP';
+            $body = str_replace('{otp}', $otp, $mailContent->content);
+            Mail::html($body, function ($msg) use ($request, $subject) {
+                $msg->to($request->email)->subject($subject);
+            });
+        } else {
+            Mail::raw("Your OTP for password reset is: $otp", function ($msg) use ($request) {
+                $msg->to($request->email)->subject('Password Reset OTP');
+            });
+        }
+    
         return response()->json(['message' => 'OTP sent to your email. Please check your inbox. OTP will expire in 10 minutes.']);
-    }
+    }    
 
     public function verifyResetOtp(Request $request)
     {
