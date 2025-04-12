@@ -22,11 +22,6 @@ class PassportAuthController extends Controller
             'surname' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'nullable|regex:/^\d{10}$/',
-            'address_first_line' => 'nullable|string|max:255',
-            'address_second_line' => 'nullable|string|max:255',
-            'address_third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
-            'postcode' => 'nullable|string|max:255',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'phone.regex' => 'The phone number must be exactly 10 digits.',
@@ -43,11 +38,6 @@ class PassportAuthController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'address_first_line' => $request->address_first_line,
-            'address_second_line' => $request->address_second_line,
-            'address_third_line' => $request->address_third_line,
-            'town' => $request->town,
-            'postcode' => $request->postcode,
         ]);
 
         $token = $user->createToken('AppName')->accessToken;

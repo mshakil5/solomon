@@ -375,14 +375,15 @@ class FrontendController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'first_name' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
-            'address_first_line' => 'required|string|max:255',
+            'address_first_line' => 'nullable|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
-            'town' => 'required|string|max:255',
-            'postcode' => 'required|string|max:10',
-            'category_ids' => 'required|array',
+            'town' => 'nullable|string|max:255',
+            'postcode' => 'nullable|string|max:10',
+            'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
             'cv' => 'required|file|mimes:pdf,docx|max:3000',
         ]);
@@ -397,15 +398,17 @@ class FrontendController extends Controller
         $validatedData = $validator->validated();
 
         $career = new Career();
-        $career->name = $validatedData['name'];
-        $career->email = $validatedData['email'];
-        $career->phone = $validatedData['phone'];
-        $career->address_first_line = $validatedData['address_first_line'];
+        $career->name = $validatedData['name'] ?? null;
+        $career->first_name = $validatedData['first_name'] ?? null;
+        $career->email = $validatedData['email'] ?? null;
+        $career->phone = $validatedData['phone'] ?? null;
+        $career->address_first_line = $validatedData['address_first_line'] ?? null;
         $career->address_second_line = $validatedData['address_second_line'] ?? null;
         $career->address_third_line = $validatedData['address_third_line'] ?? null;
-        $career->town = $validatedData['town'];
-        $career->postcode = $validatedData['postcode'];
-        $career->category_ids = json_encode($validatedData['category_ids']);
+        $career->town = $validatedData['town'] ?? null;
+        $career->postcode = $validatedData['postcode'] ?? null; 
+        $career->note = $validatedData['note'] ?? null;
+        // $career->category_ids = json_encode($validatedData['category_ids']) ?? null;
         $career->created_by = auth()->id() ?? null;
 
         if ($request->hasFile('cv')) {
