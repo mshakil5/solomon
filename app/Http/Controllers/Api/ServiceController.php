@@ -198,7 +198,7 @@ class ServiceController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Booking updated successfully',
-            'data' => $booking->load('images')
+            'data' => $booking->load('files')
         ]);
     }
 
