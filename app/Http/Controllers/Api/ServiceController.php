@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\ServiceBooking;
 use App\Models\ServiceBookingReview;
 use App\Models\Type;
+use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
@@ -51,7 +52,7 @@ class ServiceController extends Controller
 
     public function serviceBookingStore(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
             'date' => 'required|date',
@@ -59,6 +60,14 @@ class ServiceController extends Controller
             'additional_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
     
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
@@ -130,7 +139,7 @@ class ServiceController extends Controller
 
     public function serviceBookingUpdate(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
             'date' => 'required|date',
@@ -138,7 +147,15 @@ class ServiceController extends Controller
             'additional_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
         ]);
-
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+  
         $booking = ServiceBooking::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
@@ -216,9 +233,17 @@ class ServiceController extends Controller
 
     public function reviewStore(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'review_star' => 'required|integer|min:1|max:5',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
         
         $serviceBooking = ServiceBooking::find($id);
         
