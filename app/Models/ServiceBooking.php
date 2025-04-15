@@ -20,4 +20,9 @@ class ServiceBooking extends Model
     {
         return $this->hasMany(ServiceImage::class);
     }
+
+    public function serviceReview()
+    {
+        return $this->hasOne(ServiceBookingReview::class);
+    }
 }
