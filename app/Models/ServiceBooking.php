@@ -25,4 +25,14 @@ class ServiceBooking extends Model
     {
         return $this->hasOne(ServiceBookingReview::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(AdditionalAddress::class, 'additional_address_id');
+    }
 }

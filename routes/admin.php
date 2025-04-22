@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\TypeController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\MailContentTypeController;
 use App\Http\Controllers\Admin\MailContentController;
+use App\Http\Controllers\Admin\ServiceBookingController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -51,6 +52,18 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/get-processing', [WorkController::class, 'processing'])->name('admin.processing');
     Route::get('/get-complete', [WorkController::class, 'complete'])->name('admin.complete');
     Route::get('/get-cancel', [WorkController::class, 'cancel'])->name('admin.cancel');
+
+    Route::get('/service-bookings', [ServiceBookingController::class, 'allServiceBooking'])->name('admin.service.bookings');
+
+    Route::get('/new-service-bookings', [ServiceBookingController::class, 'newServiceBooking'])->name('admin.service.bookings.new');
+
+    Route::get('/processing-service-bookings', [ServiceBookingController::class, 'processingServiceBooking'])->name('admin.service.bookings.processing');
+
+    Route::get('/completed-service-bookings', [ServiceBookingController::class, 'completedServiceBooking'])->name('admin.service.bookings.completed');
+
+    Route::get('/cancelled-service-bookings', [ServiceBookingController::class, 'cancelledServiceBooking'])->name('admin.service.bookings.cancelled');
+
+    Route::get('/change-booking-status', [ServiceBookingController::class, 'changeBookingStatus']);
 
     Route::post('/assign-staff', [WorkController::class, 'assignStaff'])->name('assign.staff');
 

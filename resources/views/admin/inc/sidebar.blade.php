@@ -16,7 +16,7 @@
         <a href="{{route('alladmin')}}" class="nav-link {{ (request()->is('admin/new-admin*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            Admin
+            Admins
           </p>
         </a>
       </li>
@@ -24,7 +24,7 @@
         <a href="{{route('allUser')}}" class="nav-link {{ (request()->is('admin/new-user*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            All User
+            Users
           </p>
         </a>
       </li>
@@ -33,12 +33,54 @@
         <a href="{{route('allStaff')}}" class="nav-link {{ (request()->is('admin/staff*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            All Staff
+            Staffs
           </p>
         </a>
       </li>
 
-      <li class="nav-item dropdown {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/job*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*')) ? 'menu-open' : '' }}">
+      <li class="nav-item dropdown {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                  Service Bookings
+                  <i class="fas fa-angle-left right"></i>
+              </p>
+          </a>
+          <ul class="nav nav-treeview">    
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings.new') }}" class="nav-link {{ (request()->is('admin/new-service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>New</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings.processing') }}" class="nav-link {{ (request()->is('admin/processing-service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>In Progress</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings.completed') }}" class="nav-link {{ (request()->is('admin/completed-service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Completed</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings.cancelled') }}" class="nav-link {{ (request()->is('admin/cancelled-service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Cancelled</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings') }}" class="nav-link {{ (request()->is('admin/service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All</p>
+                </a>
+              </li>
+          </ul>
+      </li>
+
+      <li class="nav-item dropdown d-none {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/job*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*')) ? 'menu-open' : '' }}">
         <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/get-new*') || request()->is('admin/get-processing*') || request()->is('admin/job*') || request()->is('admin/get-complete*') || request()->is('admin/get-cancel*') || Route::is('admin.work.review')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-th"></i>
               <p>

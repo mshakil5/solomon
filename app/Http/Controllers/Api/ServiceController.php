@@ -146,7 +146,7 @@ class ServiceController extends Controller
 
     public function serviceBookingDetails($id)
     {
-        $booking = ServiceBooking::with(['service.type', 'files', 'serviceReview'])
+        $booking = ServiceBooking::with(['service.type', 'files', 'serviceReview', 'user.additionalAddresses', 'address'])
             ->where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
