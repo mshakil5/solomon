@@ -20,8 +20,7 @@
                   <th>Name</th>
                   <th>Email/Phone</th>
                   <th>Address</th>
-                  <th>Categories</th>
-                  <th>Sub Categories</th>
+                  <th>Note</th>
                   <th>CV</th>
                 </tr>
                 </thead>
@@ -32,39 +31,7 @@
                     <td>{{$data->name}}</td>
                     <td>{{$data->email}} <br> {{$data->phone}}</td>
                     <td>{{$data->address_first_line}} <br> {{$data->address_second_line}} <br> {{$data->address_third_line}} <br> {{$data->town}} <br> {{$data->post_code}}</td>
-                    <td>
-                        @php
-                            $categoryIds = json_decode($data->category_ids);
-                        @endphp
-
-                        @foreach ($categoryIds as $categoryId)
-                            @php
-                                $category = $categories->firstWhere('id', $categoryId);
-                            @endphp
-
-                            @if ($category)
-                                {{ $category->name }} <br>
-                            @endif
-                        @endforeach
-                    </td>
-                    <td>
-                        @php
-                            $subCategoryIds = json_decode($data->sub_category_ids);
-                        @endphp
-                    
-                        @if ($subCategoryIds && is_array($subCategoryIds))
-                            @foreach ($subCategoryIds as $subCategoryId)
-                                @php
-                                    $subCategory = $subCategories->firstWhere('id', $subCategoryId);
-                                @endphp
-                    
-                                @if ($subCategory)
-                                    {{ $subCategory->name }} <br>
-                                @endif
-                            @endforeach
-                        @endif
-                    </td>
-                
+                    <td>{!! $data->note !!}</td>
                     <td><a class="btn btn-secondary" href="{{ asset($data->cv) }}" target="_blank">View CV</a></td>
                   </tr>
                   @endforeach

@@ -383,6 +383,7 @@ class FrontendController extends Controller
             'address_third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:255',
             'postcode' => 'nullable|string|max:10',
+            'note' => 'nullable',
             'category_ids' => 'nullable|array',
             'category_ids.*' => 'exists:categories,id',
             'cv' => 'required|file|mimes:pdf,docx|max:3000',
