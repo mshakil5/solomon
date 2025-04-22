@@ -172,6 +172,13 @@
 
                 <div class="col-sm-4">
                     <div class="form-group">
+                    <label>Closing Time</label>
+                    <input type="time" class="form-control @error('closing_time') is-invalid @enderror" id="closing_time" name="closing_time" value="{{$data->closing_time}}">
+                    </div>
+                </div>
+
+                <div class="col-sm-4 d-none">
+                    <div class="form-group">
                     <label>Footer Link</label>
                     <input type="text" class="form-control @error('footer_link') is-invalid @enderror" id="footer_link" name="footer_link" value="{{$data->footer_link}}">
                     </div>

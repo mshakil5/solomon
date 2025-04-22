@@ -9,6 +9,8 @@ use App\Models\ServiceBooking;
 use App\Models\ServiceBookingReview;
 use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
+use App\Models\CompanyDetails;
 
 class ServiceController extends Controller
 {
@@ -68,7 +70,30 @@ class ServiceController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
+        $now = now();
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $openingHour = $company?->opening_time ?? '10:00';
+        $closingHour = $company?->closing_time ?? '18:00';
+
+        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1; $fee = 400.00;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; $fee = 250.00;
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3; $fee = 300.00;
+        } else {
+            $type = 4; $fee = 0.00;
+        }
+
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
             'service_id' => $request->service_id,
@@ -76,6 +101,8 @@ class ServiceController extends Controller
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,
+            'additional_fee' => $fee,
+            'type' => $type
         ]);
     
         if ($request->hasFile('files')) {
@@ -155,6 +182,29 @@ class ServiceController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
+
+        $now = now();
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $openingHour = $company?->opening_time ?? '10:00';
+        $closingHour = $company?->closing_time ?? '18:00';
+
+        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1; $fee = 400.00;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; $fee = 250.00;
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3; $fee = 300.00;
+        } else {
+            $type = 4; $fee = 0.00;
+        }
   
         $booking = ServiceBooking::where('id', $id)
             ->where('user_id', auth()->id())
@@ -173,6 +223,8 @@ class ServiceController extends Controller
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,
+            'additional_fee' => $fee,
+            'type' => $type
         ]);
 
         if ($request->hasFile('files')) {

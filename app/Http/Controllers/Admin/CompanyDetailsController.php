@@ -100,6 +100,7 @@ class CompanyDetailsController extends Controller
         $data->google_appstore_link = $request->google_appstore_link;
         $data->google_play_link = $request->google_play_link;
         $data->opening_time = $request->opening_time;
+        $data->closing_time = $request->closing_time;
         $data->footer_link = $request->footer_link;
         $data->currency = $request->currency;
         $data->language = $request->language;

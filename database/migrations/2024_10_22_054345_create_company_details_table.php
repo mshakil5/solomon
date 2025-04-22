@@ -29,6 +29,7 @@ return new class extends Migration
             $table->longText('footer_content',191)->nullable();
             $table->string('footer_link',191)->nullable();
             $table->string('opening_time')->nullable();
+            $table->string('closing_time')->nullable();
             $table->string('header_content',191)->nullable();
             $table->string('google_play_link',191)->nullable();
             $table->string('google_appstore_link',191)->nullable();

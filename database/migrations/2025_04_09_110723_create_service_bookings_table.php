@@ -22,8 +22,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('date')->nullable();
             $table->time('time')->nullable();
+            $table->decimal('additional_fee', 10, 2)->nullable();
             $table->boolean('status')->default(1);
-            $table->boolean('type')->default(1);
+            $table->boolean('type')->default(1); // 1 ==emergency, 2 ==priortized, 3 ==outside working hours, 4 ==standard service
             $table->timestamps();
         });
     }
