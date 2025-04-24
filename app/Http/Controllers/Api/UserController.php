@@ -109,37 +109,53 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'first_line' => 'required|string|max:255',
             'second_line' => 'nullable|string|max:255',
             'third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:255',
             'post_code' => 'required|string|max:255',
         ]);
-
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 422,
+                'msg' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+    
         $address = new AdditionalAddress([
-            'first_line' => $validatedData['first_line'],
-            'second_line' => $validatedData['second_line'],
-            'third_line' => $validatedData['third_line'],
-            'town' => $validatedData['town'],
-            'post_code' => $validatedData['post_code'],
-            'user_id' => Auth::user()->id,
+            'first_line' => $request->first_line,
+            'second_line' => $request->second_line,
+            'third_line' => $request->third_line,
+            'town' => $request->town,
+            'post_code' => $request->post_code,
+            'user_id' => Auth::id(),
         ]);
-
+    
         $address->save();
-
-        return response()->json(['message' => 'Address created successfully!', 'address' => $address], 201);
-    }
+    
+        return response()->json([
+            'code' => 201,
+            'msg' => 'Address created successfully!',
+            'address' => $address
+        ], 201);
+    }    
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'first_line' => 'required|string|max:255',
             'second_line' => 'nullable|string|max:255',
             'third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:255',
-            'post_code' => 'nullable|string|max:255',
+            'post_code' => 'required|string|max:255',
         ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed.', 'errors' => $validator->errors()], 422);
+        }
 
         $address = AdditionalAddress::where('id', $id)->first();
         if (!$address) {
