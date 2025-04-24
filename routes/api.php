@@ -17,7 +17,6 @@ use App\Http\Controllers\Api\WorkTimeController;
 use App\Http\Controllers\Api\ServiceController;
 
 Route::post('/register/email', [PassportAuthController::class, 'requestRegistrationToken']);
-Route::post('/register/verify', [PassportAuthController::class, 'verifyRegistrationToken']);
 Route::post('/register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);

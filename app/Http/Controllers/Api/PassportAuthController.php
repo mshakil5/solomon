@@ -26,10 +26,10 @@ class PassportAuthController extends Controller
         }
 
         $otp = rand(100000, 999999);
-        Cache::put('registration_otp_' . $request->email, $otp, now()->addMinutes(10));
+        $cachedOtp = Cache::put('registration_otp_' . $request->email, $otp, now()->addMinutes(10));
 
         $mailContentType = MailContentType::where('name', 'OTP')->first();
-        
+        // dd($cachedOtp);
         if ($mailContentType && $mailContentType->mailContent) {
           $mailContent = $mailContentType->mailContent;
           $subject = $mailContent->subject ?? 'Registration OTP';
@@ -46,7 +46,7 @@ class PassportAuthController extends Controller
         return response()->json(['message' => 'OTP sent to your email. Please check your inbox. OTP will expire in 10 minutes.']);
     }
 
-    public function verifyRegistrationToken(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -59,23 +59,10 @@ class PassportAuthController extends Controller
             return response()->json(['message' => 'Invalid or expired OTP.'], 400);
         }
 
-        Cache::put('registration_otp_verified_' . $request->email, true, now()->addMinutes(10));
-
-        return response()->json(['message' => 'OTP verified. You can now proceed to register.']);
-    }
-
-    public function register(Request $request)
-    {
-
-        if (!Cache::has('registration_otp_verified_' . $request->email)) {
-            return response()->json(['message' => 'OTP not verified. Please verify your OTP before registering.'], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'name' => 'required|string|max:255',
             'surname' => 'nullable|string|max:255',
-            'phone' => 'nullable|regex:/^\d{11}$/',
             'password' => 'required|string|min:6|confirmed',
         ]);
         
@@ -83,20 +70,15 @@ class PassportAuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        if (!Cache::has('registration_otp_verified_' . $request->email)) {
-            return response()->json(['message' => 'OTP not verified.'], 403);
-        }
-
         $user = User::create([
             'name' => $request->name,
             'surname' => $request->surname,
             'email' => $request->email,
-            'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'email_verified_at' => now(),
         ]);
 
         Cache::forget('registration_otp_' . $request->email);
-        Cache::forget('registration_otp_verified_' . $request->email);
 
         $token = $user->createToken('AppName')->accessToken;
 
