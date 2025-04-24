@@ -18,7 +18,13 @@ class PassportAuthController extends Controller
 
     public function requestRegistrationToken(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $existingUser  = User::where('email', $request->email)->first();
         if ($existingUser ) {
@@ -29,7 +35,6 @@ class PassportAuthController extends Controller
         $cachedOtp = Cache::put('registration_otp_' . $request->email, $otp, now()->addMinutes(10));
 
         $mailContentType = MailContentType::where('name', 'OTP')->first();
-        // dd($cachedOtp);
         if ($mailContentType && $mailContentType->mailContent) {
           $mailContent = $mailContentType->mailContent;
           $subject = $mailContent->subject ?? 'Registration OTP';
@@ -48,10 +53,14 @@ class PassportAuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'otp' => 'required|digits:6',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $cachedOtp = Cache::get('registration_otp_' . $request->email);
 
