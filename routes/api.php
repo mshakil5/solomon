@@ -32,12 +32,13 @@ Route::post('/contact-us', [FrontendController::class, 'contactUs']);
 Route::get('/get-in-touch', [FrontendController::class, 'getInTouch']);
 Route::post('/check-post-code', [FrontendController::class, 'checkPostCode']);
 
+Route::post('request-password-reset', [PassportAuthController::class, 'requestPasswordReset']);
+Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp']);
+Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
+
 Route::group(['middleware' => ['auth:api']], function () {
   Route::get('welcome', [FrontendController::class, 'welcome']);
   Route::get('slider', [FrontendController::class, 'slider']);
-  Route::post('request-password-reset', [PassportAuthController::class, 'requestPasswordReset']);
-  Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp']);
-  Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
 
   Route::put('password-change', [PassportAuthController::class, 'changePassword']);
   Route::post('logout', [PassportAuthController::class, 'logout']);
