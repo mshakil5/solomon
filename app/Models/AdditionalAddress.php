@@ -10,14 +10,7 @@ class AdditionalAddress extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'first_line',
-        'second_line',
-        'third_line',
-        'town',
-        'post_code'
-    ];
+    protected $guarded = [];
 
     public function user()
     {

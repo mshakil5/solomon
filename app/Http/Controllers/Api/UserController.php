@@ -110,10 +110,15 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'first_line' => 'required|string|max:255',
-            'second_line' => 'nullable|string|max:255',
-            'third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'street_name' => 'required|string|max:255',
+            'street_number' => 'required|string|max:255',
+            'block' => 'nullable|string|max:255',
+            'entrance' => 'nullable|string|max:255',
+            'floor' => 'nullable|string|max:255',
+            'apartment' => 'nullable|string|max:255',
             'post_code' => 'required|string|max:255',
         ]);
     
@@ -126,10 +131,15 @@ class UserController extends Controller
         }
     
         $address = new AdditionalAddress([
-            'first_line' => $request->first_line,
-            'second_line' => $request->second_line,
-            'third_line' => $request->third_line,
-            'town' => $request->town,
+            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'phone' => $request->phone,
+            'street_name' => $request->street_name,
+            'street_number' => $request->street_number,
+            'block' => $request->block,
+            'entrance' => $request->entrance,
+            'floor' => $request->floor,
+            'apartment' => $request->apartment,
             'post_code' => $request->post_code,
             'user_id' => Auth::id(),
         ]);
@@ -146,10 +156,15 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'first_line' => 'required|string|max:255',
-            'second_line' => 'nullable|string|max:255',
-            'third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'street_name' => 'required|string|max:255',
+            'street_number' => 'required|string|max:255',
+            'block' => 'nullable|string|max:255',
+            'entrance' => 'nullable|string|max:255',
+            'floor' => 'nullable|string|max:255',
+            'apartment' => 'nullable|string|max:255',
             'post_code' => 'required|string|max:255',
         ]);
     

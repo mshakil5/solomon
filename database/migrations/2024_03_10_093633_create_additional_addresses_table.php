@@ -15,6 +15,16 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('name')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('district')->nullable();
+            $table->string('street_name')->nullable();
+            $table->string('street_number')->nullable();
+            $table->string('block')->nullable();
+            $table->string('entrance')->nullable();
+            $table->string('floor')->nullable();
+            $table->string('apartment')->nullable();
             $table->string('first_line')->nullable();
             $table->string('second_line')->nullable();
             $table->string('third_line')->nullable();
