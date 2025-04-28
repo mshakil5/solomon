@@ -15,7 +15,7 @@ class UserController extends Controller
     
     public function index()
     {
-        $data = User::where('id', Auth::user()->id)->first();
+        $data = User::with(['primaryAddress', 'primaryBillingAddress'])->where('id', Auth::user()->id)->first();
         $success['data'] = $data;
         return response()->json(['success'=>true,'response'=> $success], 200);
     }
@@ -62,14 +62,9 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
             'phone' => 'required|regex:/^\d{10}$/',
-            'address_first_line' => 'required|string|max:255',
-            'address_second_line' => 'nullable|string|max:255',
-            'address_third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
-            'postcode' => 'nullable|string|max:255',
         ], [
             'phone.regex' => 'The phone number must be exactly 10 digits.',
             'email.unique' => 'The email has already been taken.',
@@ -82,18 +77,87 @@ class UserController extends Controller
         $user = User::find($request->user()->id);
 
         $user->name = $request->name;
-        $user->surname = $request->surname;
+        $user->first_name = $request->first_name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->address_first_line = $request->address_first_line;
-        $user->address_second_line = $request->address_second_line;
-        $user->address_third_line = $request->address_third_line;
-        $user->town = $request->town;
-        $user->postcode = $request->postcode;
 
         $user->save();
 
         return response()->json(['message' => 'Profile updated successfully.', 'user' => $user], 200);
+    }
+
+    public function primaryAddressUpdate(Request $request)
+    {
+      $validator = Validator::make($request->all(), [
+          'additional_address_id' => 'required|exists:additional_addresses,id',
+      ]);
+
+      if ($validator->fails()) {
+          return response()->json([
+              'code' => 422,
+              'msg' => 'Validation failed',
+              'errors' => $validator->errors()
+          ], 422);
+      }
+
+      $address = AdditionalAddress::where('id', $request->additional_address_id)
+      ->where('user_id', Auth::id())
+      ->first();
+
+        if (!$address) {
+          return response()->json([
+            'code' => 404,
+            'msg' => 'Address not found or does not belong to the user',
+          ], 404);
+        }
+
+        AdditionalAddress::where('user_id', Auth::id())->where('status', 1)->update(['status' => 0]);
+
+        $address->status = 1;
+        $address->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Primary address updated successfully',
+        ]);
+
+    }
+
+    public function primaryBillingAddressUpdate(Request $request)
+    {
+      $validator = Validator::make($request->all(), [
+          'additional_address_id' => 'required|exists:additional_addresses,id',
+      ]);
+
+      if ($validator->fails()) {
+          return response()->json([
+              'code' => 422,
+              'msg' => 'Validation failed',
+              'errors' => $validator->errors()
+          ], 422);
+      }
+
+      $address = AdditionalAddress::where('id', $request->additional_address_id)
+      ->where('user_id', Auth::id())
+      ->first();
+
+        if (!$address) {
+          return response()->json([
+            'code' => 404,
+            'msg' => 'Address not found or does not belong to the user',
+          ], 404);
+        }
+
+        AdditionalAddress::where('user_id', Auth::id())->where('status', 2)->update(['status' => 0]);
+
+        $address->status = 2;
+        $address->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Primary billing address updated successfully',
+        ]);
+
     }
 
     public function address()

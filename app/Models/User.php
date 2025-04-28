@@ -87,6 +87,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(AdditionalAddress::class);
     }
+
+    public function primaryAddress()
+    {
+        return $this->hasOne(AdditionalAddress::class)->where('status', 1);
+    }
+
+    public function primaryBillingAddress()
+    {
+        return $this->hasOne(AdditionalAddress::class)->where('status', 2);
+    }
     
     public function accDelRequest()
     {

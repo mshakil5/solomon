@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('third_line')->nullable();
             $table->string('town')->nullable();
             $table->string('post_code')->nullable();
-            $table->boolean('status')->default(0);
+            $table->boolean('status')->default(0); //1 = primary address, 2 = primary billing address
             $table->boolean('type')->default(1); 
             $table->timestamps();
         });
