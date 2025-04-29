@@ -19,17 +19,13 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('phone')->nullable();
             $table->string('district')->nullable();
-            $table->string('street_name')->nullable();
-            $table->string('street_number')->nullable();
-            $table->string('block')->nullable();
-            $table->string('entrance')->nullable();
-            $table->string('floor')->nullable();
-            $table->string('apartment')->nullable();
             $table->string('first_line')->nullable();
             $table->string('second_line')->nullable();
             $table->string('third_line')->nullable();
             $table->string('town')->nullable();
             $table->string('post_code')->nullable();
+            $table->string('floor')->nullable();
+            $table->string('apartment')->nullable();
             $table->boolean('status')->default(0); //1 = primary address, 2 = primary billing address
             $table->boolean('type')->default(1); 
             $table->timestamps();
