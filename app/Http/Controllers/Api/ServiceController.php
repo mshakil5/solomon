@@ -27,6 +27,20 @@ class ServiceController extends Controller
             ], 404);
         }
     
+        $services = $services->map(function ($item) {
+            $item->des_english = strip_tags($item->des_english);
+            $item->des_romanian = strip_tags($item->des_romanian);
+            $item->information = strip_tags($item->information);
+    
+            if ($item->type) {
+                $item->type->des_english = strip_tags($item->type->des_english);
+                $item->type->des_romanian = strip_tags($item->type->des_romanian);
+                $item->type->information = strip_tags($item->type->information);
+            }
+    
+            return $item;
+        });
+    
         return response()->json([
             'success' => true,
             'data' => $services
@@ -45,6 +59,21 @@ class ServiceController extends Controller
                 'message' => 'No types found.'
             ], 404);
         }
+    
+        $types = $types->map(function ($type) {
+            $type->des_english = strip_tags($type->des_english);
+            $type->des_romanian = strip_tags($type->des_romanian);
+            $type->information = strip_tags($type->information ?? '');
+    
+            $type->services = $type->services->map(function ($service) {
+                $service->des_english = strip_tags($service->des_english);
+                $service->des_romanian = strip_tags($service->des_romanian);
+                $service->information = strip_tags($service->information);
+                return $service;
+            });
+    
+            return $type;
+        });
     
         return response()->json([
             'success' => true,
@@ -126,10 +155,26 @@ class ServiceController extends Controller
 
     public function serviceBookingIndex()
     {
-        $bookings = ServiceBooking::with(['service.type', 'files'])
+      $bookings = ServiceBooking::with(['service.type', 'files'])
             ->where('user_id', auth()->id())
             ->latest()
             ->get();
+        
+        $bookings = $bookings->map(function ($booking) {
+            if ($booking->service) {
+                $booking->service->des_english = strip_tags($booking->service->des_english);
+                $booking->service->des_romanian = strip_tags($booking->service->des_romanian);
+                $booking->service->information = strip_tags($booking->service->information);
+        
+                if ($booking->service->type) {
+                    $booking->service->type->des_english = strip_tags($booking->service->type->des_english);
+                    $booking->service->type->des_romanian = strip_tags($booking->service->type->des_romanian);
+                    $booking->service->type->information = strip_tags($booking->service->type->information ?? '');
+                }
+            }
+            return $booking;
+        });
+  
 
         if (!$bookings) {
             return response()->json([
