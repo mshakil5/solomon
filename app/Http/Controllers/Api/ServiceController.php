@@ -88,7 +88,8 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'date' => 'required|date',
             'time' => 'required',
-            'additional_address_id' => 'required|exists:additional_addresses,id',
+            'billing_address_id' => 'required|exists:additional_addresses,id',
+            'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
         ]);
 
@@ -126,7 +127,8 @@ class ServiceController extends Controller
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
             'service_id' => $request->service_id,
-            'additional_address_id' => $request->additional_address_id,
+            'billing_address_id' => $request->billing_address_id,
+            'shipping_address_id' => $request->shipping_address_id,
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,
@@ -216,7 +218,8 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'date' => 'required|date',
             'time' => 'required',
-            'additional_address_id' => 'required|exists:additional_addresses,id',
+            'billing_address_id' => 'required|exists:additional_addresses,id',
+            'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
         ]);
         
@@ -264,7 +267,8 @@ class ServiceController extends Controller
 
         $booking->update([
             'service_id' => $request->service_id,
-            'additional_address_id' => $request->additional_address_id,
+            'billing_address_id' => $request->billing_address_id,
+            'shipping_address_id' => $request->shipping_address_id,
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,

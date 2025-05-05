@@ -35,4 +35,14 @@ class ServiceBooking extends Model
     {
         return $this->belongsTo(AdditionalAddress::class, 'additional_address_id');
     }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(AdditionalAddress::class, 'billing_address_id');
+    }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(AdditionalAddress::class, 'shipping_address_id');
+    }
 }
