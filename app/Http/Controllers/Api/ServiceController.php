@@ -137,16 +137,18 @@ class ServiceController extends Controller
         ]);
     
         if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
+            $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
+        
+            foreach ($files as $file) {
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $storagePath = public_path('images/service');
                 $file->move($storagePath, $filename);
-    
+        
                 $booking->files()->create([
                     'file' => $filename
                 ]);
             }
-        }
+        }      
     
         return response()->json([
             'success' => true,
@@ -284,12 +286,14 @@ class ServiceController extends Controller
                 }
                 $file->delete();
             }
-
-            foreach ($request->file('files') as $file) {
+        
+            $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
+        
+            foreach ($files as $file) {
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $storagePath = public_path('images/service');
                 $file->move($storagePath, $filename);
-
+        
                 $booking->files()->create([
                     'file' => $filename
                 ]);
