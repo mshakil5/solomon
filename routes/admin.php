@@ -65,6 +65,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     Route::get('/change-booking-status', [ServiceBookingController::class, 'changeBookingStatus']);
 
+    Route::get('/booking-details/{id}', [ServiceBookingController::class, 'bookingDetails'])->name('admin.booking.details');
+
     Route::post('/assign-staff', [WorkController::class, 'assignStaff'])->name('assign.staff');
 
     Route::get('/get-all-work/{id}', [WorkController::class, 'workGallery'])->name('admin.workGallery');

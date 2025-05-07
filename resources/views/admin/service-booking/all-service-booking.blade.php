@@ -8,7 +8,7 @@
         <div class="col-12">
           <div class="card card-secondary">
             <div class="card-header">
-              <h3 class="card-title"><b>Work List</b></h3>
+              <h3 class="card-title"><b>Service Booking List</b></h3>
             </div>
             <div class="card-body">
                 
@@ -22,8 +22,9 @@
                     <th>Type</th>
                     <th>Client</th>
                     <th>Service</th>
-                    <th>Address</th>
-                    <th>Des</th>
+                    <th>Billing Address</th>
+                    <th>Shipping Address</th>
+                    <th>Description</th>
                     <th>Status</th>
                     <th>Details</th>
                   </tr>
@@ -57,11 +58,31 @@
                           {{$data->service->title_english}} ( {{$data->service->title_romanian}} )
                       </td>
                       <td>
-                          {{$data->address->address_first_line}} </br>
-                          {{$data->address->address_second_line}}</br>
-                          {{$data->address->address_third_line}}</br>
-                          {{$data->address->town}}</br>
-                          {{$data->address->post_code}}
+                          {{$data->billingAddress->name ?? ''}} </br>
+                          {{$data->billingAddress->first_name ?? ''}}</br>
+                          {{$data->billingAddress->phone ?? ''}}</br>
+                          {{$data->billingAddress->district ?? ''}}</br>
+                          {{$data->billingAddress->first_line ?? ''}}</br>
+                          {{$data->billingAddress->second_line ?? ''}}</br>
+                          {{$data->billingAddress->third_line ?? ''}}</br>
+                          {{$data->billingAddress->town ?? ''}}</br>
+                          {{$data->billingAddress->post_code ?? ''}}</br>
+                          {{$data->billingAddress->floor ?? ''}}</br>
+                          {{$data->billingAddress->apartment ?? ''}}</br>
+                      </td>
+
+                      <td>
+                          {{$data->billingAddress->name ?? ''}} </br>
+                          {{$data->billingAddress->first_name ?? ''}}</br>
+                          {{$data->billingAddress->phone ?? ''}}</br>
+                          {{$data->billingAddress->district ?? ''}}</br>
+                          {{$data->billingAddress->first_line ?? ''}}</br>
+                          {{$data->billingAddress->second_line ?? ''}}</br>
+                          {{$data->billingAddress->third_line ?? ''}}</br>
+                          {{$data->billingAddress->town ?? ''}}</br>
+                          {{$data->billingAddress->post_code ?? ''}}</br>
+                          {{$data->billingAddress->floor ?? ''}}</br>
+                          {{$data->billingAddress->apartment ?? ''}}</br>
                       </td>
                       <td>
                           {!! $data->description !!}
@@ -91,9 +112,12 @@
                       </td>
                      
                       <td>
-                          <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
+                          {{-- <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
                               <i class="fas fa-eye"></i>
-                          </a>
+                          </a> --}}
+                            <a href="{{ route('admin.booking.details', $data->id) }}" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i>
+                            </a>
                       </td>
   
                     </tr>

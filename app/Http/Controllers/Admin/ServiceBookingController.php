@@ -53,4 +53,10 @@ class ServiceBookingController extends Controller
         }
     }
 
+    public function bookingDetails($id)
+    {
+        $booking = ServiceBooking::with('user', 'service', 'files', 'serviceReview', 'billingAddress', 'shippingAddress')->findOrFail($id);
+        return view('admin.service-booking.details', compact('booking'));
+    }
+
 }
