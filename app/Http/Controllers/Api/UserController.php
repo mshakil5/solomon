@@ -86,7 +86,7 @@ class UserController extends Controller
         return response()->json(['message' => 'Profile updated successfully.', 'user' => $user], 200);
     }
 
-    public function primaryAddressUpdate(Request $request)
+    public function primaryShippingAddressUpdate(Request $request)
     {
       $validator = Validator::make($request->all(), [
           'additional_address_id' => 'required|exists:additional_addresses,id',
@@ -162,13 +162,38 @@ class UserController extends Controller
 
     public function address()
     {
-        $addresses = AdditionalAddress::where('user_id', Auth::user()->id)->get();
+        $userId = Auth::id();
+    
+        $shipping = AdditionalAddress::where('user_id', $userId)
+            ->where('type', 1)
+            ->get();
+    
+        $billing = AdditionalAddress::where('user_id', $userId)
+            ->where('type', 2)
+            ->get();
+    
+        return response()->json([
+            'shipping_addresses' => $shipping,
+            'billing_addresses' => $billing,
+        ], 200);
+    }    
 
-        if ($addresses->isEmpty()) {
-            return response()->json(['message' => 'No additional addresses found.'], 200);
-        }
+    public function defaultAddresses()
+    {
+        $userId = Auth::id();
 
-        return response()->json(['addresses' => $addresses], 200);
+        $defaultShipping = AdditionalAddress::where('user_id', $userId)
+            ->where('status', 1)
+            ->first();
+
+        $defaultBilling = AdditionalAddress::where('user_id', $userId)
+            ->where('status', 2)
+            ->first();
+
+        return response()->json([
+            'default_shipping' => $defaultShipping,
+            'default_billing' => $defaultBilling,
+        ], 200);
     }
 
     public function store(Request $request)
@@ -185,6 +210,7 @@ class UserController extends Controller
             'post_code' => 'required|string|max:255',
             'floor' => 'nullable|string|max:255',
             'apartment' => 'nullable|string|max:255',
+            'type' => 'required|in:1,2',
         ]);
     
         if ($validator->fails()) {
@@ -208,6 +234,7 @@ class UserController extends Controller
             'floor' => $request->floor,
             'apartment' => $request->apartment,
             'user_id' => Auth::id(),
+            'type' => $request->type
         ]);
     
         $address->save();
@@ -233,6 +260,7 @@ class UserController extends Controller
             'post_code' => 'required|string|max:255',
             'floor' => 'nullable|string|max:255',
             'apartment' => 'nullable|string|max:255',
+            'type' => 'required|in:1,2',
         ]);
     
         if ($validator->fails()) {
@@ -257,6 +285,7 @@ class UserController extends Controller
             'floor' => $request->floor,
             'apartment' => $request->apartment,
             'user_id' => Auth::id(),
+            'type' => $request->type
         ]);
 
         return response()->json(['message' => 'Address updated successfully.', 'address' => $address], 200);

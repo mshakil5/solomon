@@ -44,9 +44,10 @@ Route::group(['middleware' => ['auth:api']], function () {
   Route::post('logout', [PassportAuthController::class, 'logout']);
   Route::get('user-details', [UserController::class, 'index']);
   Route::post('user-profile-update', [UserController::class, 'userProfileUpdate']);
-  Route::post('primary-address-update', [UserController::class, 'primaryAddressUpdate']);
+  Route::post('primary-shipping-address-update', [UserController::class, 'primaryShippingAddressUpdate']);
   Route::post('primary-billing-address-update', [UserController::class, 'primaryBillingAddressUpdate']);
   Route::get('additional-addresses', [UserController::class, 'address']);
+  Route::get('default-addresses', [UserController::class, 'defaultAddresses']);
   Route::post('additional-addresses', [UserController::class, 'store']);
   Route::put('additional-addresses/{id}', [UserController::class, 'update']);
   Route::delete('additional-addresses/{id}', [UserController::class, 'destroy']);

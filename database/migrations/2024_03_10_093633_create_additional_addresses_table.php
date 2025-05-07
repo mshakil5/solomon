@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('post_code')->nullable();
             $table->string('floor')->nullable();
             $table->string('apartment')->nullable();
-            $table->boolean('status')->default(0); //1 = primary address, 2 = primary billing address
-            $table->boolean('type')->default(1); 
+            $table->boolean('status')->default(0); //1 = primary shipping address, 2 = primary billing address
+            $table->boolean('type')->default(1);  //1 = shipping address, 2 = billing address
             $table->timestamps();
         });
     }
