@@ -130,6 +130,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/new-user-update', [UserController::class, 'userUpdate']);
     Route::get('/new-user/{id}', [UserController::class, 'userDelete']);
 
+    Route::get('user-address/{id}', [UserController::class, 'additionalAddress'])->name('admin.user.address');
+
     //Staff crud by Admin
     Route::get('/staff', [StaffController::class, 'getStaff'])->name('allStaff');
     Route::post('/staff', [StaffController::class, 'staffStore']);

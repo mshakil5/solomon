@@ -42,8 +42,8 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
-                        <label>Company Name <span class="text-danger">*</span></label>
-                        <input type="text" id="surname" name="surname" class="form-control" placeholder="Enter company name">
+                        <label>First Name</label>
+                        <input type="text" id="surname" name="surname" class="form-control" placeholder="Enter first name">
                       </div>
                     </div>
                   </div>
@@ -117,7 +117,6 @@
                 <tr>
                   <th>Sl</th>
                   <th>Name</th>
-                  <th>Company Name</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Action</th>
@@ -127,14 +126,15 @@
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
-                    <td>{{$data->name}}</td>
-                    <td>{{$data->surname}}</td>
+                    <td>{{$data->name}} {{$data->surname}}</td>
                     <td>{{$data->email}}</td>
                     <td>{{$data->phone}}</td>
-                    
                     <td>
                       <a id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="color: #2196f3;font-size:16px;"></i></a>
                       <a id="deleteBtn" rid="{{$data->id}}"><i class="fa fa-trash-o" style="color: red;font-size:16px;"></i></a>
+                      <a href="{{ url('admin/user-address/' . $data->id) }}">
+                        <i class="fa fa-map-marker" style="color: green; font-size:16px;"></i>
+                      </a>
                     </td>
                   </tr>
                   @endforeach
@@ -161,7 +161,8 @@
 $(function () {
     $("#example1").DataTable({
      order: [], 
-    "responsive": true, "lengthChange": false, "autoWidth": false,
+     pageLength: 50,
+    "responsive": true, "lengthChange": true, "autoWidth": false,
     "buttons": ["copy", "csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 });

@@ -136,7 +136,7 @@ class UserController extends Controller
 
     public function getUser()
     {
-        $data = User::where('is_type', '0')->orderby('id','DESC')->get();
+        $data = User::where('is_type', '0')->whereNotNull('email_verified_at')->orderby('id','DESC')->get();
         return view('admin.user.index', compact('data'));
     }
     
@@ -151,7 +151,7 @@ class UserController extends Controller
     {
         
         if(empty($request->name)){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Username \" field..!</b></div>";
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Name \" field..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
@@ -189,6 +189,7 @@ class UserController extends Controller
         $data->phone = $request->phone;
         $data->email = $request->email;
         $data->is_type = "0";
+        $data->email_verified_at = now();
         if(isset($request->password)){
             $data->password = Hash::make($request->password);
         }
@@ -212,7 +213,7 @@ class UserController extends Controller
     public function userUpdate(Request $request)
     {
         if(empty($request->name)){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Username \" field..!</b></div>";
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Name \" field..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
@@ -265,5 +266,13 @@ class UserController extends Controller
             return response()->json(['success'=>false,'message'=>'Delete Failed']);
         }
     }
+
+    public function additionalAddress($id)
+    {
+        $address = AdditionalAddress::where('user_id', $id)->get();
+        $userName = User::where('id', $id)->first()->name;
+        return view('admin.user.address', compact('address', 'userName'));
+    }
+
 
 }
