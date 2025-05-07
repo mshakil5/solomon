@@ -111,9 +111,9 @@ class UserController extends Controller
           ], 404);
         }
 
-        AdditionalAddress::where('user_id', Auth::id())->where('status', 1)->update(['status' => 0]);
+        AdditionalAddress::where('user_id', Auth::id())->where('primary_shipping', 1)->update(['primary_shipping' => 0]);
 
-        $address->status = 1;
+        $address->primary_shipping = 1;
         $address->save();
 
         return response()->json([
@@ -148,9 +148,9 @@ class UserController extends Controller
           ], 404);
         }
 
-        AdditionalAddress::where('user_id', Auth::id())->where('status', 2)->update(['status' => 0]);
+        AdditionalAddress::where('user_id', Auth::id())->where('primary_billing', 1)->update(['primary_billing' => 0]);
 
-        $address->status = 2;
+        $address->primary_billing = 1;
         $address->save();
 
         return response()->json([
@@ -183,11 +183,11 @@ class UserController extends Controller
         $userId = Auth::id();
 
         $defaultShipping = AdditionalAddress::where('user_id', $userId)
-            ->where('status', 1)
+            ->where('primary_shipping', 1)
             ->first();
 
         $defaultBilling = AdditionalAddress::where('user_id', $userId)
-            ->where('status', 2)
+            ->where('primary_billing', 1)
             ->first();
 
         return response()->json([
