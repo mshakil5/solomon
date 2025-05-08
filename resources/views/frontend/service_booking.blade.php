@@ -9,7 +9,7 @@
       <div class="col-lg-10 col-md-12 col-sm-12">
           <div class="card">
               <div class="card-header text-center bg-primary text-white">
-                  <h2>Complete Your Booking for {{ $service->name }}</h2>
+                  <h2>Complete Your Booking for {{ $service->title_english }}</h2>
               </div>
               
               <div class="card-body">
@@ -52,12 +52,12 @@
                           <div class="row mb-4">
                               <div class="col-md-4">
                                   <img src="{{ asset('images/service/' . $service->image) }}" 
-                                       alt="{{ $service->name }}" 
+                                       alt="{{ $service->title_english }}" 
                                        class="img-fluid rounded" 
                                        style="max-height: 200px; object-fit: cover;">
                               </div>
                               <div class="col-md-8">
-                                  <h3 class="text-primary">{{ $service->name }}</h3>
+                                  <h3 class="text-primary">{{ $service->title_english }}</h3>
                                   <p class="lead">{!! $service->des_english !!}</p>
                                   <h4 class="text-success">Price: {{ number_format($service->price, 2) }}RON</h4>
                               </div>
@@ -191,12 +191,12 @@
                                   <div class="row">
                                       <div class="col-md-3">
                                           <img src="{{ asset('images/service/' . $service->image) }}" 
-                                               alt="{{ $service->name }}" 
+                                               alt="{{ $service->title_english }}" 
                                                class="img-fluid rounded" 
                                                style="max-height: 150px; object-fit: cover;">
                                       </div>
                                       <div class="col-md-9">
-                                          <h5>{{ $service->name }}</h5>
+                                          <h5>{{ $service->title_english }}</h5>
                                           <p>{!! $service->des_english !!}</p>
                                           <h5 class="text-success">Price: £{{ number_format($service->price, 2) }}</h5>
                                       </div>
