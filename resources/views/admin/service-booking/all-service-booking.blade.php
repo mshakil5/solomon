@@ -30,6 +30,7 @@
                     <th>Description</th>
                     <th>Status</th>
                     <th>Details</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -118,12 +119,20 @@
                       </td>
                      
                       <td>
-                          {{-- <a href="{{ route('admin.work.details', $data->id) }}" class="btn btn-secondary">
-                              <i class="fas fa-eye"></i>
-                          </a> --}}
                             <a href="{{ route('admin.booking.details', $data->id) }}" class="btn btn-secondary">
                                 <i class="fas fa-eye"></i>
                             </a>
+                      </td>
+                      <td>
+                        @if ($data->status == 3)
+                          @php $invoiceCount = $data->invoices->count(); @endphp
+                          <a href="{{ route('admin.booking.invoices', $data->id) }}" class="btn btn-primary" title="Invoice">
+                            <i class="fas fa-file-invoice"></i>
+                            @if($invoiceCount > 0)
+                              <span class="badge badge-light">{{ $invoiceCount }}</span>
+                            @endif
+                          </a>
+                        @endif
                       </td>
   
                     </tr>
@@ -196,68 +205,6 @@
         }
       });
     });
-  });
-</script>
-
-<script>
-    $(document).ready(function() {
-      $('.assign-staff').on('click', function() {
-          var workId = $(this).data('work-id');
-  
-          $('#workId').val(workId);
-
-          $('#assignStaffModal').modal('show');
-      });
-
-      $('#submitAssignStaff').on('click', function() {
-          $('#loading').show();
-          var formData = {
-              work_id: $('#workId').val(),
-              staff_id: $('#staffSelect').val(),
-              start_date: $('#startDate').val(),
-              end_date: $('#endDate').val(),
-              start_time: $('#startTime').val(),
-              end_time: $('#endTime').val(),
-              note: $('#note').val(),
-              _token: '{{ csrf_token() }}'
-          };
-
-          var requiredFields = [];
-          if (!formData.staff_id) {
-              requiredFields.push('Staff');
-          }
-          if (!formData.start_date) {
-              requiredFields.push('Start Date');
-          }
-          if (!formData.end_date) {
-              requiredFields.push('End Date');
-          }
-
-          if (requiredFields.length > 0) {
-              $('#loading').hide();
-              alert('Please fill in the following required fields: ' + requiredFields.join(', '));
-              return;
-          }
-
-          $.ajax({
-              url: '/admin/assign-staff',
-              type: 'POST',
-              data: formData,
-              success: function(response) {
-                  $('#loading').hide();
-                  alert('Assigned Successfully');
-                  $('#assignStaffModal').modal('hide');
-                  setTimeout(function() {
-                      window.location.reload();
-                  }, 100);
-              },
-              error: function(xhr, status, error) {
-                alert(xhr.responseText);
-                  $('#loading').hide();
-                  console.error(xhr.responseText);
-              }
-          });
-      });
   });
 </script>
 

@@ -45,4 +45,9 @@ class ServiceBooking extends Model
     {
         return $this->belongsTo(AdditionalAddress::class, 'shipping_address_id');
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'service_booking_id');
+    }
 }

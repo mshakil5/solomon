@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Work;
 use App\Models\Invoice;
+use App\Models\ServiceBooking;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,8 +13,8 @@ class InvoiceController extends Controller
 {
     public function index($id)
     {
-        $work = Work::findOrFail($id);
-        $invoice = $work->invoice;
+        $work = ServiceBooking::findOrFail($id);
+        $invoice = $work->invoices;
         return view('admin.work.invoice.index', compact('invoice', 'work'));
     }
 
@@ -41,9 +42,15 @@ class InvoiceController extends Controller
             $file->move($storagePath, $filename);
             $validatedData['img'] = 'images/invoices/' . $filename;
         }
-        $invoice = Invoice::create($validatedData);
+        $invoice = new Invoice;
+        $invoice->date = $validatedData['date'];
+        $invoice->amount = $validatedData['amount'];
+        $invoice->service_booking_id = $validatedData['work_id'];
+        $invoice->invoiceid = $validatedData['invoiceid'];
+        $invoice->img = $validatedData['img'] ?? null;
+        $invoice->save();
 
-        return redirect()->route('work.invoice', ['id' => $validatedData['work_id']])->with('success', 'Invoice created successfully.');
+        return redirect()->route('admin.booking.invoices', ['id' => $validatedData['work_id']])->with('success', 'Invoice created successfully.');
     }
 
     public function update(Request $request, $work_id)

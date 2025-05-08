@@ -17,11 +17,11 @@
                     <tbody>
                         <tr>
                             <td>Date:</td>
-                            <td><input type="date" class="form-control" id="date" name="date" value="{{ old('date') }}"></td>
+                            <td><input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}" required></td>
                         </tr>
                         <tr>
                             <td>Amount:</td>
-                            <td><input type="text" class="form-control" id="amount" name="amount" value="{{ old('amount') }}"></td>
+                            <td><input type="number" class="form-control" id="amount" name="amount" value="{{ old('amount') }}" required></td>
                         </tr>
                         <tr>
                             <td>Upload Invoice File</td>
