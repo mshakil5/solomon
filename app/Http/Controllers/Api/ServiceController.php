@@ -11,6 +11,7 @@ use App\Models\Type;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
+use App\Models\Invoice;
 
 class ServiceController extends Controller
 {
@@ -390,5 +391,20 @@ class ServiceController extends Controller
             'data' => $review
         ], 201);
     }  
+
+    public function getInvoices($id)
+    {
+        $booking = ServiceBooking::where('id', $id)->where('user_id', auth()->id())->first();
+        if (!$booking) {
+            return response()->json(['error' => 'Unauthorized or booking not found.'], 403);
+        }
+
+        $invoices = Invoice::where('service_booking_id', $id)
+        ->select('id', 'service_booking_id', 'invoiceid', 'amount', 'date', 'img')
+        ->get();    
+
+        return response()->json($invoices);
+    }
+
 
 }

@@ -85,6 +85,9 @@ Route::group(['middleware' => ['auth:api']], function () {
   Route::delete('/service-booking/{id}', [ServiceController::class, 'serviceBookingDelete']);
 
   Route::post('/service-booking-review/{id}', [ServiceController::class, 'reviewStore']);
+
+  Route::get('/service-booking/invoices/{id}', [ServiceController::class, 'getInvoices']);
+
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
