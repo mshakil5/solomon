@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Type;
+use Illuminate\Support\Str;
 
 class TypeController extends Controller
 {
@@ -32,6 +33,15 @@ class TypeController extends Controller
         $data->title_romanian = $request->title_romanian;
         $data->des_english = $request->des_english;
         $data->des_romanian = $request->des_romanian;
+
+        $baseSlug = Str::slug($request->title_english);
+        $slug = $baseSlug;
+        $counter = 1;
+        while (Type::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $data->slug = $slug;
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -81,6 +91,15 @@ class TypeController extends Controller
         $data->title_romanian = $request->title_romanian;
         $data->des_english = $request->des_english;
         $data->des_romanian = $request->des_romanian;
+
+        $baseSlug = Str::slug($request->title_english);
+        $slug = $baseSlug;
+        $counter = 1;
+        while (Type::where('slug', $slug)->where('id', '!=', $data->id)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $data->slug = $slug;
 
         if ($request->hasFile('image')) {
             $oldImage = public_path('images/type/' . $data->image);

@@ -32,8 +32,7 @@
                                                     @elseif($booking->type == 3) Outside Hours
                                                     @else Standard @endif
                                                 </span>
-                                                @if($booking->additional_fee > 0)
-                                                    <br>(+{{ number_format($booking->additional_fee, 2) }} RON)
+                                                @if($booking->additional_fee > 0)(+{{ number_format($booking->additional_fee, 2) }} RON)
                                                 @endif
                                             </td>
                                         </tr>

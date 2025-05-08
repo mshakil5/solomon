@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Models\Type;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
@@ -49,6 +50,15 @@ class ServiceController extends Controller
       $data->des_romanian = $request->des_romanian;
       $data->information = $request->information;
       $data->price = $request->price;
+
+      $baseSlug = Str::slug($request->title_english);
+      $slug = $baseSlug;
+      $counter = 1;
+      while (Service::where('slug', $slug)->exists()) {
+          $slug = $baseSlug . '-' . $counter;
+          $counter++;
+      }
+      $data->slug = $slug;
 
       if ($request->hasFile('image')) {
           $image = $request->file('image');
@@ -111,6 +121,15 @@ class ServiceController extends Controller
       $data->des_romanian = $request->des_romanian;
       $data->information = $request->information;
       $data->price = $request->price;
+
+      $baseSlug = Str::slug($request->title_english);
+      $slug = $baseSlug;
+      $counter = 1;
+      while (Service::where('slug', $slug)->where('id', '!=', $data->id)->exists()) {
+          $slug = $baseSlug . '-' . $counter;
+          $counter++;
+      }
+      $data->slug = $slug;
       
       if ($request->hasFile('image')) {
           $oldImage = public_path('images/service/' . $data->image);

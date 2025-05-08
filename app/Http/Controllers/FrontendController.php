@@ -22,16 +22,22 @@ use App\Models\Career;
 use App\Models\CallBack;
 use Illuminate\Support\Carbon;
 use App\Mail\CallbackMail;
+use App\Models\Service;
 use App\Models\SubCategory;
+use App\Models\Type;
+use App\Models\AdditionalAddress;
+use App\Models\ServiceBooking;
 
 class FrontendController extends Controller
 {
     public function index()
     {
         $categories = Category::with('subcategories')->where('status', 1)->get();
-        
+        $types = Type::with(['services' => function($q) {
+            $q->where('status', 1);
+        }])->where('status', 1)->get();
         $companyDetails = CompanyDetails::select('footer_content', 'company_name', 'address1', 'phone1', 'email1')->first();
-        return view('frontend.index', compact('categories', 'companyDetails'));
+        return view('frontend.index', compact('categories', 'companyDetails', 'types'));
     }
 
     public function privacy()
@@ -228,6 +234,92 @@ class FrontendController extends Controller
 
         $companyDetails = CompanyDetails::select('footer_content')->first();
         return view('frontend.post_job', compact('category', 'companyDetails','subcategory'));
+    }
+
+    public function serviceBooking($slug)
+    {
+        $service = Service::where('slug', $slug)->firstOrFail();
+        $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->get();
+        $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->get();
+        return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses'));
+    }
+
+    public function bookingStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'service_id' => 'required|exists:services,id',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'time' => 'required',
+            'billing_address_id' => 'required|exists:additional_addresses,id',
+            'shipping_address_id' => 'required|exists:additional_addresses,id',
+            'files.*' => 'nullable|file|max:10240',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $now = now();
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $openingHour = $company?->opening_time ?? '10:00';
+        $closingHour = $company?->closing_time ?? '18:00';
+
+        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1; $fee = 400.00;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; $fee = 250.00;
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3; $fee = 300.00;
+        } else {
+            $type = 4; $fee = 0.00;
+        }
+
+        $service = Service::findOrFail($request->service_id);
+        $serviceFee = $service->price;
+        $totalFee = $serviceFee + $fee;
+
+        $booking = ServiceBooking::create([
+            'user_id' => auth()->id(),
+            'service_id' => $request->service_id,
+            'billing_address_id' => $request->billing_address_id,
+            'shipping_address_id' => $request->shipping_address_id,
+            'description' => $request->description,
+            'date' => $request->date,
+            'time' => $request->time,
+            'service_fee' => $serviceFee,
+            'additional_fee' => $fee,
+            'total_fee' => $totalFee,
+            'type' => $type
+        ]);
+    
+        if ($request->hasFile('files')) {
+            $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
+        
+            foreach ($files as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $storagePath = public_path('images/service');
+                $file->move($storagePath, $filename);
+        
+                $booking->files()->create([
+                    'file' => $filename
+                ]);
+            }
+        }      
+    
+        return redirect()->route('homepage')->with('success', 'Booking created successfully.');
     }
 
     public function aboutUs()

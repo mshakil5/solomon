@@ -15,7 +15,7 @@
     }
 </style>
 
-<div class="categories mt-5">
+<div class="categories mt-5 d-none">
 
     <div class="container col-10">
     @if(session('success'))
@@ -83,6 +83,62 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="services-by-type py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="text-primary fw-semibold">
+        {{ session('app_locale', 'en') == 'ro' ? 'Serviciile noastre pe categorii' : 'Our Services by Type' }}
+      </h2>
+      <p class="text-secondary fs-5">
+        {{ session('app_locale', 'en') == 'ro' ? 'Explorează serviciile noastre organizate pe categorii' : 'Explore our services organized by categories' }}
+      </p>
+    </div>
+
+    @foreach ($types as $type)
+      <div class="mb-5">
+        <h4 class="mb-3 text-primary">
+          {{ session('app_locale', 'en') == 'ro' ? $type->title_romanian : $type->title_english }}
+        </h4>
+
+        <div class="row">
+          @foreach ($type->services as $service)
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="border rounded p-3 h-100 shadow-sm">
+                <div class="mb-3">
+                  <img src="{{ asset('images/service/' . $service->image) }}" 
+                       alt="{{ $service->title_english }}" 
+                       class="img-fluid rounded w-100" 
+                       style="height: 160px; object-fit: cover;">
+                </div>
+                <h5>
+                  {{ session('app_locale', 'en') == 'ro' ? $service->title_romanian : $service->title_english }}
+                </h5>
+                <p class="text-muted small">
+                  {!! session('app_locale', 'en') == 'ro' ? Str::limit($service->des_romanian, 60) : Str::limit($service->des_english, 60) !!}
+                </p>
+                <p class="fw-semibold mb-2">
+                  {{ session('app_locale', 'en') == 'ro' ? 'Preț:' : 'Price:' }} {{ number_format($service->price, 2) }} RON
+                </p>
+
+                @auth
+                  <a href="{{ route('service.booking', $service->slug) }}" class="btn btn-sm btn-primary">
+                    {{ session('app_locale', 'en') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
+                  </a>
+                @else
+                  <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">
+                    {{ session('app_locale', 'en') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
+                  </a>
+                @endauth
+
+              </div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+    @endforeach
+  </div>
 </div>
 
 <div class="info-section">
