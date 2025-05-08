@@ -124,6 +124,10 @@ class ServiceController extends Controller
             $type = 4; $fee = 0.00;
         }
 
+        $service = Service::findOrFail($request->service_id);
+        $serviceFee = $service->price;
+        $totalFee = $serviceFee + $fee;
+
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
             'service_id' => $request->service_id,
@@ -132,7 +136,9 @@ class ServiceController extends Controller
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,
+            'service_fee' => $serviceFee,
             'additional_fee' => $fee,
+            'total_fee' => $totalFee,
             'type' => $type
         ]);
     
@@ -266,6 +272,10 @@ class ServiceController extends Controller
                 'message' => 'Booking not found or unauthorized access.',
             ], 404);
         }
+
+        $service = Service::findOrFail($request->service_id);
+        $serviceFee = $service->price;
+        $totalFee = $serviceFee + $fee;
 
         $booking->update([
             'service_id' => $request->service_id,

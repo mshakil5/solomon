@@ -20,6 +20,9 @@
                     <th>Date</th>
                     <th>Time</th>
                     <th>Type</th>
+                    <th>
+                      Service + Aditional = Total
+                    </th>
                     <th>Client</th>
                     <th>Service</th>
                     <th>Billing Address</th>
@@ -46,6 +49,9 @@
                               @elseif($data->type == 3) Outside Hours
                               @else Standard @endif
                           </span>
+                      </td>
+                      <td>
+                          {{ $data->service_fee }} + {{ $data->additional_fee }} = {{ $data->total_fee }}
                       </td>
                     
                       <td style="text-align: left">

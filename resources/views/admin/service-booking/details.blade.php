@@ -38,6 +38,30 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th>Service Fee</th>
+                                            <td>
+                                              @if($booking->service_fee > 0)
+                                                {{ number_format($booking->service_fee, 2) }} RON
+                                              @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Additional Fee</th>
+                                            <td>
+                                              @if($booking->additional_fee > 0)
+                                                {{ number_format($booking->additional_fee, 2) }} RON
+                                              @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Fee</th>
+                                            <td>
+                                              @if($booking->total_fee > 0)
+                                                {{ number_format($booking->total_fee, 2) }} RON
+                                              @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th>Status</th>
                                             <td>
                                                 @php $statusClass = ['1'=>'primary','2'=>'info','3'=>'success','4'=>'danger'][$booking->status] ?? 'secondary'; @endphp
@@ -146,31 +170,6 @@
                             </div>
                         </div>
                     </div>
-
-                    @if($booking->files->count() > 0)
-                    <div class="mt-4">
-                        <h4>Attached Files</h4>
-                        <div class="row">
-                            @foreach($booking->files as $file)
-                                <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card h-100">
-                                        <div class="card-body text-center">
-                                            @if(in_array(pathinfo($file->file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                                                <img src="{{ asset('images/service/' . $file->file) }}" class="img-fluid mb-2" style="max-height: 150px;">
-                                            @else
-                                                <i class="fas fa-file fa-4x mb-2 text-secondary"></i>
-                                            @endif
-                                            <p class="mb-1">{{ basename($file->file) }}</p>
-                                            <a href="{{ asset('images/service/' . $file->file) }}" target="_blank" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-download"></i> Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
 
                     @if($booking->serviceReview)
                     <div class="mt-4">
