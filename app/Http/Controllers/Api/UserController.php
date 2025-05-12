@@ -15,9 +15,26 @@ class UserController extends Controller
     
     public function index()
     {
-        $data = User::with(['primaryAddress', 'primaryBillingAddress'])->where('id', Auth::user()->id)->first();
-        $success['data'] = $data;
-        return response()->json(['success'=>true,'response'=> $success], 200);
+        $userId = Auth::id();
+        $userInfo = User::where('id', $userId)->select('id','name','surname','email','email_verified_at','is_type','phone','address_first_line','address_second_line','address_third_line','town','postcode','country','status')
+        ->first();
+
+        $defaultShipping = AdditionalAddress::where('user_id', $userId)
+        ->where('primary_shipping', 1)
+        ->first();
+
+        $defaultBilling = AdditionalAddress::where('user_id', $userId)
+        ->where('primary_billing', 1)
+        ->first();
+
+        return response()->json([
+            'success' => true,
+            'response' => [
+                'data' => $userInfo,
+                'default_shipping' => $defaultShipping,
+                'default_billing' => $defaultBilling,
+            ]
+        ], 200);
     }
 
     public function show($id)
@@ -195,6 +212,7 @@ class UserController extends Controller
             'default_billing' => $defaultBilling,
         ], 200);
     }
+
 
     public function store(Request $request)
     {
