@@ -239,8 +239,8 @@ class FrontendController extends Controller
     public function serviceBooking($slug)
     {
         $service = Service::where('slug', $slug)->firstOrFail();
-        $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->get();
-        $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->get();
+        $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->latest()->get();
+        $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->latest()->get();
         return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses'));
     }
 
@@ -502,6 +502,56 @@ class FrontendController extends Controller
         } else {
           return redirect()->back()->with('callback_error', 'Failed to request a callback.');
       }
+    }
+
+    public function storeAdditionalAddress(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'first_line' => 'required|string|max:255',
+            'second_line' => 'nullable|string|max:255',
+            'third_line' => 'nullable|string|max:255',
+            'town' => 'required|string|max:255',
+            'post_code' => 'required|string|max:255',
+            'floor' => 'nullable|string|max:255',
+            'apartment' => 'nullable|string|max:255',
+            'type' => 'required|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 422,
+                'msg' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $address = new AdditionalAddress([
+            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'phone' => $request->phone,
+            'district' => $request->district,
+            'first_line' => $request->first_line,
+            'second_line' => $request->second_line,
+            'third_line' => $request->third_line,
+            'town' => $request->town,
+            'post_code' => $request->post_code,
+            'floor' => $request->floor,
+            'apartment' => $request->apartment,
+            'user_id' => Auth::id(),
+            'type' => $request->type
+        ]);
+
+        $address->save();
+
+        return response()->json([
+            'code' => 201,
+            'msg' => 'Address created successfully!',
+            'address' => $address
+        ], 201);
     }
 
 }

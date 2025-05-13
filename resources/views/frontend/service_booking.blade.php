@@ -59,7 +59,7 @@
                               <div class="col-md-8">
                                   <h3 class="text-primary">{{ $service->title_english }}</h3>
                                   <p class="lead">{!! $service->des_english !!}</p>
-                                  <h4 class="text-success">Price: {{ number_format($service->price, 2) }}RON</h4>
+                                  <h4 class="text-success d-none">Price: {{ number_format($service->price, 2) }}RON</h4>
                               </div>
                           </div>
                           
@@ -118,9 +118,13 @@
                           <div class="row">
                               <div class="col-md-6">
                                   <div class="card mb-4">
-                                      <div class="card-header bg-light">
-                                          <h5>Billing Address</h5>
-                                      </div>
+                                        <div class="card-header bg-light">
+                                            <h5>Billing Address 
+                                                <button type="button" class="btn btn-sm btn-success ms-2" onclick="event.preventDefault(); openAddressModal(2); return false;">
+                                                  Add
+                                              </button>
+                                            </h5>
+                                        </div>
                                       <div class="card-body">
                                           @if($billingAddresses->count() > 0)
                                               <div class="form-group">
@@ -135,9 +139,6 @@
                                               </div>
                                           @else
                                               <p class="text-muted">No saved billing addresses found.</p>
-                                              <a href="#" class="btn btn-sm btn-outline-primary d-none">
-                                                  Add New Billing Address
-                                              </a>
                                           @endif
                                       </div>
                                   </div>
@@ -146,7 +147,12 @@
                               <div class="col-md-6">
                                   <div class="card">
                                       <div class="card-header bg-light">
-                                          <h5>Shipping Address</h5>
+                                          <h5>Shipping Address 
+                                            <button type="button" class="btn btn-sm btn-success ms-2" 
+                                                    onclick="event.preventDefault(); openAddressModal(1); return false;">
+                                                Add
+                                            </button>
+                                          </h5>
                                       </div>
                                       <div class="card-body">
                                           @if($shippingAddresses->count() > 0)
@@ -162,9 +168,6 @@
                                               </div>
                                           @else
                                               <p class="text-muted">No saved shipping addresses found.</p>
-                                              <a href="#" class="btn btn-sm btn-outline-primary d-none">
-                                                  Add New Shipping Address
-                                              </a>
                                           @endif
                                       </div>
                                   </div>
@@ -198,7 +201,7 @@
                                       <div class="col-md-9">
                                           <h5>{{ $service->title_english }}</h5>
                                           <p>{!! $service->des_english !!}</p>
-                                          <h5 class="text-success">Price: £{{ number_format($service->price, 2) }}</h5>
+                                          <h5 class="text-success d-none">Price: {{ number_format($service->price, 2) }}RON</h5>
                                       </div>
                                   </div>
                               </div>
@@ -259,6 +262,70 @@
   </div>
 </div>
 
+<div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add Address</h5>
+                  <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addressForm">
+                <div class="modal-body">
+                    <input type="hidden" name="type" id="addressType" value="1">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="first_name" required id="first_name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" name="phone" required id="phone">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">District</label>
+                        <input type="text" class="form-control" name="district" required id="district">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">First Line</label>
+                        <input type="text" class="form-control" name="first_line" required id="first_line">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Second Line (Optional)</label>
+                        <input type="text" class="form-control" name="second_line" id="second_line">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Third Line (Optional)</label>
+                        <input type="text" class="form-control" name="third_line" id="third_line">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Town</label>
+                        <input type="text" class="form-control" name="town" required id="town">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Post Code</label>
+                        <input type="text" class="form-control" name="post_code" required id="post_code">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Floor (Optional)</label>
+                        <input type="text" class="form-control" name="floor" id="floor">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apartment (Optional)</label>
+                        <input type="text" class="form-control" name="apartment" id="apartment">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <style>
   .step {
       padding: 25px;
@@ -297,6 +364,111 @@
 @endsection
 
 @section('script')
+
+<script>
+$(document).ready(function() {
+    const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+
+    window.openAddressModal = function(type) {
+        const title = type === 1 ? 'Shipping' : 'Billing';
+        console.log(title);
+        $('#modalTitle').text(`Add ${title} Address`);
+        $('#addressType').val(type);
+        addressModal.show();
+    };
+
+    $('#saveAddressBtn').on('click', function(e) {
+        e.preventDefault();
+        saveAddress();
+    });
+
+    async function saveAddress() {
+        const form = document.getElementById('addressForm');
+        const type = $('#addressType').val();
+        const typeName = type === '1' ? 'shipping' : 'billing';
+        
+        const formData = new FormData();
+        formData.append('type', type);
+        formData.append('name', $('#name').val());
+        formData.append('first_name', $('#first_name').val());
+        formData.append('phone', $('#phone').val());
+        formData.append('district', $('#district').val());
+        formData.append('first_line', $('#first_line').val());
+        formData.append('second_line', $('#second_line').val());
+        formData.append('third_line', $('#third_line').val());
+        formData.append('town', $('#town').val());
+        formData.append('post_code', $('#post_code').val());
+        formData.append('floor', $('#floor').val());
+        formData.append('apartment', $('#apartment').val());
+
+        $('#saveAddressBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+
+        try {
+            const response = await $.ajax({
+                url: '/addresses-store',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            if (response.code === 201) {
+                addressModal.hide();
+                form.reset(); // ✅ Clear the form
+                toastr.success('Address added successfully!');
+                updateAddressDropdown(typeName, response.address);
+            }
+        } catch (error) {
+            handleFormErrors(error);
+        } finally {
+            $('#saveAddressBtn').prop('disabled', false).text('Save Address');
+        }
+    }
+
+    function updateAddressDropdown(typeName, address) {
+        const selectElement = $(`select[name="${typeName}_address_id"]`);
+        const addressText = `${address.name}, ${address.first_name}, ${address.phone}`;
+
+        if (selectElement.length === 0) {
+            const cardBody = $(`.card:has(.card-header:contains('${typeName.charAt(0).toUpperCase() + typeName.slice(1)} Address')) .card-body`);
+            cardBody.find('p.text-muted').remove();
+
+            cardBody.prepend(`
+                <div class="form-group">
+                    <label>Select ${typeName.charAt(0).toUpperCase() + typeName.slice(1)} Address</label>
+                    <select class="form-control" name="${typeName}_address_id" required>
+                        <option value="${address.id}">${addressText}</option>
+                    </select>
+                </div>
+            `);
+        } else {
+            const newOption = new Option(addressText, address.id, true, true);
+            selectElement.append(newOption).trigger('change');
+        }
+    }
+
+    function handleFormErrors(error) {
+        if (error.status === 422) {
+            $('.is-invalid').removeClass('is-invalid');
+            $('.invalid-feedback').remove();
+
+            $.each(error.responseJSON.errors, function(key, value) {
+                const input = $(`[name="${key}"]`);
+                input.addClass('is-invalid');
+                input.after(`<div class="invalid-feedback">${value[0]}</div>`);
+            });
+        } else {
+            toastr.error('An error occurred. Please try again.');
+            console.error('Error:', error);
+        }
+    }
+});
+</script>
+
+
 <!-- FilePond -->
 <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
 <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">

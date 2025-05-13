@@ -53,6 +53,7 @@ Route::post('/contact-message', [FrontendController::class, 'contactMessage'])->
 Route::get('/service/booking/{slug}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
 Route::post('/booking-store', [FrontendController::class, 'bookingStore'])->name('booking.store');
 Route::get('/category/{category}/{subcategory?}', [FrontendController::class, 'showCategoryDetails'])->name('category.show');
+Route::post('/addresses-store', [FrontendController::class, 'storeAdditionalAddress'])->name('addresses.store');
 
 
 Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');

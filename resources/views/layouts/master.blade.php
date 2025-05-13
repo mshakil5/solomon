@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Solomon Maintainance</title>
+    <title>Tot Pro</title>
 
     <link rel="icon" href="{{ asset('images/company/' . $companyDetails->fav_icon) }}">
     
@@ -30,6 +30,8 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
     <link href="{{ asset('frontend/css/style.css')}}" rel="stylesheet">
 
@@ -49,15 +51,11 @@
     <div class="header-line"></div> 
     @include('frontend.inc.footer')
 
-    <!-- JAVASCRIPT FILES -->
-    <!-- <script src="{{ asset('frontend/js/jquery.min.js')}}"></script>
-    <script src="{{ asset('frontend/js/bootstrap.min.js')}}"></script>
-    <script src="{{ asset('frontend/js/counter.js')}}"></script>
-    <script src="{{ asset('frontend/js/custom.js')}}"></script> -->
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     {{-- <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -72,6 +70,23 @@
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> --}}
+
+    <script>
+      function showToast(type, message, title = '') {
+          const options = {
+              closeButton: true,
+              progressBar: true,
+              positionClass: 'toast-top-right',
+              timeOut: 5000
+          };
+
+          if (type === 'success') {
+              toastr.success(message, title, options);
+          } else if (type === 'error') {
+              toastr.error(message, title, options);
+          }
+      }
+    </script>
 
     @yield('script')
 
