@@ -131,7 +131,8 @@
                                                   <label>Select Billing Address</label>
                                                   <select class="form-select" name="billing_address_id" required>
                                                       @foreach($billingAddresses as $address)
-                                                          <option value="{{ $address->id }}">
+                                                          <option value="{{ $address->id }}"
+                                                            @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
                                                               {{ $address->name }}, {{ $address->first_name }}, {{ $address->phone }}
                                                           </option>
                                                       @endforeach
@@ -160,7 +161,11 @@
                                                   <label>Select Shipping Address</label>
                                                   <select class="form-select" name="shipping_address_id" required>
                                                       @foreach($shippingAddresses as $address)
-                                                          <option value="{{ $address->id }}">
+                                                          <option value="{{ $address->id }}"
+                                                            @if($address->primary_shipping == 1) 
+                                                                selected 
+                                                                style="background-color: #d3f9d8;"
+                                                            @endif>
                                                             {{ $address->name }}, {{ $address->first_name }},   {{ $address->phone }}
                                                           </option>
                                                       @endforeach

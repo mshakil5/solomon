@@ -26,7 +26,7 @@ class UserController extends Controller
             'surname' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => ['required', 'string', 'regex:/^\d{10}$/'],
-            'address_first_line' => 'required|string|max:255',
+            'address_first_line' => 'nullable|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:255',

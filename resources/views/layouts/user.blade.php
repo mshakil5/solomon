@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Solomon Maintainance</title>
+    <title>Tot Pro</title>
 
     <link rel="icon" type="image/x-icon" href="">
     

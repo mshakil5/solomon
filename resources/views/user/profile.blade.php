@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="surname" class="form-label">Company Name</label>
+                                <label for="surname" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="surname" name="surname" value="{{ $user->surname }}">
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row d-none">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address_first_line" class="form-label">Address First Line <span class="text-danger">*</span></label>
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row d-none">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="town" class="form-label">Town</label>
