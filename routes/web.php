@@ -13,6 +13,7 @@ use App\Http\Controllers\WorkTimeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\CompanyDetailsController;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +119,12 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
     Route::get('/password', [UserController::class, 'password'])->name('user.password');
     Route::post('/password', [UserController::class, 'updatePassword'])->name('user.update.password');
 
+    Route::prefix('addresses')->group(function() {
+        Route::get('/', [AddressController::class, 'index'])->name('user.addresses.index');
+        Route::post('/', [AddressController::class, 'store'])->name('user.addresses.store');
+        Route::put('/{id}', [AddressController::class, 'update'])->name('user.addresses.update');
+        Route::delete('/{id}', [AddressController::class, 'destroy'])->name('user.addresses.destroy');
+    });
 
     Route::get('/additional-addresses', [UserController::class, 'index'])->name('additional-addresses.index');
     Route::get('/additional-addresses/create', [UserController::class, 'create'])->name('additional-addresses.create');

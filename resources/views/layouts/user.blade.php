@@ -59,6 +59,7 @@
                         <a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a>
                         <a class="dropdown-item" href="{{ route('user.password') }}">Change Password</a>
                         <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ route('user.addresses.index') }}">Address</a>
                         <a class="dropdown-item" href="{{ route('user.works') }}">Job History</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
