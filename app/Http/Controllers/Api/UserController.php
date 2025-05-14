@@ -181,8 +181,8 @@ class UserController extends Controller
     {
         $userId = Auth::id();
     
-        $shipping = AdditionalAddress::where('user_id', $userId)
-            ->where('type', 1)
+        $address = AdditionalAddress::where('user_id', $userId)
+            ->whereIn('type',[1, 2])
             ->get();
     
         $billing = AdditionalAddress::where('user_id', $userId)
@@ -190,8 +190,7 @@ class UserController extends Controller
             ->get();
     
         return response()->json([
-            'shipping_addresses' => $shipping,
-            'billing_addresses' => $billing,
+            'addresses' => $address,
         ], 200);
     }    
 
