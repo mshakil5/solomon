@@ -190,7 +190,7 @@ class UserController extends Controller
             ->get();
     
         return response()->json([
-            'allAddress' => $address,
+            'addresses' => $address,
         ], 200);
     }    
 
