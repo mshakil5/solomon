@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\User\ServiceBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +56,6 @@ Route::get('/service/booking/{slug}', [FrontendController::class, 'serviceBookin
 Route::post('/booking-store', [FrontendController::class, 'bookingStore'])->name('booking.store');
 Route::get('/category/{category}/{subcategory?}', [FrontendController::class, 'showCategoryDetails'])->name('category.show');
 Route::post('/addresses-store', [FrontendController::class, 'storeAdditionalAddress'])->name('addresses.store');
-
 
 Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
@@ -118,6 +118,10 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
     Route::post('/user/profile/update', [UserController::class, 'userProfileUpdate'])->name('user.profile.update');
     Route::get('/password', [UserController::class, 'password'])->name('user.password');
     Route::post('/password', [UserController::class, 'updatePassword'])->name('user.update.password');
+
+    Route::get('/service-bookings', [ServiceBookingController::class, 'userBookings'])->name('user.service.bookings');
+    Route::get('/service-booking/details/{id}', [ServiceBookingController::class, 'showBookingDetails'])->name('service.booking.details');
+    Route::get('/service-booking/invoice/{id}', [ServiceBookingController::class, 'showInvoice'])->name('service.booking.invoice');
 
     Route::prefix('addresses')->group(function() {
         Route::get('/', [AddressController::class, 'index'])->name('user.addresses.index');

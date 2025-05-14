@@ -61,6 +61,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('user.addresses.index') }}">Address</a>
                         <a class="dropdown-item" href="{{ route('user.works') }}">Job History</a>
+                        <a class="dropdown-item" href="{{ route('user.works') }}">Job History</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="me-50" data-feather="power"></i> {{ __('Logout') }}
