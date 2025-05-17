@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="row mt-3">
-    <div class="col-12">
+<div class="row justify-content-center mt-3">
+    <div class="col-10">
         <div class="card">
             <div class="card-header bg-primary">
                 <h4 class="card-title text-white">My Addresses</h4>

@@ -123,6 +123,9 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
     Route::get('/service-booking/details/{id}', [ServiceBookingController::class, 'showBookingDetails'])->name('service.booking.details');
     Route::get('/service-booking/invoice/{id}', [ServiceBookingController::class, 'showInvoice'])->name('service.booking.invoice');
 
+    Route::get('/service-bookings/edit/{id}', [ServiceBookingController::class, 'editBooking'])->name('service.booking.edit');
+    Route::put('/service-bookings/{id}', [ServiceBookingController::class, 'updateBooking'])->name('service.booking.update');
+
     Route::prefix('addresses')->group(function() {
         Route::get('/', [AddressController::class, 'index'])->name('user.addresses.index');
         Route::post('/', [AddressController::class, 'store'])->name('user.addresses.store');

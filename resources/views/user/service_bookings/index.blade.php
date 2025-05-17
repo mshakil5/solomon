@@ -57,28 +57,36 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                @switch($booking->status)
-                                    @case(0)
-                                        <span class="badge bg-secondary">Pending</span>
-                                        @break
-                                    @case(1)
-                                        <span class="badge bg-primary">Confirmed</span>
-                                        @break
-                                    @case(2)
-                                        <span class="badge bg-warning">In Progress</span>
-                                        @break
-                                    @case(3)
-                                        <span class="badge bg-success">Completed</span>
-                                        @break
-                                    @case(4)
-                                        <span class="badge bg-danger">Cancelled</span>
-                                        @break
-                                @endswitch
+                              @switch($booking->status)
+                                  @case(1) {{-- New --}}
+                                      <span class="badge bg-info">New</span>
+                                      @break
+
+                                  @case(2) {{-- Processing --}}
+                                      <span class="badge bg-warning text-dark">Processing</span>
+                                      @break
+
+                                  @case(3) {{-- Completed --}}
+                                      <span class="badge bg-success">Completed</span>
+                                      @break
+
+                                  @case(4) {{-- Cancelled --}}
+                                      <span class="badge bg-danger">Cancelled</span>
+                                      @break
+
+                                  @default {{-- Unknown/Invalid --}}
+                                      <span class="badge bg-secondary">Unknown</span>
+                              @endswitch
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('service.booking.details', $booking->id) }}" class="btn btn-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
+                                @if($booking->status == 1)
+                                    <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
