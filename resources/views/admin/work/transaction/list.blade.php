@@ -33,21 +33,19 @@
                 <tr>
                   <th>Sl</th>
                   <th>Date</th>
-                  <th>Name</th>
-                  <th>Email</th>
                   <th>Transaction ID</th>
                   <th>Amount</th>
+                  <th>Booking Details</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
-                     <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
-                    <td>{{ isset($data->work) ? $data->work->name : 'N/A' }}</td>
-                    <td>{{ isset($data->work) ? $data->work->email : 'N/A' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
                     <td>{{$data->tranid}}</td>
                     <td>{{$data->amount}}</td>
+                    <td><a href="{{ route('admin.booking.details', $data->invoice->serviceBooking->id) }}" class="btn btn-secondary" target="_blank"><i class="fas fa-eye"></i></a></td>
                   </tr>
                   @endforeach
                 

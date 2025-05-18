@@ -3,17 +3,13 @@
 
 @include('frontend.inc.hero')
 
-<style>
-    .sub-category{
-        padding: 2px;
-        margin: 5px;
-    }
-
-    .sub-category:hover{
-        padding: 5px;
-        margin: 0px;
-    }
-</style>
+<div class="categories mt-5">
+  @if(session('success'))
+      <div class="alert alert-success">
+          {{ session('success') }}
+      </div>
+  @endif
+</div>
 
 <div class="categories mt-5 d-none">
 
@@ -85,41 +81,71 @@
     </div>
 </div>
 
-<div class="services-by-type py-5">
+<div class="booking-type-section py-5 bg-light">
+  <div class="container">
+    <h2 class="text-primary fw-semibold mb-4 text-center">
+      {{ session('app_locale', 'en') == 'ro' ? 'Alegeți tipul de rezervare' : 'Choose Booking Type' }}
+    </h2>
+
+    <div class="row g-3 justify-content-center">
+      @php
+        $workTypes = [
+          1 => ['title' => session('app_locale', 'en') == 'ro' ? 'Serviciu de urgență' : 'Emergency Service', 'icon' => 'fa-solid fa-triangle-exclamation'],
+          2 => ['title' => session('app_locale', 'en') == 'ro' ? 'Serviciu Prioritar' : 'Prioritized Service', 'icon' => 'fa-solid fa-bolt'],
+          3 => ['title' => session('app_locale', 'en') == 'ro' ? 'În afara orelor de lucru' : 'Outside Working Hours', 'icon' => 'fa-solid fa-clock'],
+          4 => ['title' => session('app_locale', 'en') == 'ro' ? 'Serviciu Standard' : 'Standard Service', 'icon' => 'fa-solid fa-wrench']
+        ];
+      @endphp
+
+      @foreach ($workTypes as $value => $type)
+        <div class="col-md-3 col-sm-6">
+          <a href="{{ route('booking.type.select', ['type' => $value]) }}" class="booking-type-option d-block text-decoration-none text-center">
+            <div class="booking-type-icon mb-2"><i class="{{ $type['icon'] }}"></i></div>
+            <div class="fw-semibold text-dark">{{ $type['title'] }}</div>
+          </a>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.booking-type-option input').forEach(input => {
+    input.addEventListener('change', function () {
+      document.querySelectorAll('.booking-type-option').forEach(opt => opt.classList.remove('selected'));
+      this.closest('.booking-type-option').classList.add('selected');
+    });
+  });
+</script>
+
+<div class="services-by-type py-5 bg-light">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="text-primary fw-semibold">
-        {{ session('app_locale', 'en') == 'ro' ? 'Serviciile noastre pe categorii' : 'Our Services by Type' }}
+        {{ session('app_locale', 'en') == 'ro' ? 'Serviciile noastre' : 'Our Services' }}
       </h2>
-      <p class="text-secondary fs-5">
-        {{ session('app_locale', 'en') == 'ro' ? 'Explorează serviciile noastre organizate pe categorii' : 'Explore our services organized by categories' }}
-      </p>
     </div>
 
     @foreach ($types as $type)
       <div class="mb-5">
-        <h4 class="mb-3 text-primary">
+        <h4 class="mb-4 text-primary text-center">
           {{ session('app_locale', 'en') == 'ro' ? $type->title_romanian : $type->title_english }}
         </h4>
 
-        <div class="row">
+        <div class="row g-3 justify-content-center">
           @foreach ($type->services as $service)
-            <div class="col-md-6 col-lg-4 mb-4">
-              <div class="border rounded p-3 h-100 shadow-sm">
-                <div class="mb-3">
-                  <img src="{{ asset('images/service/' . $service->image) }}" 
-                       alt="{{ $service->title_english }}" 
-                       class="img-fluid rounded w-100" 
-                       style="height: 160px; object-fit: cover;">
-                </div>
-                <h5>
+            <div class="col-md-3 col-sm-6">
+              <div class="service-option shadow-sm">
+                <img src="{{ asset('images/service/' . $service->image) }}" 
+                     alt="{{ $service->title_english }}" 
+                     class="service-img img-fluid">
+
+                <h5 class="fw-semibold mb-2">
                   {{ session('app_locale', 'en') == 'ro' ? $service->title_romanian : $service->title_english }}
                 </h5>
-                <p class="text-muted small">
+
+                <p class="text-muted small mb-3">
                   {!! session('app_locale', 'en') == 'ro' ? Str::limit($service->des_romanian, 60) : Str::limit($service->des_english, 60) !!}
-                </p>
-                <p class="fw-semibold mb-2">
-                  {{ session('app_locale', 'en') == 'ro' ? 'Preț:' : 'Price:' }} {{ number_format($service->price, 2) }} RON
                 </p>
 
                 @auth
@@ -131,7 +157,6 @@
                     {{ session('app_locale', 'en') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
                   </a>
                 @endauth
-
               </div>
             </div>
           @endforeach
@@ -341,7 +366,7 @@
 @endsection
 
 @section('script')
-<script>
+{{-- <script>
   document.addEventListener('DOMContentLoaded', function() {
       const forms = document.querySelectorAll('form');
       const loadingDiv = document.getElementById('loading');
@@ -352,5 +377,5 @@
           });
       });
   });
-</script>
+</script> --}}
 @endsection

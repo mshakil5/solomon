@@ -93,12 +93,15 @@
                                       <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
                                   </div>
                               </div>
+                              <input type="hidden" name="selected_type" value="{{ $type }}">
+                              @if (!isset($type) || $type != 1)
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label for="time">Time <span class="text-danger">*</span></label>
                                       <input type="time" name="time" id="time" class="form-control" required>
                                   </div>
                               </div>
+                              @endif
                           </div>
                           
                           <div class="row mt-4">

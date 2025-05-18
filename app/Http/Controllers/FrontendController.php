@@ -236,12 +236,12 @@ class FrontendController extends Controller
         return view('frontend.post_job', compact('category', 'companyDetails','subcategory'));
     }
 
-    public function serviceBooking($slug)
+    public function serviceBooking($slug, $type = null)
     {
         $service = Service::where('slug', $slug)->firstOrFail();
         $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->latest()->get();
         $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->latest()->get();
-        return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses'));
+        return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses','type'));
     }
 
     public function bookingStore(Request $request)
@@ -250,7 +250,7 @@ class FrontendController extends Controller
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'time' => 'required',
+            'time' => (!isset($request->selected_type) || $request->selected_type != 1) ? 'required' : 'nullable',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
@@ -265,10 +265,22 @@ class FrontendController extends Controller
         }
 
         $now = now();
-        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
-        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
-        $hour = $serviceDateTime->format('H');
-        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        if ($request->selected_type == 1 || empty($request->time)) {
+            $serviceDateTime = null;
+        } else {
+            $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        }
+
+        if ($serviceDateTime) {
+            $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+            $hour = $serviceDateTime->format('H');
+            $dayOfWeek = $serviceDateTime->dayOfWeek;
+        } else {
+            $diffInMinutes = null;
+            $hour = null;
+            $dayOfWeek = null;
+        }
 
         $company = CompanyDetails::select('opening_time', 'closing_time')->first();
         $openingHour = $company?->opening_time ?? '10:00';
@@ -277,14 +289,24 @@ class FrontendController extends Controller
         $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
         $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
 
-        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1; $fee = 400.00;
-        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2; $fee = 250.00;
-        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
-            $type = 3; $fee = 300.00;
+        if (isset($request->selected_type)) {
+            $type = $request->selected_type;
+            $fee = match ($type) {
+                1 => 400.00,
+                2 => 250.00,
+                3 => 300.00,
+                default => 0.00,
+            };
         } else {
-            $type = 4; $fee = 0.00;
+            if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+                $type = 1; $fee = 400.00;
+            } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
+                $type = 2; $fee = 250.00;
+            } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+                $type = 3; $fee = 300.00;
+            } else {
+                $type = 4; $fee = 0.00;
+            }
         }
 
         $service = Service::findOrFail($request->service_id);
@@ -298,27 +320,27 @@ class FrontendController extends Controller
             'shipping_address_id' => $request->shipping_address_id,
             'description' => $request->description,
             'date' => $request->date,
-            'time' => $request->time,
+            'time' => ($request->selected_type == 1) ? null : $request->time,
             'service_fee' => $serviceFee,
             'additional_fee' => $fee,
             'total_fee' => $totalFee,
             'type' => $type
         ]);
-    
+
         if ($request->hasFile('files')) {
             $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
-        
+
             foreach ($files as $file) {
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
                 $storagePath = public_path('images/service');
                 $file->move($storagePath, $filename);
-        
+
                 $booking->files()->create([
                     'file' => $filename
                 ]);
             }
-        }      
-    
+        }
+
         return redirect()->route('homepage')->with('success', 'Booking created successfully.');
     }
 
@@ -552,6 +574,19 @@ class FrontendController extends Controller
             'msg' => 'Address created successfully!',
             'address' => $address
         ], 201);
+    }
+
+    public function selectType(Request $request)
+    {
+      $validated = $request->validate([
+        'type' => 'required|in:1,2,3,4',
+      ]);
+
+      $types = Type::with(['services' => function ($q) {
+        $q->where('status', 1);
+      }])->where('status', 1)->get();
+      $selectedType = $request->type;
+      return view('frontend.services', compact('types', 'selectedType'));
     }
 
 }

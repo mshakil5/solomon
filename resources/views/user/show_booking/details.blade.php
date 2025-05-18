@@ -6,14 +6,26 @@
         <a href="{{ route('user.service.bookings') }}" class="btn btn-primary mb-3">Go Back</a>
         <div class="card">
             <div class="card-header bg-primary">
-                <h2 class="card-title text-white">Booking Details</h2>    
+              @php
+                $priority = match($booking->type) {
+                  1 => 'Emergency',
+                  2 => 'Prioritized',
+                  3 => 'Outside Working Hours',
+                  4 => 'Standard Service',
+                  default => 'Unknown',
+                };
+              @endphp
+                
+            <h2 class="card-title text-white">
+              Booking Details - <small>{{ $priority }}</small>
+            </h2>
             </div>
             <div class="card-body">
                 <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
                     <div class="col-md-6">
                         <div class="form-group mb-1">
                             <label class="mb-1" for="name">Booking Date:</label>
-                            <p>{{ \Carbon\Carbon::parse($booking->created_at)->format('d/m/Y H:i') }}</p>
+                            <p>{{ \Carbon\Carbon::parse($booking->created_at)->format('d/m/Y') }}</p>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -67,7 +79,12 @@
                     <div class="col-md-6">
                         <div class="form-group mb-1">
                             <label class="mb-1" for="name">Scheduled Time:</label>
-                            <p>{{ \Carbon\Carbon::parse($booking->time)->format('h:i A') }}</p>
+                            <p>
+                              @if($booking->time)
+                                {{ \Carbon\Carbon::parse($booking->time)->format('h:i A') }}
+                              @else
+                              @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -206,43 +223,72 @@
                 @endif
 
                 @if($booking->invoices->count() > 0)
-                <div class="row mt-4">
+                  <div class="row mt-4">
                     <div class="col-12">
-                        <h4>Invoices</h4>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Invoice ID</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($booking->invoices as $invoice)
-                                <tr>
-                                    <td>{{ $invoice->invoiceid }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
-                                    <td>{{ number_format($invoice->amount, 2) }} RON</td>
-                                    <td>
-                                        @if($invoice->status == 1)
-                                            <span class="badge bg-success">Paid</span>
-                                        @else
-                                            <span class="badge bg-warning">Pending</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('service.booking.invoice', $booking->id) }}" class="btn btn-sm btn-primary">
-                                            View Invoice
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                      <h4>Invoices</h4>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Invoice ID</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @foreach($booking->invoices as $invoice)
+                            <tr>
+                              <td>{{ $invoice->invoiceid }}</td>
+                              <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
+                              <td>{{ number_format($invoice->amount, 2) }} RON</td>
+                              <td>
+                                @if($invoice->status == 0)
+                                  <span class="badge bg-success">Paid</span>
+                                @else
+                                  <span class="badge bg-warning">Pending</span>
+                                @endif
+                              </td>
+                              <td>
+                                <a href="{{ asset($invoice->img) }}" class="btn btn-sm btn-primary" target="_blank" download>
+                                  View Invoice
+                                </a>
+                              </td>
+                            </tr>
+                          @endforeach
+                        </tbody>
+                      </table>
                     </div>
-                </div>
+                  </div>
+
+                  {{-- Transactions Section --}}
+                  <div class="row mt-4">
+                    <div class="col-12">
+                      <h4>Transactions</h4>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Invoice ID</th>
+                            <th>Date</th>
+                            <th>Booking ID</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @foreach($booking->invoices as $invoice)
+                            @if($invoice->transaction)
+                              <tr>
+                                <td>{{ $invoice->invoiceid }}</td>
+                                <td>{{ \Carbon\Carbon::parse($invoice->transaction->date)->format('d/m/Y') }}</td>
+                                <td>#{{ $invoice->service_booking_id  }}</td>
+                                <td>{{ number_format($invoice->transaction->amount, 2) }} RON</td>
+                              </tr>
+                            @endif
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 @endif
             </div>
         </div>

@@ -107,6 +107,73 @@
                         </div>
 
                         <div class="col-md-6 mb-4">
+
+                            @if($booking->invoices->count())
+                              <div class="card">
+                                  <div class="card-header"><strong>Invoices</strong></div>
+                                  <div class="card-body p-0">
+                                      <table class="table table-bordered mb-0">
+                                          <thead>
+                                              <tr>
+                                                  <th>Invoice ID</th>
+                                                  <th>Date</th>
+                                                  <th>Amount</th>
+                                                  <th>Status</th>
+                                                  <th>Action</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              @foreach($booking->invoices as $invoice)
+                                                  <tr>
+                                                      <td>{{ $invoice->invoiceid }}</td>
+                                                      <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
+                                                      <td>{{ number_format($invoice->amount, 2) }} RON</td>
+                                                      <td>
+                                                          @if($invoice->status == 0)
+                                                              <span class="badge bg-success">Paid</span>
+                                                          @else
+                                                              <span class="badge bg-warning">Pending</span>
+                                                          @endif
+                                                      </td>
+                                                      <td>
+                                                        <a href="{{ asset($invoice->img) }}" target="_blank" class="btn btn-sm btn-primary">
+                                                            View Invoice
+                                                        </a>
+                                                      </td>
+                                                  </tr>
+                                              @endforeach
+                                          </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+
+                              @foreach($booking->invoices as $invoice)
+                                @if($invoice->transaction)
+                                  <div class="card mt-3">
+                                    <div class="card-header"><strong>Transaction for Invoice: {{ $invoice->invoiceid }}</strong></div>
+                                    <div class="card-body p-0">
+                                      <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th>Date</th>
+                                            <th>Work ID</th>
+                                            <th>Amount</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>{{ \Carbon\Carbon::parse($invoice->transaction->date)->format('d/m/Y') }}</td>
+                                            <td>#{{ $invoice->serviceBooking->id }}</td>
+                                            <td>{{ number_format($invoice->transaction->amount, 2) }} RON</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                @endif
+                              @endforeach
+                            @endif
+
                             <div class="card mb-3">
                                 <div class="card-header"><strong>Client Information</strong></div>
                                 <div class="card-body p-0">

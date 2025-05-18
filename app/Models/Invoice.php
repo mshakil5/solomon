@@ -29,4 +29,9 @@ class Invoice extends Model
         return $this->belongsTo(ServiceBooking::class);
     }
 
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class, 'invoice_id');
+    }
+
 }

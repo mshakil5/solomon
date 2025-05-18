@@ -52,8 +52,11 @@ Route::get('/about-us', [FrontendController::class, 'aboutUs'])->name('aboutUs')
 Route::post('/work', [FrontendController::class, 'workStore'])->name('work.store');
 // Route::get('/contact', [FrontendController::class, 'showContactForm'])->name('contact.show');
 Route::post('/contact-message', [FrontendController::class, 'contactMessage'])->name('contactMessage');
-Route::get('/service/booking/{slug}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
+Route::get('/service/booking/{slug}/{type?}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
 Route::post('/booking-store', [FrontendController::class, 'bookingStore'])->name('booking.store');
+
+Route::get('/booking/select-type', [FrontendController::class, 'selectType'])->name('booking.type.select');
+
 Route::get('/category/{category}/{subcategory?}', [FrontendController::class, 'showCategoryDetails'])->name('category.show');
 Route::post('/addresses-store', [FrontendController::class, 'storeAdditionalAddress'])->name('addresses.store');
 
@@ -121,7 +124,7 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
 
     Route::get('/service-bookings', [ServiceBookingController::class, 'userBookings'])->name('user.service.bookings');
     Route::get('/service-booking/details/{id}', [ServiceBookingController::class, 'showBookingDetails'])->name('service.booking.details');
-    Route::get('/service-booking/invoice/{id}', [ServiceBookingController::class, 'showInvoice'])->name('service.booking.invoice');
+    Route::get('/service-booking/invoice-view/{serviceBooking}', [ServiceBookingController::class, 'showInvoice'])->name('service.booking.invoice');
 
     Route::get('/service-bookings/edit/{id}', [ServiceBookingController::class, 'editBooking'])->name('service.booking.edit');
     Route::put('/service-bookings/{id}', [ServiceBookingController::class, 'updateBooking'])->name('service.booking.update');

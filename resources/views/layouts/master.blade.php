@@ -18,12 +18,7 @@
 
     <link rel="icon" href="{{ asset('images/company/' . $companyDetails->fav_icon) }}">
     
-    <!-- CSS FILES -->
-    <!-- <link href="{{ asset('frontend/css/bootstrap.min.css')}}" rel="stylesheet"> -->
-    <!-- <link href="{{ asset('frontend/css/bootstrap-icons.css')}}" rel="stylesheet"> -->
-    <!-- <link href="{{ asset('frontend/css/templatemo-kind-heart-charity.css')}}" rel="stylesheet"> -->
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -55,20 +50,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    {{-- <script type="text/javascript">
-        function googleTranslateElementInit() {
-            var elements = document.querySelectorAll('.google_translate_element');
-            elements.forEach(function(element) {
-                new google.translate.TranslateElement({
-                    pageLanguage: 'ro',
-                    includedLanguages: 'en,ro',
-                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                }, element);
-            });
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> --}}
 
     <script>
       function showToast(type, message, title = '') {

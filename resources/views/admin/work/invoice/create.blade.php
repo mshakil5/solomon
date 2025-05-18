@@ -6,7 +6,7 @@
         <div class="card-header">
             <div class="row">
                 <div class="col">
-                    <a href="{{ route('admin.complete') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Go back</a>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Go back</a>
                 </div>
             </div>
         </div>

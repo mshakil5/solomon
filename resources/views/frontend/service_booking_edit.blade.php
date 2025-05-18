@@ -73,6 +73,7 @@
                                          value="{{ old('date', $booking->date) }}" required>
                               </div>
                           </div>
+                          @if($booking->type != 1)
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label for="time">Time <span class="text-danger">*</span></label>
@@ -80,6 +81,7 @@
                                          value="{{ old('time', \Carbon\Carbon::parse($booking->time)->format('H:i')) }}" required>
                               </div>
                           </div>
+                          @endif
                       </div>
                       
                       <div class="row mt-4">
@@ -150,6 +152,16 @@
       </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    const confirmUpdate = confirm('Warning: Updating your booking may change your work priority based on our system. Do you want to proceed?');
+    if (!confirmUpdate) {
+      e.preventDefault();
+    }
+  });
+</script>
+
 @endsection
 
 @section('script')

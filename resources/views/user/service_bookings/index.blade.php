@@ -29,6 +29,7 @@
                         <tr>
                             <th class="text-center">Booking ID</th>
                             <th class="text-center">Date</th>
+                            <th class="text-center">Priority</th>
                             <th class="text-center">Service</th>
                             <th class="text-center">Scheduled Date</th>
                             <th class="text-center">Time</th>
@@ -43,9 +44,29 @@
                         <tr>
                             <td class="text-center">#{{ $booking->id }}</td>
                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d/m/Y') }}</td>
+                            <td class="text-center">
+                                @switch($booking->type)
+                                    @case(1)
+                                        <span class="badge bg-danger">Emergency</span>
+                                        @break
+                                    @case(2)
+                                        <span class="badge bg-warning">Prioritized</span>
+                                        @break
+                                    @case(3)
+                                        <span class="badge bg-info">Outside Hours</span>
+                                        @break
+                                    @case(4)
+                                        <span class="badge bg-success">Standard</span>
+                                        @break
+                                    @default
+                                        <span class="badge bg-secondary">Unknown</span>
+                                @endswitch
+                            </td>
                             <td class="text-center">{{ $booking->service->title_english }}</td>
                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->date)->format('d/m/Y') }}</td>
-                            <td class="text-center">{{ \Carbon\Carbon::parse($booking->time)->format('h:i A') }}</td>
+                            <td class="text-center">
+                                {{ $booking->time ? \Carbon\Carbon::parse($booking->time)->format('h:i A') : '-' }}
+                            </td>
                             <td class="text-center">{{ number_format($booking->total_fee, 2) }} RON</td>
                             <td class="text-center">
                                 @if ($booking->invoices->count() > 0)
@@ -82,7 +103,7 @@
                                 <a href="{{ route('service.booking.details', $booking->id) }}" class="btn btn-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                @if($booking->status == 1)
+                                @if($booking->status == 1 && $booking->type != 1)
                                     <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning">
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -92,6 +113,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="px-3 mt-3">
+                    {{ $bookings->links('pagination::bootstrap-5') }}
+                </div>
             </div>
         </div>
     </div>

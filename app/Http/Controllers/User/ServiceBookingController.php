@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
 use App\Models\ServiceImage;
+use App\Models\Invoice;
 
 class ServiceBookingController extends Controller
 {
@@ -17,11 +18,11 @@ class ServiceBookingController extends Controller
     public function userBookings()
     {
         $userId = auth()->id();
-        $bookings = ServiceBooking::with('service')
+        $bookings = ServiceBooking::with(['service', 'invoices'])
             ->where('user_id', $userId)
             ->orderBy('id', 'DESC')
-            ->get();
-            
+            ->paginate(10);
+
         return view('user.service_bookings.index', compact('bookings'));
     }
 
@@ -32,7 +33,7 @@ class ServiceBookingController extends Controller
                 'billingAddress', 
                 'shippingAddress',
                 'files',
-                'invoices'
+                'invoices.transaction'
             ])->findOrFail($id);
             
         if ($booking->user_id != auth()->id()) {
@@ -42,17 +43,10 @@ class ServiceBookingController extends Controller
         return view('user.show_booking.details', compact('booking'));
     }
 
-    public function showInvoice($id)
+    public function showInvoice(ServiceBooking $serviceBooking)
     {
-        $invoice = Invoice::where('service_booking_id', $id)
-            ->firstOrFail();
-            
-        $booking = ServiceBooking::find($invoice->service_booking_id);
-        if ($booking->user_id != auth()->id()) {
-            abort(403);
-        }
-        
-        return response()->file(public_path($invoice->img));
+        $invoices = $serviceBooking->invoices;
+        return view('user.invoice.details', compact('invoices'));
     }
 
     public function editBooking($id)

@@ -3,11 +3,11 @@
 @section('content')
 <div class="row mt-3">
     <div class="col-10 mx-auto">
-        <a href="{{ route('user.works') }}" class="btn btn-primary mb-3">Go Back</a>
+        <a href="{{ route('user.service.bookings') }}" class="btn btn-primary mb-3">Go Back</a>
         
-        @if ($invoice)
+        @if ($invoices)
 
-        @foreach ($invoice as $invoice)
+        @foreach ($invoices as $invoice)
             <div class="card mt-2">
                 <div class="card-header bg-primary">
                     <h2 class="card-title text-white">Invoice Details</h2>
