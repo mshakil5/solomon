@@ -48,20 +48,17 @@
                             <label class="mb-1" for="name">Status:</label>
                             <p>
                                 @switch($booking->status)
-                                    @case(0)
-                                        <span class="badge bg-secondary">Pending</span>
+                                    @case(1)
+                                        <span class="badge bg-secondary">New</span>
                                         @break
                                     @case(1)
-                                        <span class="badge bg-primary">Confirmed</span>
-                                        @break
-                                    @case(2)
-                                        <span class="badge bg-warning">In Progress</span>
+                                        <span class="badge bg-primary">Processing</span>
                                         @break
                                     @case(3)
-                                        <span class="badge bg-success">Completed</span>
+                                        <span class="badge bg-warning">Completed</span>
                                         @break
                                     @case(4)
-                                        <span class="badge bg-danger">Cancelled</span>
+                                        <span class="badge bg-success">Cancelled</span>
                                         @break
                                 @endswitch
                             </p>
