@@ -49,10 +49,10 @@
                             <p>
                                 @switch($booking->status)
                                     @case(1)
-                                        <span class="badge bg-secondary">New</span>
+                                        <span class="badge bg-secondary">Placed</span>
                                         @break
                                     @case(1)
-                                        <span class="badge bg-primary">Processing</span>
+                                        <span class="badge bg-primary">Confirmed</span>
                                         @break
                                     @case(3)
                                         <span class="badge bg-warning">Completed</span>

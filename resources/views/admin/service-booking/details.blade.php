@@ -65,7 +65,7 @@
                                             <td>
                                                 @php $statusClass = ['1'=>'primary','2'=>'info','3'=>'success','4'=>'danger'][$booking->status] ?? 'secondary'; @endphp
                                                 <span class="badge bg-{{ $statusClass }}">
-                                                    {{ ['1'=>'New','2'=>'In progress','3'=>'Completed','4'=>'Cancelled'][$booking->status] ?? 'Unknown' }}
+                                                    {{ ['1'=>'Placed','2'=>'Confirmed','3'=>'Completed','4'=>'Cancelled'][$booking->status] ?? 'Unknown' }}
                                                 </span>
                                             </td>
                                         </tr>

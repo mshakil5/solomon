@@ -80,11 +80,11 @@
                             <td class="text-center">
                               @switch($booking->status)
                                   @case(1) {{-- New --}}
-                                      <span class="badge bg-info">New</span>
+                                      <span class="badge bg-info">Placed</span>
                                       @break
 
                                   @case(2) {{-- Processing --}}
-                                      <span class="badge bg-warning text-dark">Processing</span>
+                                      <span class="badge bg-warning text-dark">Confirmed</span>
                                       @break
 
                                   @case(3) {{-- Completed --}}

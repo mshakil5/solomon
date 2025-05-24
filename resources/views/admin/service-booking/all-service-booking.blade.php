@@ -99,8 +99,8 @@
                         <div class="btn-group">
                           <button type="button" class="btn btn-secondary">
                             <span id="stsval{{$data->id}}">
-                            @if ($data->status == 1) New
-                            @elseif($data->status == 2) In progress
+                            @if ($data->status == 1) Placed
+                            @elseif($data->status == 2) Confirmed
                             @elseif($data->status == 3) Completed
                             @elseif($data->status == 4) Cancelled
                             @endif
