@@ -406,5 +406,23 @@ class ServiceController extends Controller
         return response()->json($invoices);
     }
 
+    public function cancelBooking($id)
+    {
+        $booking = ServiceBooking::find($id);
+
+        if (!$booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+
+        if ($booking->status != 1) {
+            return response()->json(['message' => 'Only placed bookings can be cancelled'], 403);
+        }
+
+        $booking->status = 4;
+        $booking->save();
+
+        return response()->json(['message' => 'Booking cancelled successfully'], 200);
+    }
+
 
 }

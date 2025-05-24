@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('service_fee', 10, 2)->nullable();
             $table->decimal('additional_fee', 10, 2)->nullable();
             $table->decimal('total_fee', 10, 2)->nullable();
-            $table->boolean('status')->default(1); // 1 ==new, 2 ==processing, 3 ==completed, 4 ==cancelled
+            $table->boolean('status')->default(1); // 1 ==placed, 2 ==confirmed, 3 ==completed, 4 ==cancelled
             $table->boolean('type')->default(1); // 1 ==emergency, 2 ==priortized, 3 ==outside working hours, 4 ==standard service
             $table->timestamps();
         });

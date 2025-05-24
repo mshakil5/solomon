@@ -88,6 +88,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
   Route::get('/service-booking/invoices/{id}', [ServiceController::class, 'getInvoices']);
 
+  Route::post('/cancel-booking/{id}', [ServiceController::class, 'cancelBooking']);
+
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'staff'], function () {
