@@ -421,7 +421,10 @@ class ServiceController extends Controller
         $booking->status = 4;
         $booking->save();
 
-        return response()->json(['message' => 'Booking cancelled successfully'], 200);
+        return response()->json(
+          ['message' => 'Booking cancelled successfully'
+          , 'data' => $booking
+          ,'status' => 200]);
     }
 
 
