@@ -166,7 +166,7 @@ class ServiceController extends Controller
 
     public function serviceBookingIndex()
     {
-      $bookings = ServiceBooking::with(['service.type', 'files'])
+      $bookings = ServiceBooking::with(['service.type', 'files', 'serviceReview', 'user.additionalAddresses', 'address'])
             ->where('user_id', auth()->id())
             ->latest()
             ->get();

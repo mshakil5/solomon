@@ -246,7 +246,7 @@
                                     <div>
                                         <strong>Rating:</strong> 
                                         @for($i = 1; $i <= 5; $i++)
-                                            <i class="{{ $i <= $booking->serviceReview->rating ? 'fas' : 'far' }} fa-star text-warning"></i>
+                                            <i class="{{ $i <= $booking->serviceReview->review_star ? 'fas' : 'far' }} fa-star text-warning"></i>
                                         @endfor
                                     </div>
                                     <small class="text-muted">Reviewed on {{ $booking->serviceReview->created_at->format('d/m/Y H:i') }}</small>
