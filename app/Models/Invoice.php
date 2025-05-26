@@ -11,14 +11,7 @@ class Invoice extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'date',
-        'amount',
-        'img',
-        'status',
-        'work_id',
-        'invoiceid'
-    ];
+    protected $guarded = [];
 
      public function work()
     {

@@ -50,13 +50,13 @@
               <li class="nav-item">
                 <a href="{{ route('admin.service.bookings.new') }}" class="nav-link {{ (request()->is('admin/new-service-bookings*')) ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>New</p>
+                    <p>Placed</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ route('admin.service.bookings.processing') }}" class="nav-link {{ (request()->is('admin/processing-service-bookings*')) ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>In Progress</p>
+                    <p>Confirmed</p>
                 </a>
               </li>
               <li class="nav-item">

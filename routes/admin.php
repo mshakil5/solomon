@@ -115,21 +115,13 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/location/{id}', [LocationController::class, 'delete']);
 
     Route::post('/location-status', [LocationController::class, 'toggleStatus']);
-
-    // //Invoice
-    // Route::get('/invoice/{id}', [InvoiceController::class, 'index'])->name('work.invoice');
-    // Route::get('/invoices/create/{work_id}', [InvoiceController::class, 'create'])->name('invoice.create');
-    // Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
-    // Route::put('/admin/invoices/{work_id}', [InvoiceController::class, 'update'])->name('invoices.update');
-    // Route::delete('/admin/invoices/{work_id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
-
     
     //Invoice
     Route::get('/invoice/{id}', [InvoiceController::class, 'index'])->name('admin.booking.invoices');
     Route::get('/invoices/create/{work_id}', [InvoiceController::class, 'create'])->name('invoice.create');
     Route::post('/invoices/store', [InvoiceController::class, 'store'])->name('invoices.store');
-    Route::put('/admin/invoices/{work_id}', [InvoiceController::class, 'update'])->name('invoices.update');
-    Route::delete('/admin/invoices/{work_id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
+    Route::match(['put', 'patch'], '/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+    Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
 
     //User crud by Admin
     Route::get('/new-user', [UserController::class, 'getUser'])->name('allUser');

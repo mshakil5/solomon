@@ -14,13 +14,8 @@ class InvoiceController extends Controller
     public function index($id)
     {
         $work = ServiceBooking::findOrFail($id);
-        $invoice = $work->invoices;
-        return view('admin.work.invoice.index', compact('invoice', 'work'));
-    }
-
-    public function create($work_id)
-    {
-        return view('admin.work.invoice.create',['work_id' => $work_id]);
+        $work->load('invoices');
+        return view('admin.work.invoice.index', compact('work'));
     }
 
     public function store(Request $request)
@@ -28,11 +23,11 @@ class InvoiceController extends Controller
         $validatedData = $request->validate([
             'date' => 'required',
             'amount' => 'required|numeric',
-            'work_id' => 'required|exists:works,id',
+            'service_booking_id' => 'required|exists:service_bookings,id',
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,docx|max:5120',
         ]);
         
-        $invoiceid = time() . $request->work_id;
+        $invoiceid = time() . $request->service_booking_id;
         $validatedData['invoiceid'] = $invoiceid;
 
         if ($request->hasFile('img')) { 
@@ -42,31 +37,24 @@ class InvoiceController extends Controller
             $file->move($storagePath, $filename);
             $validatedData['img'] = 'images/invoices/' . $filename;
         }
-        $invoice = new Invoice;
-        $invoice->date = $validatedData['date'];
-        $invoice->amount = $validatedData['amount'];
-        $invoice->service_booking_id = $validatedData['work_id'];
-        $invoice->invoiceid = $validatedData['invoiceid'];
-        $invoice->img = $validatedData['img'] ?? null;
-        $invoice->save();
+        
+        Invoice::create($validatedData);
 
-        return redirect()->route('admin.booking.invoices', ['id' => $validatedData['work_id']])->with('success', 'Invoice created successfully.');
+        return response()->json(['message' => 'Invoice created successfully.']);
     }
 
-    public function update(Request $request, $work_id)
+    public function update(Request $request, $id)
     {
-        $invoice = Invoice::where('work_id', $work_id)->firstOrFail();
+        $invoice = Invoice::findOrFail($id);
 
         $validatedData = $request->validate([
             'date' => 'required',
             'amount' => 'required|numeric',
+            'service_booking_id' => 'required|exists:service_bookings,id',
             'img' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf,docx|max:5120',
         ]);
 
         $previousImagePath = $invoice->img;
-
-        $invoice->date = $validatedData['date'];
-        $invoice->amount = $validatedData['amount'];
 
         if ($request->hasFile('img')) {
             $file = $request->file('img');
@@ -86,16 +74,15 @@ class InvoiceController extends Controller
 
         $invoice->update($validatedData);
 
-        return redirect()->route('work.invoice', ['id' => $work_id])->with('success', 'Invoice updated successfully.');
+        return response()->json(['message' => 'Invoice updated successfully.']);
     }
 
     public function destroy($id)
     {
-        $invoice = Invoice::where('id', $id)->firstOrFail();
+        $invoice = Invoice::findOrFail($id);
 
         if ($invoice->img) {
             $imagePath = public_path($invoice->img);
-
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
