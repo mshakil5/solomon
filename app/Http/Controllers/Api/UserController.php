@@ -223,7 +223,7 @@ class UserController extends Controller
             'first_line' => 'required|string|max:255',
             'second_line' => 'nullable|string|max:255',
             'third_line' => 'nullable|string|max:255',
-            'town' => 'required|string|max:255',
+            'town' => 'nullable|string|max:255',
             'post_code' => 'required|string|max:255',
             'floor' => 'nullable|string|max:255',
             'apartment' => 'nullable|string|max:255',
