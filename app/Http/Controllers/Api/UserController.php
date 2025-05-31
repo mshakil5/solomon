@@ -251,7 +251,7 @@ class UserController extends Controller
             'floor' => $request->floor,
             'apartment' => $request->apartment,
             'user_id' => Auth::id(),
-            'type' => $request->type
+            'type' => $request->type ?? 1,
         ]);
     
         $address->save();
