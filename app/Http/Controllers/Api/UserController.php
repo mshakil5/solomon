@@ -227,7 +227,7 @@ class UserController extends Controller
             'post_code' => 'required|string|max:255',
             'floor' => 'nullable|string|max:255',
             'apartment' => 'nullable|string|max:255',
-            'type' => 'required|in:1,2',
+            'type' => 'nullable|in:1,2',
         ]);
     
         if ($validator->fails()) {
