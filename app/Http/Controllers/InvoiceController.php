@@ -93,10 +93,10 @@ class InvoiceController extends Controller
         return back()->with('success', 'Invoice deleted successfully.');
     }
 
-    public function showInvoice(Work $work)
+    public function showInvoice(ServiceBooking $serviceBooking)
     {
-        $invoice = $work->invoice;
-        return view('user.invoice.details', compact('invoice'));
+        $invoices = $serviceBooking->invoices;
+        return view('user.invoice.details', compact('invoices'));
     }
 
     public function showInvoiceApi(Work $work)

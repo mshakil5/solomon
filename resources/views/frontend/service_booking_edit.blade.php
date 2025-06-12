@@ -24,7 +24,7 @@
                           <div class="col-md-8">
                               <h3 class="text-primary">{{ $booking->service->title_english }}</h3>
                               <p class="lead">{!! $booking->service->des_english !!}</p>
-                              <h4 class="text-success">Price: {{ number_format($booking->service->price, 2) }}RON</h4>
+                              <h4 class="text-success d-none">Price: {{ number_format($booking->service->price, 2) }}RON</h4>
                           </div>
                       </div>
                       

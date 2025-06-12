@@ -45,7 +45,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required readonly>
                             </div>
                         </div>
                         <div class="col-md-6">

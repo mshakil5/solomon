@@ -114,16 +114,16 @@
                             <p>
                                 @switch($booking->type)
                                     @case(1)
-                                        Urgent (within 2 hours)
+                                        Emergency
                                         @break
                                     @case(2)
-                                        Same Day
+                                        Priortized
                                         @break
                                     @case(3)
-                                        After Hours/Weekend
+                                        Outside Hours
                                         @break
                                     @case(4)
-                                        Standard
+                                        Standard Servicew
                                         @break
                                 @endswitch
                             </p>
@@ -243,14 +243,21 @@
                                 @if($invoice->status == 0)
                                   <span class="badge bg-success">Paid</span>
                                 @else
-                                  <span class="badge bg-warning">Pending</span>
+                                  <form action="{{ route('payment', $invoice->id) }}" method="POST">
+                                      @csrf
+                                      <input type="hidden" name="amount" value="{{ $invoice->amount }}">
+                                      <input type="hidden" name="work_id" value="{{ $invoice->work_id }}">
+                                      <button type="submit" class="badge bg-warning border-0">Pay</button>
+                                  </form>
                                 @endif
                               </td>
+                              @if ($invoice->img)   
                               <td>
                                 <a href="{{ asset($invoice->img) }}" class="btn btn-sm btn-primary" target="_blank" download>
                                   View Invoice
                                 </a>
                               </td>
+                              @endif
                             </tr>
                           @endforeach
                         </tbody>
