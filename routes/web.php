@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\User\ServiceBookingController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,12 @@ Route::get('/clear', function () {
 Route::post('/company-info-update', [CompanyDetailsController::class, 'updateCompanyInfo'])->name('admin.companyinfo');
 
 Auth::routes();
+
+// Registration routes
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name('register.send-otp');
+Route::post('/register/verify-otp', [RegisterController::class, 'verifyOtp'])->name('register.verify-otp');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
 Route::get('/change-language/{lang}', function ($lang) {
     session(['app_locale' => $lang]);
