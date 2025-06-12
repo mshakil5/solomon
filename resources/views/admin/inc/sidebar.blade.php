@@ -219,7 +219,7 @@
         </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item d-none">
         <a href="{{route('allQuestions')}}" class="nav-link {{ (request()->is('admin/questions*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
@@ -287,6 +287,9 @@
               <i class="nav-icon fas fa-briefcase"></i>
               <p>Career</p>
           </a>
+      </li>
+
+      <li class="nav-item" style="margin-top: 200px">
       </li>
   
     </ul>

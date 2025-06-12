@@ -42,7 +42,8 @@ class FrontendController extends Controller
 
     public function privacy()
     {
-        return view('frontend.privacy');
+        $privacy = CompanyDetails::select('privacy_policy')->first()->privacy_policy;
+        return view('frontend.privacy', compact('privacy'));
     }
 
     public function terms()

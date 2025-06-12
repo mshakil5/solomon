@@ -1,7 +1,8 @@
 <?php
   
 namespace App\Http\Controllers;
- 
+
+use App\Models\ServiceBooking;
 use App\Models\Work;
 use App\Models\WorkTime;
 use Illuminate\View\View;
@@ -40,12 +41,11 @@ class HomeController extends Controller
      */
     public function adminHome(): View
     {
-        $newJobsCount = Work::where('status', 1)->count();
-        $processingJobsCount = Work::where('status', 2)->count();
-        $completedJobsCount = Work::where('status', 3)->count();
-        $newReviews = WorkReview::where('is_new', 1)->with('work')->latest()->get();
-        $newReviewsCount = $newReviews->count();
-        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount', 'newReviews', 'newReviewsCount'));
+        $newJobsCount = ServiceBooking::where('status', 1)->count();
+        $processingJobsCount = ServiceBooking::where('status', 2)->count();
+        $completedJobsCount = ServiceBooking::where('status', 3)->count();
+        $cancelledJobsCount = ServiceBooking::where('status', 3)->count();
+        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount', 'cancelledJobsCount'));
     }
   
     /**

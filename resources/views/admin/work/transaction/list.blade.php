@@ -45,7 +45,11 @@
                     <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
                     <td>{{$data->tranid}}</td>
                     <td>{{$data->amount}}</td>
-                    <td><a href="{{ route('admin.booking.details', $data->invoice->serviceBooking->id) }}" class="btn btn-secondary" target="_blank"><i class="fas fa-eye"></i></a></td>
+                    <td>
+                      @if ($data->invoice && $data->invoice->serviceBooking)
+                      <a href="{{ route('admin.booking.details', $data->invoice->serviceBooking->id) }}" class="btn btn-secondary" target="_blank"><i class="fas fa-eye"></i></a>
+                      @endif
+                    </td>
                   </tr>
                   @endforeach
                 

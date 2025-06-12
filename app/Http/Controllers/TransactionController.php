@@ -114,7 +114,7 @@ class TransactionController extends Controller
         return view('admin.work.transaction.create', compact('work_id'));
     }
 
-        public function allTransactions()
+    public function allTransactions()
     {
         $data = Transaction::with('invoice.serviceBooking')->orderBy('id', 'desc')->get();
         return view('admin.work.transaction.list', compact('data'));
