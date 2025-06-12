@@ -34,7 +34,7 @@ class JobOrderMail extends Mailable
 
     public function build()
     {
-        return $this->from('solomon@example.co.uk', 'Solomon Maintainance')
+        return $this->from('info@totpro.net', 'Solomon Maintainance')
                     ->subject($this->array['subject'])
                     ->markdown('emails.job_order');
     }
