@@ -30,6 +30,9 @@
 
     <link href="{{ asset('frontend/css/style.css')}}" rel="stylesheet">
 
+    <div id="global-loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.6); z-index:9999; text-align:center; padding-top:200px;">
+        <img src="{{ asset('loader.gif') }}" alt="Loading..." />
+    </div>
 
 </head>
 
@@ -66,6 +69,23 @@
               toastr.error(message, title, options);
           }
       }
+    </script>
+
+    <script>
+        function showLoader() {
+            $('#global-loader').show();
+        }
+
+        function hideLoader() {
+            $('#global-loader').hide();
+        }
+
+        $(document).ready(function () {
+            // Auto-show loader on any form submit
+            $('form').on('submit', function () {
+                showLoader();
+            });
+        });
     </script>
 
     @yield('script')
