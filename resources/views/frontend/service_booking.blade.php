@@ -413,7 +413,7 @@ $(document).ready(function() {
     const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
 
     window.openAddressModal = function(type) {
-        const title = type === 1 ? 'Shipping' : 'Billing';
+        const title = type === 1 ? 'Delivery' : 'Billing';
         $('#modalTitle').text(`Add ${title} Address`);
         $('#addressType').val(type);
         $('#addressForm')[0].reset(); 

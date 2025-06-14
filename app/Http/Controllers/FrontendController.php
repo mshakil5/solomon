@@ -242,6 +242,10 @@ class FrontendController extends Controller
 
     public function serviceBooking($slug, $type = null)
     {
+        if (!auth()->check()) {
+            abort(403);
+        }
+
         $service = Service::where('slug', $slug)->firstOrFail();
         $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->latest()->get();
         $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->latest()->get();
