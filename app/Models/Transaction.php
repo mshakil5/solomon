@@ -22,4 +22,9 @@ class Transaction extends Model
         return $this->belongsTo(Invoice::class, 'invoice_id');
     }
 
+    public function booking()
+    {
+        return $this->belongsTo(ServiceBooking::class, 'booking_id');
+    }
+
 }

@@ -46,8 +46,8 @@
                     <td>{{$data->tranid}}</td>
                     <td>{{$data->amount}}</td>
                     <td>
-                      @if ($data->invoice && $data->invoice->serviceBooking)
-                      <a href="{{ route('admin.booking.details', $data->invoice->serviceBooking->id) }}" class="btn btn-secondary" target="_blank"><i class="fas fa-eye"></i></a>
+                      @if ($data->booking && $data->booking_id)
+                      <a href="{{ route('admin.booking.details', $data->booking_id) }}" class="btn btn-secondary" target="_blank"><i class="fas fa-eye"></i></a>
                       @endif
                     </td>
                   </tr>

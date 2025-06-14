@@ -231,6 +231,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/slider-update', [SliderController::class, 'sliderUpdate']);
     Route::get('/slider/{id}', [SliderController::class, 'sliderDelete']);
 
+    Route::post('/slider-status', [SliderController::class, 'toggleStatus']);
+
     //Mail Content
     Route::get('/mail-content-type', [MailContentTypeController::class, 'index'])->name('admin.mail-content-type');
     Route::post('/mail-content-type', [MailContentTypeController::class, 'store']);

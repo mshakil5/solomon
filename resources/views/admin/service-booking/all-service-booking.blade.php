@@ -238,7 +238,7 @@
     });
   });
 
-  $('.set-price-btn').click(function() {
+  $(document).on('click', '.set-price-btn', function() {
     const bookingId = $(this).data('id');
     const serviceFee = $(this).data('service-fee') || '';
 

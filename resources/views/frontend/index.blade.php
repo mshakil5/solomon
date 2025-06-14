@@ -11,6 +11,7 @@
   @endif
 </div>
 
+@if ($sliders->count() > 0)
 <section class="slider">
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -54,6 +55,7 @@
         </button>
     </div>
 </section>
+@endif
 
 
 <div class="categories mt-5 d-none">
