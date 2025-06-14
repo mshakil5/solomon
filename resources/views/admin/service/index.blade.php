@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label>Price</label>
+                        <label>Price <span class="text-danger">*</span></label>
                         <input type="number" id="price" name="price" class="form-control" placeholder="Enter price" min="0">
                     </div>
                 </div>

@@ -89,7 +89,7 @@
                                                   @endphp
                           
                                                   @if(in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'gif']))
-                                                      <img src="{{ $fileUrl }}" class="img-fluid rounded" alt="attachment">
+                                                      <img src="{{ $fileUrl }}" class="img-fluid rounded" alt="attachment" style="height: 200px; object-fit: cover;">
                                                   @elseif(in_array(strtolower($ext), ['mp4', 'webm']))
                                                       <video src="{{ $fileUrl }}" controls style="max-width: 100%;"></video>
                                                   @else
@@ -108,71 +108,75 @@
 
                         <div class="col-md-6 mb-4">
 
-                            @if($booking->invoices->count())
-                              <div class="card">
-                                  <div class="card-header"><strong>Invoices</strong></div>
-                                  <div class="card-body p-0">
-                                      <table class="table table-bordered mb-0">
-                                          <thead>
-                                              <tr>
-                                                  <th>Invoice ID</th>
-                                                  <th>Date</th>
-                                                  <th>Amount</th>
-                                                  <th>Status</th>
-                                                  <th>Action</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              @foreach($booking->invoices as $invoice)
-                                                  <tr>
-                                                      <td>{{ $invoice->invoiceid }}</td>
-                                                      <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
-                                                      <td>{{ number_format($invoice->amount, 2) }} RON</td>
-                                                      <td>
-                                                          @if($invoice->status == 0)
-                                                              <span class="badge bg-success">Paid</span>
-                                                          @else
-                                                              <span class="badge bg-warning">Pending</span>
-                                                          @endif
-                                                      </td>
-                                                      <td>
-                                                        <a href="{{ asset($invoice->img) }}" target="_blank" class="btn btn-sm btn-primary">
-                                                            View Invoice
-                                                        </a>
-                                                      </td>
-                                                  </tr>
-                                              @endforeach
-                                          </tbody>
-                                      </table>
-                                  </div>
-                              </div>
-
-                              @foreach($booking->invoices as $invoice)
-                                @if($invoice->transaction)
-                                  <div class="card mt-3">
-                                    <div class="card-header"><strong>Transaction for Invoice: {{ $invoice->invoiceid }}</strong></div>
+                              @if($booking->invoices->count() > 0)
+                                <div class="card">
+                                    <div class="card-header"><strong>Invoices</strong></div>
                                     <div class="card-body p-0">
-                                      <table class="table table-bordered mb-0">
-                                        <thead>
-                                          <tr>
-                                            <th>Date</th>
-                                            <th>Work ID</th>
-                                            <th>Amount</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr>
-                                            <td>{{ \Carbon\Carbon::parse($invoice->transaction->date)->format('d/m/Y') }}</td>
-                                            <td>#{{ $invoice->serviceBooking->id }}</td>
-                                            <td>{{ number_format($invoice->transaction->amount, 2) }} RON</td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
+                                        <table class="table table-bordered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Invoice ID</th>
+                                                    <th>Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($booking->invoices as $invoice)
+                                                    <tr>
+                                                        <td>{{ $invoice->invoiceid }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($invoice->date)->format('d/m/Y') }}</td>
+                                                        <td>{{ number_format($invoice->amount, 2) }} RON</td>
+                                                        <td>
+                                                            @if($invoice->status == 0)
+                                                                <span class="badge bg-success">Paid</span>
+                                                            @else
+                                                                <span class="badge bg-warning">Pending</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                          @if ($invoice->img)                        
+                                                          <a href="{{ asset($invoice->img) }}" target="_blank" class="btn btn-sm btn-primary">
+                                                              View Invoice
+                                                          </a>
+                                                          @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
+                                </div>
+                              @endif
+                              @if($booking->transactions->count())
+                                <div class="card mt-3">
+                                  <div class="card-body p-0">
+                                    <div class="card-header"><strong>Transactions</strong></div>
+                                    <table class="table table-bordered mb-0">
+                                      <thead>
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Transaction ID</th>
+                                          <th>Amount</th>
+                                          <th>Payment Type</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        @foreach($booking->transactions as $transaction)
+                                        <tr>
+                                          <td>{{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}</td>
+                                          <td>#{{ $transaction->tranid }}</td>
+                                          <td>{{ number_format($transaction->amount, 2) }} RON</td>
+                                          <td>{{ $transaction->payment_type }}</td>
+                                        </tr>
+                                        @endforeach
+                                      </tbody>
+                                    </table>
                                   </div>
-                                @endif
-                              @endforeach
-                            @endif
+                                </div>
+                              @endif
+
 
                             <div class="card mb-3">
                                 <div class="card-header"><strong>Client Information</strong></div>
@@ -211,7 +215,7 @@
                             </div>
 
                             <div class="card">
-                                <div class="card-header"><strong>Shipping Address</strong></div>
+                                <div class="card-header"><strong>Delivery Address</strong></div>
                                 <div class="card-body p-0">
                                     <table class="table table-bordered mb-0">
                                         @if($booking->shippingAddress)
@@ -229,7 +233,7 @@
                                                 </td>
                                             </tr>
                                         @else
-                                            <tr><td colspan="2">No shipping address provided</td></tr>
+                                            <tr><td colspan="2">No Delivery address provided</td></tr>
                                         @endif
                                     </table>
                                 </div>

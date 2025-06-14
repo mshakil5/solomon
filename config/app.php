@@ -70,8 +70,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
-
+    // 'timezone' => 'UTC',
+    // 'timezone' => 'Asia/Dhaka',
+    'timezone' => 'Europe/Bucharest',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

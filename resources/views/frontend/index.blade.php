@@ -3,13 +3,58 @@
 
 @include('frontend.inc.hero')
 
-<div class="categories mt-5">
+<div class="categories">
   @if(session('success'))
       <div class="alert alert-success">
           {{ session('success') }}
       </div>
   @endif
 </div>
+
+<section class="slider">
+    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @foreach($sliders as $key => $slider)
+                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                    <img src="{{ asset('images/slider/' . $slider->image) }}" class="d-block w-100 h desktop-img" alt="Slider Image">
+                    <div class="carousel-caption text-center">
+                        @if($slider->link)
+                            <a href="{{ $slider->link }}" class="slider-link">
+                                <div class="slider-content">
+                                    @if($slider->title)
+                                        <h1 class="slider-title">{{ $slider->title }}</h1>
+                                    @endif
+                                    @if($slider->sub_title)
+                                        <h3 class="slider-subtitle">{{ $slider->sub_title }}</h3>
+                                    @endif
+                                </div>
+                            </a>
+                        @else
+                            <div class="slider-content">
+                                @if($slider->title)
+                                    <h1 class="slider-title">{{ $slider->title }}</h1>
+                                @endif
+                                @if($slider->sub_title)
+                                    <h3 class="slider-subtitle">{{ $slider->sub_title }}</h3>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
 
 <div class="categories mt-5 d-none">
 
@@ -83,7 +128,7 @@
 
 <div class="booking-type-section py-5 bg-light">
   <div class="container">
-    <h2 class="text-primary fw-semibold mb-4 text-center">
+    <h2 class="text-primary fw-semibold mb-5 text-center">
       {{ session('app_locale', 'en') == 'ro' ? 'Alegeți tipul de rezervare' : 'Choose Booking Type' }}
     </h2>
 
@@ -118,7 +163,7 @@
   });
 </script>
 
-<div class="services-by-type py-5 bg-light">
+<div class="services-by-type bg-light">
   <div class="container">
     <div class="text-center mb-5">
       <h2 class="text-primary fw-semibold">
@@ -171,7 +216,7 @@
         <i class="fas fa-check-circle">
         </i>
         <p>
-            Every Checkatrade tradesperson has passed up to 12 rigorous checks
+            Every Tot Pro tradesperson has passed up to 12 rigorous checks
         </p>
     </div>
     <div class="info-box">
@@ -185,7 +230,7 @@
         <i class="fas fa-shield-alt">
         </i>
         <p>
-            We guarantee Checkatrade tradespeople's work, claim up to £1000 - 10000
+            We guarantee Tot Pro tradespeople's work, claim up to £1000 - 10000
         </p>
     </div>
 </div>
@@ -361,6 +406,67 @@
     #loading-image {
         z-index: 100;
     }
+    .slider-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+  .slider-title {
+      background:rgb(0, 88, 162) !important;
+      color: white !important;
+      padding: 10px 20px;
+      font-size: 40px;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 30px;
+      word-break: break-word;
+      text-align: center;
+  }
+
+  .slider-subtitle {
+      background: linear-gradient(to right,rgb(0, 88, 162),rgb(0, 149, 255)) !important;
+      color: white !important;
+      padding: 8px 16px;
+      font-size: 25px;
+      width: fit-content;
+      max-width: 100%;
+      word-break: break-word;
+      text-align: center;
+      margin-bottom: 50px;
+  }
+
+  .slider-link {
+      text-decoration: none !important;
+      color: inherit !important;
+      width: 100%;
+  }
+
+  @media (max-width: 767px) {
+      .carousel-caption {
+          top: 30% !important;
+          transform: translateY(-50%) !important;
+          padding-top: 10px !important;
+          margin-top: 0 !important;
+      }
+
+      .slider-title {
+          font-size: 1rem !important;
+          padding: 0px 2px !important;
+          margin-top: 0 !important;
+      }
+
+      .slider-subtitle {
+          font-size: 0.75rem !important;
+          padding: 0px 2px !important;
+      }
+
+      .slider-content {
+          max-width: 90%;
+      }
+  }
 </style>
 
 @endsection

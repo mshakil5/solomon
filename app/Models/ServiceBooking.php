@@ -50,4 +50,9 @@ class ServiceBooking extends Model
     {
         return $this->hasMany(Invoice::class, 'service_booking_id');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'booking_id');
+    }
 }

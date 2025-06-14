@@ -93,15 +93,15 @@
                                       <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
                                   </div>
                               </div>
-                              <input type="hidden" name="selected_type" value="{{ $type }}">
-                              @if (!isset($type) || $type != 1)
+                              <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">
+                              {{-- @if (!isset($type) || $type != 1) --}}
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label for="time">Time <span class="text-danger">*</span></label>
                                       <input type="time" name="time" id="time" class="form-control" required>
                                   </div>
                               </div>
-                              @endif
+                              {{-- @endif --}}
                           </div>
                           
                           <div class="row mt-4">
@@ -129,21 +129,18 @@
                                             </h5>
                                         </div>
                                       <div class="card-body">
-                                          @if($billingAddresses->count() > 0)
-                                              <div class="form-group">
-                                                  <label>Select Billing Address</label>
-                                                  <select class="form-select" name="billing_address_id" required>
-                                                      @foreach($billingAddresses as $address)
-                                                          <option value="{{ $address->id }}"
-                                                            @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
-                                                              {{ $address->name }}, {{ $address->first_name }}, {{ $address->phone }}
-                                                          </option>
-                                                      @endforeach
-                                                  </select>
-                                              </div>
-                                          @else
-                                              <p class="text-muted">No saved billing addresses found.</p>
-                                          @endif
+                                          <div class="form-group">
+                                              <label>Select Billing Address</label>
+                                              <select class="form-select" name="billing_address_id" required>
+                                                  <option value="">Select Address</option>
+                                                  @foreach($billingAddresses as $address)
+                                                      <option value="{{ $address->id }}"
+                                                          @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
+                                                          {{ $address->name }}, {{ $address->first_name }}, {{ $address->phone }}
+                                                      </option>
+                                                  @endforeach
+                                              </select>       
+                                          </div>
                                       </div>
                                   </div>
                               </div>
@@ -151,7 +148,7 @@
                               <div class="col-md-6">
                                   <div class="card">
                                       <div class="card-header bg-light">
-                                          <h5>Shipping Address 
+                                          <h5>Delivery Address 
                                             <button type="button" class="btn btn-sm btn-success ms-2" 
                                                     onclick="event.preventDefault(); openAddressModal(1); return false;">
                                                 Add
@@ -159,24 +156,18 @@
                                           </h5>
                                       </div>
                                       <div class="card-body">
-                                          @if($shippingAddresses->count() > 0)
-                                              <div class="form-group">
-                                                  <label>Select Shipping Address</label>
-                                                  <select class="form-select" name="shipping_address_id" required>
-                                                      @foreach($shippingAddresses as $address)
-                                                          <option value="{{ $address->id }}"
-                                                            @if($address->primary_shipping == 1) 
-                                                                selected 
-                                                                style="background-color: #d3f9d8;"
-                                                            @endif>
-                                                            {{ $address->name }}, {{ $address->first_name }},   {{ $address->phone }}
-                                                          </option>
-                                                      @endforeach
-                                                  </select>
-                                              </div>
-                                          @else
-                                              <p class="text-muted">No saved shipping addresses found.</p>
-                                          @endif
+                                          <div class="form-group">
+                                              <label>Select Delivery Address</label>
+                                              <select class="form-select" name="shipping_address_id" required>
+                                                <option value="">Select Address</option>
+                                                  @foreach($shippingAddresses as $address)
+                                                      <option value="{{ $address->id }}"
+                                                          @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
+                                                          {{ $address->name }}, {{ $address->first_name }}, {{ $address->phone }}
+                                                      </option>
+                                                  @endforeach
+                                              </select>
+                                          </div>    
                                       </div>
                                   </div>
                               </div>
@@ -210,6 +201,9 @@
                                           <h5>{{ $service->title_english }}</h5>
                                           <p>{!! $service->des_english !!}</p>
                                           <h5 class="text-success d-none">Price: {{ number_format($service->price, 2) }}RON</h5>
+                                          <div id="additional-fee-container" style="display: none;">
+                                              <p><strong>Additional Fee to Pay:</strong> <span id="additional-fee-display">0.00</span> RON (<small id="additional-fee-type" class="text-muted"></small>)</p>      
+                                          </div>
                                       </div>
                                   </div>
                               </div>
@@ -218,8 +212,14 @@
                           <div class="card mb-4">
                               <div class="card-body">
                                   <h5 class="card-title">Schedule</h5>
-                                  <p><strong>Date:</strong> <span id="review-date"></span></p>
-                                  <p><strong>Time:</strong> <span id="review-time"></span></p>
+                                  <div class="row">
+                                    <div class="col-6">
+                                      <p><strong>Date:</strong> <span id="review-date"></span></p>
+                                    </div>
+                                    <div class="col-6">
+                                      <p><strong>Time:</strong> <span id="review-time"></span></p>
+                                    </div>
+                                  </div>    
                               </div>
                           </div>
                           
@@ -228,11 +228,11 @@
                                   <h5 class="card-title">Addresses</h5>
                                   <div class="row">
                                       <div class="col-md-6">
-                                          <h6>Billing Address</h6>
+                                          <h5>Billing Address:</h5>
                                           <div id="review-billing-address"></div>
                                       </div>
                                       <div class="col-md-6">
-                                          <h6>Shipping Address</h6>
+                                          <h5>Delivery Address:</h5>
                                           <div id="review-shipping-address"></div>
                                       </div>
                                   </div>
@@ -259,7 +259,8 @@
                                   <button type="button" class="btn btn-secondary prev-step" data-step="4">Previous</button>
                               </div>
                               <div class="col-6 text-end">
-                                  <button type="submit" class="btn btn-success">Complete Booking</button>
+                                <input type="hidden" id="additional_fee" name="additional_fee" value="0">
+                                  <button type="submit" class="btn btn-success" id="submit-button">Complete Booking</button>
                               </div>
                           </div>
                       </div>
@@ -374,14 +375,50 @@
 @section('script')
 
 <script>
+  function updateFee() {
+    const date = $('#date').val();
+    const time = $('#time').val();
+
+    $.ajax({
+        url: '{{ route("booking.calculateFee") }}',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            date: date,
+            time: time
+        },
+        success: function(response) {
+            const additionalFee = parseFloat(response.fee);
+            
+            if (additionalFee > 0) {
+                $('#additional-fee-display').text(additionalFee.toFixed(2));
+                $('#additional_fee').val(additionalFee.toFixed(2));
+                $('#additional-fee-type').text(response.type_label);
+                $('#additional-fee-container').show();
+                $('#submit-button').text('Pay ' + additionalFee.toFixed(2) + ' RON');
+            } else {
+                $('#additional_fee').val(0);
+                $('#additional-fee-container').hide();
+                $('#submit-button').text('Complete Booking');
+            }
+        }
+    });
+  }
+
+  $('#date, #time, #selected_type').on('change input', updateFee);
+</script>
+
+<script>
 $(document).ready(function() {
     const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
 
     window.openAddressModal = function(type) {
         const title = type === 1 ? 'Shipping' : 'Billing';
-        console.log(title);
         $('#modalTitle').text(`Add ${title} Address`);
         $('#addressType').val(type);
+        $('#addressForm')[0].reset(); 
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
         addressModal.show();
     };
 
@@ -393,7 +430,7 @@ $(document).ready(function() {
     async function saveAddress() {
         const form = document.getElementById('addressForm');
         const type = $('#addressType').val();
-        const typeName = type === '1' ? 'shipping' : 'billing';
+        const isShipping = type === '1';
         
         const formData = new FormData();
         formData.append('type', type);
@@ -425,9 +462,8 @@ $(document).ready(function() {
 
             if (response.code === 201) {
                 addressModal.hide();
-                form.reset(); // ✅ Clear the form
                 toastr.success('Address added successfully!');
-                updateAddressDropdown(typeName, response.address);
+                updateAddressDropdown(isShipping ? 'shipping' : 'billing', response.address);
             }
         } catch (error) {
             handleFormErrors(error);
@@ -436,26 +472,12 @@ $(document).ready(function() {
         }
     }
 
-    function updateAddressDropdown(typeName, address) {
-        const selectElement = $(`select[name="${typeName}_address_id"]`);
+    function updateAddressDropdown(addressType, address) {
+        const selectElement = $(`select[name="${addressType}_address_id"]`);
         const addressText = `${address.name}, ${address.first_name}, ${address.phone}`;
 
-        if (selectElement.length === 0) {
-            const cardBody = $(`.card:has(.card-header:contains('${typeName.charAt(0).toUpperCase() + typeName.slice(1)} Address')) .card-body`);
-            cardBody.find('p.text-muted').remove();
-
-            cardBody.prepend(`
-                <div class="form-group">
-                    <label>Select ${typeName.charAt(0).toUpperCase() + typeName.slice(1)} Address</label>
-                    <select class="form-control" name="${typeName}_address_id" required>
-                        <option value="${address.id}">${addressText}</option>
-                    </select>
-                </div>
-            `);
-        } else {
-            const newOption = new Option(addressText, address.id, true, true);
-            selectElement.append(newOption).trigger('change');
-        }
+        const newOption = new Option(addressText, address.id, true, true);
+        selectElement.append(newOption).trigger('change');
     }
 
     function handleFormErrors(error) {
@@ -575,21 +597,29 @@ $(document).ready(function() {
                 isValid = false;
             }
         } else if (step === 3) {
-            if ($('select[name="billing_address_id"]').length && $('select[name="billing_address_id"]').val() === '') {
-                alert('Please select a billing address');
-                isValid = false;
-            } else if ($('select[name="shipping_address_id"]').length && $('select[name="shipping_address_id"]').val() === '') {
-                alert('Please select a shipping address');
-                isValid = false;
-            }
-        }
+          if (!$('select[name="billing_address_id"]').length || $('select[name="billing_address_id"]').val() === '') {
+              alert('Please select a billing address');
+              isValid = false;
+          }
+          
+          if (!$('select[name="shipping_address_id"]').length || $('select[name="shipping_address_id"]').val() === '') {
+              alert('Please select a Delivery address');
+              isValid = false;
+          }
+      }
         
         return isValid;
     }
     
     function updateReviewSection() {
         // Update date and time
-        $('#review-date').text($('#date').val());
+        const dateVal = $('#date').val();
+          if (dateVal) {
+            const parts = dateVal.split('-');
+            if (parts.length === 3) {
+              $('#review-date').text(`${parts[2]}/${parts[1]}/${parts[0]}`);
+            }
+          }
         $('#review-time').text($('#time').val());
         
         // Update billing address
@@ -598,7 +628,7 @@ $(document).ready(function() {
             $('#review-billing-address').html(selectedOption.text());
         }
         
-        // Update shipping address
+        // Update Delivery address
         if ($('select[name="shipping_address_id"]').length) {
             const selectedOption = $('select[name="shipping_address_id"] option:selected');
             $('#review-shipping-address').html(selectedOption.text());

@@ -23,7 +23,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Job Id : {{$work->id}}</h3>
+              <h3 class="card-title">Job Id : {{$work->id}} <br> Service Fee: {{$work->service_fee}}RON </h3> 
             </div>
             <!-- /.card-header -->
             <div class="card-body">

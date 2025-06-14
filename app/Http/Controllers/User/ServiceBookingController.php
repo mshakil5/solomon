@@ -33,7 +33,8 @@ class ServiceBookingController extends Controller
                 'billingAddress', 
                 'shippingAddress',
                 'files',
-                'invoices.transaction'
+                'invoices.transaction',
+                'transactions'
             ])->findOrFail($id);
             
         if ($booking->user_id != auth()->id()) {

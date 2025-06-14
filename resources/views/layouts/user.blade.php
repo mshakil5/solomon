@@ -55,7 +55,8 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <strong>{{ Auth::user()->name }}</strong>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
                         <a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a>
                         <a class="dropdown-item" href="{{ route('user.password') }}">Change Password</a>
                         <div class="dropdown-divider"></div>

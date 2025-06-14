@@ -27,6 +27,8 @@ use App\Models\SubCategory;
 use App\Models\Type;
 use App\Models\AdditionalAddress;
 use App\Models\ServiceBooking;
+use App\Models\Slider;
+use App\Models\Transaction;
 
 class FrontendController extends Controller
 {
@@ -37,7 +39,8 @@ class FrontendController extends Controller
             $q->where('status', 1);
         }])->where('status', 1)->get();
         $companyDetails = CompanyDetails::select('footer_content', 'company_name', 'address1', 'phone1', 'email1')->first();
-        return view('frontend.index', compact('categories', 'companyDetails', 'types'));
+        $sliders = Slider::where('status', 1)->orderBy('id', 'desc')->get();
+        return view('frontend.index', compact('categories', 'companyDetails', 'types', 'sliders'));
     }
 
     public function privacy()
@@ -245,33 +248,32 @@ class FrontendController extends Controller
         return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses','type'));
     }
 
-    public function bookingStore(Request $request)
+    public function calculateFee(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'service_id' => 'required|exists:services,id',
-            'description' => 'nullable|string',
+        $request->validate([
             'date' => 'required|date',
-            'time' => (!isset($request->selected_type) || $request->selected_type != 1) ? 'required' : 'nullable',
-            'billing_address_id' => 'required|exists:additional_addresses,id',
-            'shipping_address_id' => 'required|exists:additional_addresses,id',
-            'files.*' => 'nullable|file|max:10240',
+            'time' => 'nullable|string',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
+        $date = $request->date;
+        $time = $request->time;
         $now = now();
 
-        if ($request->selected_type == 1 || empty($request->time)) {
-            $serviceDateTime = null;
-        } else {
-            $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
-        }
+        $typeFees = [
+            1 => 400.00, // Emergency
+            2 => 250.00, // Prioritized
+            3 => 300.00, // Outside working hours
+            4 => 0.00    // Standard
+        ];
+
+        $typeLabels = [
+            1 => 'Emergency Service',
+            2 => 'Prioritized Service',
+            3 => 'Outside Working Hours',
+            4 => 'Standard Service',
+        ];
+
+        $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $time) : null;
 
         if ($serviceDateTime) {
             $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
@@ -290,59 +292,131 @@ class FrontendController extends Controller
         $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
         $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
 
-        if (isset($request->selected_type)) {
-            $type = $request->selected_type;
-            $fee = match ($type) {
-                1 => 400.00,
-                2 => 250.00,
-                3 => 300.00,
-                default => 0.00,
-            };
+        if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1;
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2;
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3;
         } else {
-            if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-                $type = 1; $fee = 400.00;
-            } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
-                $type = 2; $fee = 250.00;
-            } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
-                $type = 3; $fee = 300.00;
-            } else {
-                $type = 4; $fee = 0.00;
+            $type = 4;
+        }
+
+        return response()->json([
+            'fee' => $typeFees[$type],
+            'type' => $type,
+            'type_label' => $typeLabels[$type]
+        ]);
+    }
+
+    public function bookingStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'service_id' => 'required|exists:services,id',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'time' => 'nullable|string',
+            'billing_address_id' => 'required|exists:additional_addresses,id',
+            'shipping_address_id' => 'required|exists:additional_addresses,id',
+            'files.*' => 'nullable|file|max:10240',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $date = $request->date;
+        $time = $request->time;
+        $now = now();
+
+        $typeFees = [1 => 400, 2 => 250, 3 => 300, 4 => 0];
+        $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', "$date $time") : null;
+        $hour = $serviceDateTime?->format('H');
+        $day = $serviceDateTime?->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $open = Carbon::createFromFormat('H:i', $company?->opening_time ?? '10:00')->format('H');
+        $close = Carbon::createFromFormat('H:i', $company?->closing_time ?? '18:00')->format('H');
+
+        if ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) <= 120) {
+            $type = 1;
+        } elseif ($serviceDateTime && $serviceDateTime->isToday()) {
+            $type = 2;
+        } elseif ($day === 0 || $hour < $open || $hour >= $close) {
+            $type = 3;
+        } else {
+            $type = 4;
+        }
+
+        $additionalFee = $typeFees[$type];
+
+        // 🔄 Store uploaded files temporarily
+        $tempFiles = [];
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('temp_booking_files'), $filename);
+                $tempFiles[] = $filename;
             }
         }
 
-        $service = Service::findOrFail($request->service_id);
-        $serviceFee = $service->price;
-        $totalFee = $serviceFee + $fee;
+        if ($additionalFee > 0) {
+            $requestData = $request->except('_token', 'files');
+            $requestData['type'] = $type;
+            $requestData['additional_fee'] = $additionalFee;
+            $requestData['temp_files'] = $tempFiles;
+            session(['booking_request' => $requestData]);
+
+            return redirect()->route('paypal.booking.pay', ['amount' => $additionalFee]);
+        }
+
+        // For free bookings, pass data directly
+        $data = $request->except('_token', 'files');
+        $data['type'] = $type;
+        $data['additional_fee'] = $additionalFee;
+        $data['temp_files'] = $tempFiles;
+
+        return $this->finalizeBooking($data, $type, $additionalFee);
+    }
+
+    public function finalizeBooking(array $data, int $type, float $fee)
+    {
+        $service = Service::findOrFail($data['service_id']);
 
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
-            'service_id' => $request->service_id,
-            'billing_address_id' => $request->billing_address_id,
-            'shipping_address_id' => $request->shipping_address_id,
-            'description' => $request->description,
-            'date' => $request->date,
-            'time' => ($request->selected_type == 1) ? null : $request->time,
-            'service_fee' => $serviceFee,
+            'service_id' => $data['service_id'],
+            'billing_address_id' => $data['billing_address_id'],
+            'shipping_address_id' => $data['shipping_address_id'],
+            'description' => $data['description'],
+            'date' => $data['date'],
+            'time' => $data['time'],
+            'service_fee' => 0,
             'additional_fee' => $fee,
-            'total_fee' => $totalFee,
+            'total_fee' => $fee,
             'type' => $type
         ]);
 
-        if ($request->hasFile('files')) {
-            $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
+        if (!empty($data['temp_files'])) {
+            foreach ($data['temp_files'] as $filename) {
+                $sourcePath = public_path('temp_booking_files/' . $filename);
+                $destinationPath = public_path('images/service/' . $filename);
 
-            foreach ($files as $file) {
-                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $storagePath = public_path('images/service');
-                $file->move($storagePath, $filename);
-
-                $booking->files()->create([
-                    'file' => $filename
-                ]);
+                if (file_exists($sourcePath)) {
+                    rename($sourcePath, $destinationPath);
+                    $booking->files()->create(['file' => $filename]);
+                }
             }
         }
 
-        return redirect()->route('homepage')->with('success', 'Booking created successfully.');
+        if (isset($data['transaction_id'])) {
+            Transaction::where('id', $data['transaction_id'])
+                ->update(['booking_id' => $booking->id]);
+        }
+
+        session()->forget('booking_request');
+
+        return redirect()->route('user.service.bookings')->with('success', 'Booking created successfully.');
     }
 
     public function aboutUs()

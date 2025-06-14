@@ -55,8 +55,23 @@ class ServiceBookingController extends Controller
 
     public function bookingDetails($id)
     {
-        $booking = ServiceBooking::with('user', 'service', 'files', 'serviceReview', 'billingAddress', 'shippingAddress', 'invoices.transaction')->findOrFail($id);
+        $booking = ServiceBooking::with('user', 'service', 'files', 'serviceReview', 'billingAddress', 'shippingAddress', 'invoices', 'transactions')->findOrFail($id);
         return view('admin.service-booking.details', compact('booking'));
+    }
+
+    public function setPrice(Request $request)
+    {
+        $request->validate([
+            'booking_id' => 'required|exists:service_bookings,id',
+            'service_fee' => 'nullable|numeric|min:0',
+        ]);
+
+        $booking = ServiceBooking::find($request->booking_id);
+        $booking->service_fee = $request->service_fee;
+        $booking->total_fee = ($request->service_fee ?? 0) + ($booking->additional_fee ?? 0);
+        $booking->save();
+
+        return response()->json(['success' => true]);
     }
 
 }

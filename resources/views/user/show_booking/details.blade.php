@@ -131,7 +131,7 @@
                     </div>
                 </div>
 
-                <div class="row" style="border-bottom: 1px solid #dee2e6; padding-bottom: 10px;">
+                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group mb-1">
                             <label class="mb-1" for="name">Job Description:</label>
@@ -188,7 +188,7 @@
                 </div>
 
                 @if($booking->files->count() > 0)
-                <div class="row mt-4">
+                <div class="row mt-2">
                     <div class="col-12">
                         <h4>Attached Files</h4>
                         <div class="row">
@@ -196,7 +196,7 @@
                             <div class="col-md-3 mb-3">
                                 <div class="card">
                                     @if(in_array(pathinfo($file->file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
-                                        <img src="{{ asset('images/service/' . $file->file) }}" class="card-img-top" alt="File">
+                                        <img src="{{ asset('images/service/' . $file->file) }}" class="card-img-top img-fluid" alt="File" style="height: 200px; object-fit: cover;">
                                     @elseif(in_array(pathinfo($file->file, PATHINFO_EXTENSION), ['pdf']))
                                         <div class="card-body text-center">
                                             <i class="fas fa-file-pdf fa-5x text-danger"></i>
@@ -220,7 +220,7 @@
                 @endif
 
                 @if($booking->invoices->count() > 0)
-                  <div class="row mt-4">
+                  <div class="row mt-2">
                     <div class="col-12">
                       <h4>Invoices</h4>
                       <table class="table">
@@ -264,36 +264,36 @@
                       </table>
                     </div>
                   </div>
+                @endif
 
-                  {{-- Transactions Section --}}
+                @if($booking->transactions->count() > 0)
                   <div class="row mt-4">
                     <div class="col-12">
                       <h4>Transactions</h4>
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Invoice ID</th>
                             <th>Date</th>
-                            <th>Booking ID</th>
+                            <th>Transaction ID</th>
                             <th>Amount</th>
+                            <th>Payment Type</th>
                           </tr>
                         </thead>
                         <tbody>
-                          @foreach($booking->invoices as $invoice)
-                            @if($invoice->transaction)
-                              <tr>
-                                <td>{{ $invoice->invoiceid }}</td>
-                                <td>{{ \Carbon\Carbon::parse($invoice->transaction->date)->format('d/m/Y') }}</td>
-                                <td>#{{ $invoice->service_booking_id  }}</td>
-                                <td>{{ number_format($invoice->transaction->amount, 2) }} RON</td>
-                              </tr>
-                            @endif
+                          @foreach($booking->transactions as $transaction)
+                            <tr>
+                              <td>{{ \Carbon\Carbon::parse($transaction->date)->format('d/m/Y') }}</td>
+                              <td>#{{ $transaction->tranid  }}</td>
+                              <td>{{ number_format($transaction->amount, 2) }} RON</td>
+                              <td>{{ $transaction->payment_type }}</td>
+                            </tr>
                           @endforeach
                         </tbody>
                       </table>
                     </div>
                   </div>
                 @endif
+
             </div>
         </div>
     </div>

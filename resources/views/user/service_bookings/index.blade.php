@@ -33,7 +33,7 @@
                             <th class="text-center">Service</th>
                             <th class="text-center">Scheduled Date</th>
                             <th class="text-center">Time</th>
-                            <th class="text-center">Total Fee</th>
+                            {{-- <th class="text-center">Total Fee</th> --}}
                             <th class="text-center">Invoice</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Details</th>
@@ -67,7 +67,7 @@
                             <td class="text-center">
                                 {{ $booking->time ? \Carbon\Carbon::parse($booking->time)->format('h:i A') : '-' }}
                             </td>
-                            <td class="text-center">{{ number_format($booking->total_fee, 2) }} RON</td>
+                            {{-- <td class="text-center">{{ number_format($booking->total_fee, 2) }} RON</td> --}}
                             <td class="text-center">
                                 @if ($booking->invoices->count() > 0)
                                 <a href="{{ route('service.booking.invoice', $booking->id) }}" class="btn btn-primary">
@@ -104,7 +104,7 @@
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 @if($booking->status == 1 && $booking->type != 1)
-                                    <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning">
+                                    <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning d-none">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                 @endif

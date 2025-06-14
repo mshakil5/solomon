@@ -31,7 +31,7 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>Shipping Addresses</h5>
+                        <h5>Delivery Addresses</h5>
                         <div class="list-group">
                             @forelse($shipping_addresses as $address)
                                 <div class="list-group-item mb-3">
@@ -79,7 +79,7 @@
                                 </div>
                             @empty
                                 <div class="list-group-item">
-                                    No shipping addresses found.
+                                    No Delivery addresses found.
                                 </div>
                             @endforelse
                         </div>
@@ -218,7 +218,7 @@
                     <div class="form-group">
                         <label for="type" class="form-label">Address Type <span class="text-danger">*</span></label>
                         <select id="type" class="form-control" name="type" required>
-                            <option value="1">Shipping Address</option>
+                            <option value="1">Delivery Address</option>
                             <option value="2">Billing Address</option>
                         </select>
                     </div>

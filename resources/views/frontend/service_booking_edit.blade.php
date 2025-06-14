@@ -114,12 +114,12 @@
                           <div class="col-md-6">
                               <div class="card">
                                   <div class="card-header bg-light">
-                                      <h5>Shipping Address</h5>
+                                      <h5>Delivery Address</h5>
                                   </div>
                                   <div class="card-body">
                                       @if($shippingAddresses->count() > 0)
                                           <div class="form-group">
-                                              <label>Select Shipping Address</label>
+                                              <label>Select Delivery Address</label>
                                               <select class="form-select" name="shipping_address_id" required>
                                                   @foreach($shippingAddresses as $address)
                                                       <option value="{{ $address->id }}" 
@@ -131,7 +131,7 @@
                                               </select>
                                           </div>
                                       @else
-                                          <p class="text-muted">No saved shipping addresses found.</p>
+                                          <p class="text-muted">No saved Delivery addresses found.</p>
                                       @endif
                                   </div>
                               </div>

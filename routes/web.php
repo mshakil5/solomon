@@ -62,6 +62,8 @@ Route::post('/contact-message', [FrontendController::class, 'contactMessage'])->
 Route::get('/service/booking/{slug}/{type?}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
 Route::post('/booking-store', [FrontendController::class, 'bookingStore'])->name('booking.store');
 
+Route::post('/calculate-fee', [FrontendController::class, 'calculateFee'])->name('booking.calculateFee');
+
 Route::get('/booking/select-type', [FrontendController::class, 'selectType'])->name('booking.type.select');
 
 Route::get('/category/{category}/{subcategory?}', [FrontendController::class, 'showCategoryDetails'])->name('category.show');
@@ -93,6 +95,10 @@ Route::post('/callback-request', [FrontendController::class, 'callBack'])->name(
 Route::post('pay/{id}', [PaypalController::class, 'pay'])->name('payment');
 Route::get('success', [PaypalController::class, 'success']);
 Route::get('error', [PaypalController::class, 'error']);
+
+Route::get('/paypal/booking/pay', [PaypalController::class, 'bookingPay'])->name('paypal.booking.pay');
+Route::get('/paypal/booking/success', [PaypalController::class, 'bookingSuccess'])->name('paypal.booking.success');
+Route::get('/paypal/booking/error', [PaypalController::class, 'bookingError'])->name('paypal.booking.error');
 
 
 /*------------------------------------------
