@@ -29,7 +29,7 @@
     }
 
     .login-form-container button {
-        background-color: #d71920;
+        background-color:rgb(0, 88, 162);
         color: #fff;
         padding: 10px;
         border: none;
@@ -92,10 +92,6 @@
 
         <button type="submit" class="mt-1">Send Password Reset Link</button>
 
-        <div id='loading' style='display:none ;'>
-            <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
-        </div>
-
     </form>
 </div>
 
@@ -103,16 +99,5 @@
 
 @section('script')
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('resetPasswordForm');
-        const loadingDiv = document.getElementById('loading');
-
-        form.addEventListener('submit', function() {
-            loadingDiv.style.display = 'flex';
-        });
-    });
-</script>
 
 @endsection

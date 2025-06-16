@@ -35,83 +35,80 @@
 <body id="section_1">
 
     <div class="sticky-container">
+    @php
+        $lang = session('app_locale', 'en') == 'ro';
+    @endphp
+
     <div class="header navbar navbar-expand-md navbar-light bg-white">
         <a class="logo" href="{{ route('homepage') }}">
-          <img src="{{ asset('images/company/'.$companyDetails->company_logo)}}" alt="Logo" style="height: 40px; width: auto;">
+            <img src="{{ asset('images/company/'.$companyDetails->company_logo)}}" alt="Logo" style="height: 40px; width: auto;">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <nav class="navbar-nav ml-auto d-none d-md-flex">
                 <a class="nav-item nav-link" href="{{ route('aboutUs') }}">
-                    About
+                    {{ $lang ? 'Despre' : 'About' }}
                 </a>
                 <a class="nav-item nav-link" href="{{ route('homepage') }}#contact">
-                    Contact
+                    {{ $lang ? 'Contact' : 'Contact' }}
                 </a>
+
                 @if(Auth::check())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
                         <strong>{{ Auth::user()->name }}</strong>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-                        <a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a>
-                        <a class="dropdown-item" href="{{ route('user.password') }}">Change Password</a>
+                        <a class="dropdown-item" href="{{ route('user.profile') }}">{{ $lang ? 'Profil' : 'Profile' }}</a>
+                        <a class="dropdown-item" href="{{ route('user.password') }}">{{ $lang ? 'Schimbă parola' : 'Change Password' }}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('user.addresses.index') }}">Address</a>
-                        <a class="dropdown-item" href="{{ route('user.service.bookings') }}">Booking History</a>
-                        {{-- <a class="dropdown-item" href="{{ route('user.works') }}">Job History</a> --}}
+                        <a class="dropdown-item" href="{{ route('user.addresses.index') }}">{{ $lang ? 'Adresă' : 'Address' }}</a>
+                        <a class="dropdown-item" href="{{ route('user.service.bookings') }}">{{ $lang ? 'Istoric rezervări' : 'Booking History' }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="me-50" data-feather="power"></i> {{ __('Logout') }}
+                            <i class="me-50" data-feather="power"></i> {{ $lang ? 'Deconectare' : 'Logout' }}
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                     </div>
                 </li>
                 @endif
             </nav>
-            <div class="nav-item nav-link d-none">
-                <div class="google_translate_element"></div>
-            </div>
+
             <nav class="navbar-nav d-md-none">
-                <a class="nav-item nav-link" href="#">
-                    Homeowner
-                </a>
-                <a class="nav-item nav-link" href="#">
-                    Trades
-                </a>
+                <a class="nav-item nav-link" href="#">{{ $lang ? 'Proprietar' : 'Homeowner' }}</a>
+                <a class="nav-item nav-link" href="#">{{ $lang ? 'Meșteri' : 'Trades' }}</a>
+
                 @if(Auth::check())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
                         <strong>{{ Auth::user()->name }}</strong>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a>
-                        <a class="dropdown-item" href="{{ route('user.password') }}">Change Password</a>
+                        <a class="dropdown-item" href="{{ route('user.profile') }}">{{ $lang ? 'Profil' : 'Profile' }}</a>
+                        <a class="dropdown-item" href="{{ route('user.password') }}">{{ $lang ? 'Schimbă parola' : 'Change Password' }}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('user.works') }}">Job History</a>
+                        <a class="dropdown-item" href="{{ route('user.works') }}">{{ $lang ? 'Istoric joburi' : 'Job History' }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="me-50" data-feather="power"></i> {{ __('Logout') }}
+                            <i class="me-50" data-feather="power"></i> {{ $lang ? 'Deconectare' : 'Logout' }}
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                     </div>
                 </li>
                 @endif
             </nav>
         </div>
     </div>
+
     <div class="header-line"></div>
     </div>
 
+    <div class="container">
     @yield('content')
-
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

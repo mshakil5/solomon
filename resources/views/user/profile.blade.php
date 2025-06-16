@@ -1,11 +1,16 @@
 @extends('layouts.user')
 
 @section('content')
+
+@php
+    $lang = session('app_locale', 'en') == 'ro';
+@endphp
+
 <div class="row mt-3">
     <div class="col-10 mx-auto">
         <div class="card">
             <div class="card-header bg-primary">
-                <h4 class="card-title text-white">Profile</h4>
+                <h4 class="card-title text-white">{{ $lang ? 'Profil' : 'Profile' }}</h4>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -29,13 +34,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <label for="name" class="form-label">
+                                    {{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="surname" class="form-label">First Name</label>
+                                <label for="surname" class="form-label">
+                                    {{ $lang ? 'Prenume' : 'First Name' }}
+                                </label>
                                 <input type="text" class="form-control" id="surname" name="surname" value="{{ $user->surname }}">
                             </div>
                         </div>
@@ -44,46 +53,61 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <label for="email" class="form-label">
+                                    {{ $lang ? 'Email' : 'Email' }} <span class="text-danger">*</span>
+                                </label>
                                 <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
+                                <label for="phone" class="form-label">
+                                    {{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" required>
                             </div>
                         </div>
                     </div>
+
                     <div class="row d-none">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address_first_line" class="form-label">Address First Line <span class="text-danger">*</span></label>
+                                <label for="address_first_line" class="form-label">
+                                    {{ $lang ? 'Adresă linia 1' : 'Address First Line' }} <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" id="address_first_line" name="address_first_line" value="{{ $user->address_first_line }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address_second_line" class="form-label">Address Second Line</label>
+                                <label for="address_second_line" class="form-label">
+                                    {{ $lang ? 'Adresă linia 2' : 'Address Second Line' }}
+                                </label>
                                 <input type="text" class="form-control" id="address_second_line" name="address_second_line" value="{{ $user->address_second_line }}">
                             </div>
                         </div>
                     </div>
+
                     <div class="row d-none">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="town" class="form-label">Town</label>
+                                <label for="town" class="form-label">{{ $lang ? 'Oraș' : 'Town' }}</label>
                                 <input type="text" class="form-control" id="town" name="town" value="{{ $user->town }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="postcode" class="form-label">Post Code <span class="text-danger">*</span></label>
+                                <label for="postcode" class="form-label">
+                                    {{ $lang ? 'Cod poștal' : 'Post Code' }} <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" id="postcode" name="postcode" value="{{ $user->postcode }}" required>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+
+                    <button type="submit" class="btn btn-primary">
+                        {{ $lang ? 'Actualizează profilul' : 'Update Profile' }}
+                    </button>
                 </form>
             </div>
         </div>

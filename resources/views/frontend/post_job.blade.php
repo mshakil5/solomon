@@ -2,7 +2,7 @@
 
 @section('content')
 
-@include('frontend.inc.hero')
+{{-- @include('frontend.inc.hero') --}}
 
 <div class="container my-5">
     <div class="row justify-content-center">

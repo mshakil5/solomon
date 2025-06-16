@@ -154,7 +154,7 @@ $(function () {
   
 
 <!-- Loader start-->
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.querySelector('.custom-form');
         const loadingDiv = document.getElementById('loading');
@@ -163,7 +163,7 @@ $(function () {
             loadingDiv.style.display = 'flex';
         });
     });
-</script>
+</script> --}}
 <!-- Loader end-->
 
 <script>

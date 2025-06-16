@@ -1,15 +1,18 @@
 @extends('layouts.master')
 
 @section('content')
+@php
+    $lang = session('app_locale', 'en') == 'ro';
+@endphp
 
-@include('frontend.inc.hero')
+{{-- @include('frontend.inc.hero') --}}
 
-<div class="container my-5">
+<div class="container my-4">
   <div class="row justify-content-center">
       <div class="col-lg-10 col-md-12 col-sm-12">
           <div class="card">
               <div class="card-header text-center bg-primary text-white">
-                  <h2>Complete Your Booking for {{ $service->title_english }}</h2>
+                  <h2>{{ $lang ? 'Finalizează rezervarea pentru' : 'Complete Your Booking for' }} {{ $lang ? $service->title_romanian : $service->title_english }}</h2>
               </div>
               
               <div class="card-body">
@@ -20,7 +23,7 @@
                            aria-valuenow="25" 
                            aria-valuemin="0" 
                            aria-valuemax="100">
-                          Step 1 of 4 - Service Details
+                          {{ $lang ? 'Pasul 1 din 4 - Detalii serviciu' : 'Step 1 of 4 - Service Details' }}
                       </div>
                   </div>
 
@@ -52,87 +55,85 @@
                           <div class="row mb-4">
                               <div class="col-md-4">
                                   <img src="{{ asset('images/service/' . $service->image) }}" 
-                                       alt="{{ $service->title_english }}" 
+                                       alt="{{ $lang ? $service->title_romanian : $service->title_english }}" 
                                        class="img-fluid rounded" 
                                        style="max-height: 200px; object-fit: cover;">
                               </div>
                               <div class="col-md-8">
-                                  <h3 class="text-primary">{{ $service->title_english }}</h3>
-                                  <p class="lead">{!! $service->des_english !!}</p>
-                                  <h4 class="text-success d-none">Price: {{ number_format($service->price, 2) }}RON</h4>
+                                  <h3 class="text-primary">{{ $lang ? $service->title_romanian : $service->title_english }}</h3>
+                                  <p class="lead">{!! $lang ? $service->des_romanian : $service->des_english !!}</p>
+                                  <h4 class="text-success d-none">{{ $lang ? 'Preț:' : 'Price:' }} {{ number_format($service->price, 2) }}RON</h4>
                               </div>
                           </div>
                           
-                          <h4 class="mb-3 border-bottom pb-2">Additional Information</h4>
+                          <h4 class="mb-3 border-bottom pb-2">{{ $lang ? 'Informații suplimentare' : 'Additional Information' }}</h4>
                           
                           <div class="form-group">
-                              <label for="job_description">Job Description</label>
+                              <label for="job_description">{{ $lang ? 'Descriere serviciu' : 'Job Description' }}</label>
                               <textarea class="form-control" id="job_description" name="description" rows="4"></textarea>
                           </div>
                           
                           <div class="form-group mt-4">
-                              <label>Upload Files (Images, Videos, PDFs) - Max 10MB each</label>
+                              <label>{{ $lang ? 'Încarcă fișiere (imagini, video, PDF) - Max 10MB fiecare' : 'Upload Files (Images, Videos, PDFs) - Max 10MB each' }}</label>
                               <input type="file" class="filepond" name="files[]" multiple data-max-file-size="10MB">
                           </div>
                           
                           <div class="row mt-4">
                               <div class="col-12 text-end">
-                                  <button type="button" class="btn btn-primary next-step" data-step="1">Next</button>
+                                  <button type="button" class="btn btn-primary next-step" data-step="1">{{ $lang ? 'Următorul' : 'Next' }}</button>
                               </div>
                           </div>
                       </div>
 
                       <!-- Step 2: Schedule -->
                       <div class="step step-2" style="display: none;">
-                          <h4 class="mb-4 border-bottom pb-2">Schedule Your Service</h4>
+                          <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Programează serviciul' : 'Schedule Your Service' }}</h4>
                           
                           <div class="row">
                               <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="date">Date <span class="text-danger">*</span></label>
+                                      <label for="date">{{ $lang ? 'Dată' : 'Date' }} <span class="text-danger">*</span></label>
                                       <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
                                   </div>
                               </div>
                               <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">
-                              {{-- @if (!isset($type) || $type != 1) --}}
                               <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="time">Time <span class="text-danger">*</span></label>
+                                      <label for="time">{{ $lang ? 'Ora' : 'Time' }} <span class="text-danger">*</span></label>
                                       <input type="time" name="time" id="time" class="form-control" required>
                                   </div>
                               </div>
-                              {{-- @endif --}}
                           </div>
                           
                           <div class="row mt-4">
                               <div class="col-6">
-                                  <button type="button" class="btn btn-secondary prev-step" data-step="2">Previous</button>
+                                  <button type="button" class="btn btn-secondary prev-step" data-step="2">{{ $lang ? 'Anterior' : 'Previous' }}</button>
                               </div>
                               <div class="col-6 text-end">
-                                  <button type="button" class="btn btn-primary next-step" data-step="2">Next</button>
+                                  <button type="button" class="btn btn-primary next-step" data-step="2">{{ $lang ? 'Următorul' : 'Next' }}</button>
                               </div>
                           </div>
                       </div>
 
                       <!-- Step 3: Addresses -->
                       <div class="step step-3" style="display: none;">
-                          <h4 class="mb-4 border-bottom pb-2">Address Information</h4>
+                          <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Informații adresă' : 'Address Information' }}</h4>
                           
                           <div class="row">
                               <div class="col-md-6">
                                   <div class="card mb-4">
                                         <div class="card-header bg-light">
-                                            <h5>Billing Address 
+                                            <h5>{{ $lang ? 'Adresă facturare' : 'Billing Address' }} 
                                                 <button type="button" class="btn btn-sm btn-success ms-2" onclick="event.preventDefault(); openAddressModal(2); return false;">
-                                                  Add
+                                                  {{ $lang ? 'Adaugă' : 'Add' }}
                                               </button>
                                             </h5>
                                         </div>
                                       <div class="card-body">
                                           <div class="form-group">
-                                              <label>Select Billing Address</label>
+                                              <label>{{ $lang ? 'Selectează adresa de facturare' : 'Select Billing Address' }}</label>
                                               <select class="form-select" name="billing_address_id" required>
-                                                  <option value="">Select Address</option>
+                                                  <option value="">{{ $lang ? 'Selectează adresa' : 'Select Address' }}</option>
                                                   @foreach($billingAddresses as $address)
                                                       <option value="{{ $address->id }}"
                                                           @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
@@ -148,18 +149,18 @@
                               <div class="col-md-6">
                                   <div class="card">
                                       <div class="card-header bg-light">
-                                          <h5>Delivery Address 
+                                          <h5>{{ $lang ? 'Adresă livrare' : 'Delivery Address' }} 
                                             <button type="button" class="btn btn-sm btn-success ms-2" 
                                                     onclick="event.preventDefault(); openAddressModal(1); return false;">
-                                                Add
+                                                {{ $lang ? 'Adaugă' : 'Add' }}
                                             </button>
                                           </h5>
                                       </div>
                                       <div class="card-body">
                                           <div class="form-group">
-                                              <label>Select Delivery Address</label>
+                                              <label>{{ $lang ? 'Selectează adresa de livrare' : 'Select Delivery Address' }}</label>
                                               <select class="form-select" name="shipping_address_id" required>
-                                                <option value="">Select Address</option>
+                                                <option value="">{{ $lang ? 'Selectează adresa' : 'Select Address' }}</option>
                                                   @foreach($shippingAddresses as $address)
                                                       <option value="{{ $address->id }}"
                                                           @if($address->primary_billing == 1) selected style="background-color: #d3f9d8;" @endif>
@@ -175,34 +176,34 @@
                           
                           <div class="row mt-4">
                               <div class="col-6">
-                                  <button type="button" class="btn btn-secondary prev-step" data-step="3">Previous</button>
+                                  <button type="button" class="btn btn-secondary prev-step" data-step="3">{{ $lang ? 'Anterior' : 'Previous' }}</button>
                               </div>
                               <div class="col-6 text-end">
-                                  <button type="button" class="btn btn-primary next-step" data-step="3">Next</button>
+                                  <button type="button" class="btn btn-primary next-step" data-step="3">{{ $lang ? 'Următorul' : 'Next' }}</button>
                               </div>
                           </div>
                       </div>
 
                       <!-- Step 4: Review & Submit -->
                       <div class="step step-4" style="display: none;">
-                          <h4 class="mb-4 border-bottom pb-2">Review Your Booking</h4>
+                          <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Verifică rezervarea' : 'Review Your Booking' }}</h4>
                           
                           <div class="card mb-4">
                               <div class="card-body">
-                                  <h5 class="card-title">Service Details</h5>
+                                  <h5 class="card-title">{{ $lang ? 'Detalii serviciu' : 'Service Details' }}</h5>
                                   <div class="row">
                                       <div class="col-md-3">
                                           <img src="{{ asset('images/service/' . $service->image) }}" 
-                                               alt="{{ $service->title_english }}" 
+                                               alt="{{ $lang ? $service->title_romanian : $service->title_english }}" 
                                                class="img-fluid rounded" 
                                                style="max-height: 150px; object-fit: cover;">
                                       </div>
                                       <div class="col-md-9">
-                                          <h5>{{ $service->title_english }}</h5>
-                                          <p>{!! $service->des_english !!}</p>
-                                          <h5 class="text-success d-none">Price: {{ number_format($service->price, 2) }}RON</h5>
+                                          <h5>{{ $lang ? $service->title_romanian : $service->title_english }}</h5>
+                                          <p>{!! $lang ? $service->des_romanian : $service->des_english !!}</p>
+                                          <h5 class="text-success d-none">{{ $lang ? 'Preț:' : 'Price:' }} {{ number_format($service->price, 2) }}RON</h5>
                                           <div id="additional-fee-container" style="display: none;">
-                                              <p><strong>Additional Fee to Pay:</strong> <span id="additional-fee-display">0.00</span> RON (<small id="additional-fee-type" class="text-muted"></small>)</p>      
+                                              <p><strong>{{ $lang ? 'Taxă suplimentară de plată:' : 'Additional Fee to Pay:' }}</strong> <span id="additional-fee-display">0.00</span> RON (<small id="additional-fee-type" class="text-muted"></small>)</p>      
                                           </div>
                                       </div>
                                   </div>
@@ -211,13 +212,13 @@
                           
                           <div class="card mb-4">
                               <div class="card-body">
-                                  <h5 class="card-title">Schedule</h5>
+                                  <h5 class="card-title">{{ $lang ? 'Programare' : 'Schedule' }}</h5>
                                   <div class="row">
                                     <div class="col-6">
-                                      <p><strong>Date:</strong> <span id="review-date"></span></p>
+                                      <p><strong>{{ $lang ? 'Dată:' : 'Date:' }}</strong> <span id="review-date"></span></p>
                                     </div>
                                     <div class="col-6">
-                                      <p><strong>Time:</strong> <span id="review-time"></span></p>
+                                      <p><strong>{{ $lang ? 'Ora:' : 'Time:' }}</strong> <span id="review-time"></span></p>
                                     </div>
                                   </div>    
                               </div>
@@ -225,14 +226,14 @@
                           
                           <div class="card mb-4">
                               <div class="card-body">
-                                  <h5 class="card-title">Addresses</h5>
+                                  <h5 class="card-title">{{ $lang ? 'Adrese' : 'Addresses' }}</h5>
                                   <div class="row">
                                       <div class="col-md-6">
-                                          <h5>Billing Address:</h5>
+                                          <h5>{{ $lang ? 'Adresă facturare:' : 'Billing Address:' }}</h5>
                                           <div id="review-billing-address"></div>
                                       </div>
                                       <div class="col-md-6">
-                                          <h5>Delivery Address:</h5>
+                                          <h5>{{ $lang ? 'Adresă livrare:' : 'Delivery Address:' }}</h5>
                                           <div id="review-shipping-address"></div>
                                       </div>
                                   </div>
@@ -241,26 +242,25 @@
                           
                           <div class="card mb-4">
                               <div class="card-body">
-                                  <h5 class="card-title">Files</h5>
+                                  <h5 class="card-title">{{ $lang ? 'Fișiere' : 'Files' }}</h5>
                                   <div id="file-previews" class="d-flex flex-wrap gap-2"></div>
                               </div>
                           </div>
                           
                           <div class="form-check mb-4">
-                              
                               <label class="form-check-label">
-                                  Information
+                                  {{ $lang ? 'Informații' : 'Information' }}
                               </label>
                               <p>{!! $service->information !!}</p>
                           </div>
                           
                           <div class="row mt-4">
                               <div class="col-6">
-                                  <button type="button" class="btn btn-secondary prev-step" data-step="4">Previous</button>
+                                  <button type="button" class="btn btn-secondary prev-step" data-step="4">{{ $lang ? 'Anterior' : 'Previous' }}</button>
                               </div>
                               <div class="col-6 text-end">
                                 <input type="hidden" id="additional_fee" name="additional_fee" value="0">
-                                  <button type="submit" class="btn btn-success" id="submit-button">Complete Booking</button>
+                                  <button type="submit" class="btn btn-success" id="submit-button">{{ $lang ? 'Finalizează rezervarea' : 'Complete Booking' }}</button>
                               </div>
                           </div>
                       </div>
@@ -275,60 +275,84 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Add Address</h5>
+                <h5 class="modal-title" id="modalTitle">{{ $lang ? 'Adaugă adresă' : 'Add Address' }}</h5>
                   <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="addressForm">
                 <div class="modal-body">
                     <input type="hidden" name="type" id="addressType" value="1">
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">First Name</label>
-                        <input type="text" class="form-control" name="first_name" required id="first_name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone</label>
-                        <input type="text" class="form-control" name="phone" required id="phone">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">District</label>
-                        <input type="text" class="form-control" name="district" required id="district">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">First Line</label>
-                        <input type="text" class="form-control" name="first_line" required id="first_line">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Second Line (Optional)</label>
-                        <input type="text" class="form-control" name="second_line" id="second_line">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Third Line (Optional)</label>
-                        <input type="text" class="form-control" name="third_line" id="third_line">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Town</label>
-                        <input type="text" class="form-control" name="town" required id="town">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Post Code</label>
-                        <input type="text" class="form-control" name="post_code" required id="post_code">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Floor (Optional)</label>
-                        <input type="text" class="form-control" name="floor" id="floor">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Apartment (Optional)</label>
-                        <input type="text" class="form-control" name="apartment" id="apartment">
-                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="first_name" required id="first_name">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="phone" required id="phone">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Județ' : 'District' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="district" required id="district">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ $lang ? 'Linia 1' : 'First Line' }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="first_line" required id="first_line">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Linia 2' : 'Second Line' }}</label>
+                          <input type="text" class="form-control" name="second_line" id="second_line">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Linia 3' : 'Third Line' }}</label>
+                          <input type="text" class="form-control" name="third_line" id="third_line">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Oraș' : 'Town' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="town" required id="town">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">{{ $lang ? 'Cod poștal' : 'Post Code' }} <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" name="post_code" required id="post_code">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ $lang ? 'Etaj' : 'Floor' }}</label>
+                            <input type="text" class="form-control" name="floor" id="floor">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                            <label class="form-label">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
+                            <input type="text" class="form-control" name="apartment" id="apartment">
+                        </div>
+                      </div>
+                    </div>         
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $lang ? 'Închide' : 'Close' }}</button>
+                    <button type="button" class="btn btn-primary" id="saveAddressBtn">{{ $lang ? 'Salvează adresa' : 'Save Address' }}</button>
                 </div>
             </form>
         </div>
@@ -395,11 +419,11 @@
                 $('#additional_fee').val(additionalFee.toFixed(2));
                 $('#additional-fee-type').text(response.type_label);
                 $('#additional-fee-container').show();
-                $('#submit-button').text('Pay ' + additionalFee.toFixed(2) + ' RON');
+                $('#submit-button').text('{{ $lang ? "Plătește" : "Pay" }} ' + additionalFee.toFixed(2) + ' RON');
             } else {
                 $('#additional_fee').val(0);
                 $('#additional-fee-container').hide();
-                $('#submit-button').text('Complete Booking');
+                $('#submit-button').text('{{ $lang ? "Finalizează rezervarea" : "Complete Booking" }}');
             }
         }
     });
@@ -413,8 +437,8 @@ $(document).ready(function() {
     const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
 
     window.openAddressModal = function(type) {
-        const title = type === 1 ? 'Delivery' : 'Billing';
-        $('#modalTitle').text(`Add ${title} Address`);
+        const title = type === 1 ? '{{ $lang ? "Livrare" : "Delivery" }}' : '{{ $lang ? "Facturare" : "Billing" }}';
+        $('#modalTitle').text(`{{ $lang ? "Adaugă adresă" : "Add" }} ${title}`);
         $('#addressType').val(type);
         $('#addressForm')[0].reset(); 
         $('.is-invalid').removeClass('is-invalid');
@@ -446,7 +470,7 @@ $(document).ready(function() {
         formData.append('floor', $('#floor').val());
         formData.append('apartment', $('#apartment').val());
 
-        $('#saveAddressBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+        $('#saveAddressBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {{ $lang ? "Se salvează..." : "Saving..." }}');
 
         try {
             const response = await $.ajax({
@@ -462,13 +486,13 @@ $(document).ready(function() {
 
             if (response.code === 201) {
                 addressModal.hide();
-                toastr.success('Address added successfully!');
+                toastr.success('{{ $lang ? "Adresă adăugată cu succes!" : "Address added successfully!" }}');
                 updateAddressDropdown(isShipping ? 'shipping' : 'billing', response.address);
             }
         } catch (error) {
             handleFormErrors(error);
         } finally {
-            $('#saveAddressBtn').prop('disabled', false).text('Save Address');
+            $('#saveAddressBtn').prop('disabled', false).text('{{ $lang ? "Salvează adresa" : "Save Address" }}');
         }
     }
 
@@ -491,7 +515,7 @@ $(document).ready(function() {
                 input.after(`<div class="invalid-feedback">${value[0]}</div>`);
             });
         } else {
-            toastr.error('An error occurred. Please try again.');
+            toastr.error('{{ $lang ? "A apărut o eroare. Te rugăm să încerci din nou." : "An error occurred. Please try again." }}');
             console.error('Error:', error);
         }
     }
@@ -564,16 +588,16 @@ $(document).ready(function() {
         
         switch(step) {
             case 1:
-                stepText = 'Step 1 of 4 - Service Details';
+                stepText = '{{ $lang ? "Pasul 1 din 4 - Detalii serviciu" : "Step 1 of 4 - Service Details" }}';
                 break;
             case 2:
-                stepText = 'Step 2 of 4 - Schedule';
+                stepText = '{{ $lang ? "Pasul 2 din 4 - Programare" : "Step 2 of 4 - Schedule" }}';
                 break;
             case 3:
-                stepText = 'Step 3 of 4 - Addresses';
+                stepText = '{{ $lang ? "Pasul 3 din 4 - Adrese" : "Step 3 of 4 - Addresses" }}';
                 break;
             case 4:
-                stepText = 'Step 4 of 4 - Review & Submit';
+                stepText = '{{ $lang ? "Pasul 4 din 4 - Verifică și trimite" : "Step 4 of 4 - Review & Submit" }}';
                 break;
         }
         
@@ -584,26 +608,23 @@ $(document).ready(function() {
         let isValid = true;
         
         if (step === 1) {
-            // if ($('#job_description').val().trim() === '') {
-            //     alert('Please provide a job description');
-            //     isValid = false;
-            // }
+            // Validation for step 1
         } else if (step === 2) {
             if ($('#date').val() === '') {
-                alert('Please select a date');
+                alert('{{ $lang ? "Vă rugăm să selectați o dată" : "Please select a date" }}');
                 isValid = false;
             } else if ($('#time').val() === '') {
-                alert('Please select a time');
+                alert('{{ $lang ? "Vă rugăm să selectați o oră" : "Please select a time" }}');
                 isValid = false;
             }
         } else if (step === 3) {
           if (!$('select[name="billing_address_id"]').length || $('select[name="billing_address_id"]').val() === '') {
-              alert('Please select a billing address');
+              alert('{{ $lang ? "Vă rugăm să selectați o adresă de facturare" : "Please select a billing address" }}');
               isValid = false;
           }
           
           if (!$('select[name="shipping_address_id"]').length || $('select[name="shipping_address_id"]').val() === '') {
-              alert('Please select a Delivery address');
+              alert('{{ $lang ? "Vă rugăm să selectați o adresă de livrare" : "Please select a Delivery address" }}');
               isValid = false;
           }
       }

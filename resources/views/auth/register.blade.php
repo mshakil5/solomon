@@ -28,7 +28,7 @@
     }
 
     .register-form-container button {
-        background-color: #d71920;
+        background-color: rgb(0, 88, 162);
         color: #fff;
         padding: 10px;
         border: none;
@@ -83,7 +83,7 @@
             <div class="row justify-content-center">
                 <div class="col-4">
                     <button type="submit" class="form-control">
-                        {{ __('Send OTP') }}
+                        Send OTP
                     </button>
                 </div>
             </div>

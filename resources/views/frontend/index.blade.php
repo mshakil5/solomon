@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
 
-@include('frontend.inc.hero')
+{{-- @include('frontend.inc.hero') --}}
 
 <div class="categories">
   @if(session('success'))
@@ -44,7 +44,6 @@
                 </div>
             @endforeach
         </div>
-
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -56,7 +55,6 @@
     </div>
 </section>
 @endif
-
 
 <div class="categories mt-5 d-none">
 
@@ -391,7 +389,7 @@
 </section>
 
 <style>
-        #loading {
+    #loading {
         position: fixed;
         display: flex;
         justify-content: center;
@@ -474,16 +472,5 @@
 @endsection
 
 @section('script')
-{{-- <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      const forms = document.querySelectorAll('form');
-      const loadingDiv = document.getElementById('loading');
 
-      forms.forEach(form => {
-          form.addEventListener('submit', function() {
-              loadingDiv.style.display = 'flex';
-          });
-      });
-  });
-</script> --}}
 @endsection

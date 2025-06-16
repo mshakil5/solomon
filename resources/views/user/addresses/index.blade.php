@@ -2,11 +2,15 @@
 
 @section('content')
 
+@php
+    $lang = session('app_locale', 'en') == 'ro';
+@endphp
+
 <div class="row justify-content-center mt-3">
     <div class="col-10">
         <div class="card">
             <div class="card-header bg-primary">
-                <h4 class="card-title text-white">My Addresses</h4>
+                <h4 class="card-title text-white">{{ $lang ? 'Adresele mele' : 'My Addresses' }}</h4>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -24,21 +28,21 @@
                 <div class="row mb-4">
                     <div class="col-12 text-right">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModal">
-                            Add New Address
+                            {{ $lang ? 'Adaugă adresă nouă' : 'Add New Address' }}
                         </button>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <h5>Delivery Addresses</h5>
+                        <h5>{{ $lang ? 'Adrese de livrare' : 'Delivery Addresses' }}</h5>
                         <div class="list-group">
                             @forelse($shipping_addresses as $address)
                                 <div class="list-group-item mb-3">
                                     <div class="d-flex justify-content-between">
                                         <h6>{{ $address->name }}</h6>
                                         <div>
-                                            <button class="btn btn-sm btn-info edit-address" 
+                                            <button class="btn btn-sm btn-info edit-address"
                                                     data-id="{{ $address->id }}"
                                                     data-type="{{ $address->type }}"
                                                     data-name="{{ $address->name }}"
@@ -52,10 +56,10 @@
                                                     data-post_code="{{ $address->post_code }}"
                                                     data-floor="{{ $address->floor }}"
                                                     data-apartment="{{ $address->apartment }}">
-                                                Edit
+                                                {{ $lang ? 'Editează' : 'Edit' }}
                                             </button>
                                             <button class="btn btn-sm btn-danger delete-address" data-id="{{ $address->id }}">
-                                                Delete
+                                                {{ $lang ? 'Șterge' : 'Delete' }}
                                             </button>
                                         </div>
                                     </div>
@@ -71,29 +75,29 @@
                                     <p class="mb-1">{{ $address->town }}, {{ $address->district }}</p>
                                     <p class="mb-1">{{ $address->post_code }}</p>
                                     @if($address->floor)
-                                        <p class="mb-1">Floor: {{ $address->floor }}</p>
+                                        <p class="mb-1">{{ $lang ? 'Etaj:' : 'Floor:' }} {{ $address->floor }}</p>
                                     @endif
                                     @if($address->apartment)
-                                        <p class="mb-1">Apartment: {{ $address->apartment }}</p>
+                                        <p class="mb-1">{{ $lang ? 'Apartament:' : 'Apartment:' }} {{ $address->apartment }}</p>
                                     @endif
                                 </div>
                             @empty
                                 <div class="list-group-item">
-                                    No Delivery addresses found.
+                                    {{ $lang ? 'Nicio adresă de livrare găsită.' : 'No Delivery addresses found.' }}
                                 </div>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <h5>Billing Addresses</h5>
+                        <h5>{{ $lang ? 'Adrese de facturare' : 'Billing Addresses' }}</h5>
                         <div class="list-group">
                             @forelse($billing_addresses as $address)
                                 <div class="list-group-item mb-3">
                                     <div class="d-flex justify-content-between">
                                         <h6>{{ $address->name }}</h6>
                                         <div>
-                                            <button class="btn btn-sm btn-info edit-address" 
+                                            <button class="btn btn-sm btn-info edit-address"
                                                     data-id="{{ $address->id }}"
                                                     data-type="{{ $address->type }}"
                                                     data-name="{{ $address->name }}"
@@ -107,10 +111,10 @@
                                                     data-post_code="{{ $address->post_code }}"
                                                     data-floor="{{ $address->floor }}"
                                                     data-apartment="{{ $address->apartment }}">
-                                                Edit
+                                                {{ $lang ? 'Editează' : 'Edit' }}
                                             </button>
                                             <button class="btn btn-sm btn-danger delete-address" data-id="{{ $address->id }}">
-                                                Delete
+                                                {{ $lang ? 'Șterge' : 'Delete' }}
                                             </button>
                                         </div>
                                     </div>
@@ -126,15 +130,15 @@
                                     <p class="mb-1">{{ $address->town }}, {{ $address->district }}</p>
                                     <p class="mb-1">{{ $address->post_code }}</p>
                                     @if($address->floor)
-                                        <p class="mb-1">Floor: {{ $address->floor }}</p>
+                                        <p class="mb-1">{{ $lang ? 'Etaj:' : 'Floor:' }} {{ $address->floor }}</p>
                                     @endif
                                     @if($address->apartment)
-                                        <p class="mb-1">Apartment: {{ $address->apartment }}</p>
+                                        <p class="mb-1">{{ $lang ? 'Apartament:' : 'Apartment:' }} {{ $address->apartment }}</p>
                                     @endif
                                 </div>
                             @empty
                                 <div class="list-group-item">
-                                    No billing addresses found.
+                                    {{ $lang ? 'Nicio adresă de facturare găsită.' : 'No billing addresses found.' }}
                                 </div>
                             @endforelse
                         </div>
@@ -150,8 +154,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="addAddressModalLabel">Add New Address</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title text-white" id="addAddressModalLabel">{{ $lang ? 'Adaugă adresă nouă' : 'Add New Address' }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ $lang ? 'Închide' : 'Close' }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -159,73 +163,104 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" id="address_id">
-                    
-                    <div class="form-group">
-                        <label for="name" class="form-label">Address Name <span class="text-danger">*</span></label>
-                        <input id="name" type="text" class="form-control" name="name" required>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="name">{{ $lang ? 'Numele adresei' : 'Address Name' }} <span class="text-danger">*</span></label>
+                                <input id="name" type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="first_name">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
+                                <input id="first_name" type="text" class="form-control" name="first_name" required>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
-                        <input id="first_name" type="text" class="form-control" name="first_name" required>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="phone">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
+                                <input id="phone" type="text" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="district">{{ $lang ? 'District' : 'District' }} <span class="text-danger">*</span></label>
+                                <input id="district" type="text" class="form-control" name="district" required>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
-                        <input id="phone" type="text" class="form-control" name="phone" required>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="first_line">{{ $lang ? 'Linia Adresei 1' : 'Address Line 1' }} <span class="text-danger">*</span></label>
+                                <input id="first_line" type="text" class="form-control" name="first_line" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="second_line">{{ $lang ? 'Linia Adresei 2' : 'Address Line 2' }}</label>
+                                <input id="second_line" type="text" class="form-control" name="second_line">
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="district" class="form-label">District <span class="text-danger">*</span></label>
-                        <input id="district" type="text" class="form-control" name="district" required>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="third_line">{{ $lang ? 'Linia Adresei 3' : 'Address Line 3' }}</label>
+                                <input id="third_line" type="text" class="form-control" name="third_line">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="town">{{ $lang ? 'Oraș/Sat' : 'Town/City' }} <span class="text-danger">*</span></label>
+                                <input id="town" type="text" class="form-control" name="town" required>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="first_line" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-                        <input id="first_line" type="text" class="form-control" name="first_line" required>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="post_code">{{ $lang ? 'Cod poștal' : 'Postal Code' }} <span class="text-danger">*</span></label>
+                                <input id="post_code" type="text" class="form-control" name="post_code" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="floor">{{ $lang ? 'Etaj' : 'Floor' }}</label>
+                                <input id="floor" type="text" class="form-control" name="floor">
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="second_line" class="form-label">Address Line 2</label>
-                        <input id="second_line" type="text" class="form-control" name="second_line">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="third_line" class="form-label">Address Line 3</label>
-                        <input id="third_line" type="text" class="form-control" name="third_line">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="town" class="form-label">Town/City <span class="text-danger">*</span></label>
-                        <input id="town" type="text" class="form-control" name="town" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="post_code" class="form-label">Postal Code <span class="text-danger">*</span></label>
-                        <input id="post_code" type="text" class="form-control" name="post_code" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="floor" class="form-label">Floor</label>
-                        <input id="floor" type="text" class="form-control" name="floor">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="apartment" class="form-label">Apartment</label>
-                        <input id="apartment" type="text" class="form-control" name="apartment">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="type" class="form-label">Address Type <span class="text-danger">*</span></label>
-                        <select id="type" class="form-control" name="type" required>
-                            <option value="1">Delivery Address</option>
-                            <option value="2">Billing Address</option>
-                        </select>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="apartment">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
+                                <input id="apartment" type="text" class="form-control" name="apartment">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="type">{{ $lang ? 'Tip adresă' : 'Address Type' }} <span class="text-danger">*</span></label>
+                                <select id="type" class="form-control" name="type" required>
+                                    <option value="1">{{ $lang ? 'Adresă de livrare' : 'Delivery Address' }}</option>
+                                    <option value="2">{{ $lang ? 'Adresă de facturare' : 'Billing Address' }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Address</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $lang ? 'Închide' : 'Close' }}</button>
+                    <button type="submit" class="btn btn-primary">{{ $lang ? 'Salvează adresa' : 'Save Address' }}</button>
                 </div>
             </form>
         </div>
@@ -237,20 +272,20 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
-                <h5 class="modal-title text-white">Confirm Deletion</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title text-white">{{ $lang ? 'Confirmă ștergerea' : 'Confirm Deletion' }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ $lang ? 'Închide' : 'Close' }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this address?
+                {{ $lang ? 'Sigur doriți să ștergeți această adresă?' : 'Are you sure you want to delete this address?' }}
             </div>
             <div class="modal-footer">
                 <form id="deleteForm" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $lang ? 'Anulează' : 'Cancel' }}</button>
+                    <button type="submit" class="btn btn-danger">{{ $lang ? 'Șterge' : 'Delete' }}</button>
                 </form>
             </div>
         </div>
@@ -261,6 +296,9 @@
 
 @section('script')
 <script>
+
+    var isRo = @json($lang);
+
     $(document).ready(function() {
         // Handle edit button click
         $('.edit-address').click(function() {
@@ -286,7 +324,7 @@
             $('#apartment').val($(this).data('apartment'));
             $('#type').val($(this).data('type'));
             
-            $('#addAddressModalLabel').text('Edit Address');
+            $('#addAddressModalLabel').text(isRo ? 'Editare adresă' : 'Edit Address');
             $('#addAddressModal').modal('show');
         });
         
@@ -296,7 +334,7 @@
             $('#addressForm').attr('action', url);
             $('#addressForm input[name="_method"]').remove();
             $('#addressForm')[0].reset();
-            $('#addAddressModalLabel').text('Add New Address');
+            $('#addAddressModalLabel').text(isRo ? 'Adaugă adresă nouă' : 'Add New Address');
         });
         
         // Handle delete button click

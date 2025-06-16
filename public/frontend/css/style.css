@@ -32,7 +32,7 @@ body {
 
 .header .logo {
     font-size: 24px;
-    color: #d71920;
+    color: rgb(0, 88, 162);
     font-weight: 700;
     text-decoration: none;
 }
@@ -149,7 +149,7 @@ body {
 
 .info-section .info-box i {
     font-size: 36px;
-    color: #d71920;
+    color: rgb(0, 88, 162);
 }
 
 .info-section .info-box p {
@@ -161,7 +161,7 @@ body {
     display: inline-block;
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: #d71920;
+    background-color: rgb(0, 88, 162);
     color: #fff;
     text-decoration: none;
     border-radius: 5px;

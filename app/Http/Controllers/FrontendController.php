@@ -546,8 +546,8 @@ class FrontendController extends Controller
             'address_third_line' => 'nullable|string|max:255',
             'town' => 'required|string|max:255',
             'postcode' => 'required|string|max:10',
-            'category_ids' => 'required|array',
-            'category_ids.*' => 'exists:categories,id',
+            // 'category_ids' => 'required|array',
+            // 'category_ids.*' => 'exists:categories,id',
             'cv' => 'required|file|mimes:pdf,docx|max:3000',
         ]);
 
@@ -564,8 +564,8 @@ class FrontendController extends Controller
         $career->address_third_line = $request->address_third_line;
         $career->town = $request->town;
         $career->postcode = $request->postcode;
-        $career->category_ids = json_encode($request->category_ids);
-        $career->sub_category_ids = json_encode($request->sub_category_ids);
+        // $career->category_ids = json_encode($request->category_ids);
+        // $career->sub_category_ids = json_encode($request->sub_category_ids);
         $career->created_by = auth()->id();
 
         if ($request->hasFile('cv')) {

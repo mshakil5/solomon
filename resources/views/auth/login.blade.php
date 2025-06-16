@@ -29,7 +29,7 @@
     }
 
     .login-form-container button {
-        background-color: #d71920;
+        background-color: rgb(0, 88, 162);
         color: #fff;
         padding: 10px;
         border: none;
