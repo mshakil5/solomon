@@ -427,5 +427,65 @@ class ServiceController extends Controller
           ,'status' => 200]);
     }
 
+    public function calculateFee(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'time' => 'nullable|string',
+        ]);
+
+        $date = $request->date;
+        $time = $request->time;
+        $now = now();
+
+        $typeFees = [
+            1 => 400.00, // Emergency
+            2 => 250.00, // Prioritized
+            3 => 300.00, // Outside working hours
+            4 => 0.00    // Standard
+        ];
+
+        $typeLabels = [
+            1 => 'Emergency Service',
+            2 => 'Prioritized Service',
+            3 => 'Outside Working Hours',
+            4 => 'Standard Service',
+        ];
+
+        $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', "$date $time") : null;
+
+        if ($serviceDateTime) {
+            $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+            $hour = $serviceDateTime->format('H');
+            $dayOfWeek = $serviceDateTime->dayOfWeek;
+        } else {
+            $diffInMinutes = null;
+            $hour = null;
+            $dayOfWeek = null;
+        }
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $openingHour = $company?->opening_time ?? '10:00';
+        $closingHour = $company?->closing_time ?? '18:00';
+
+        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1; // Emergency
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; // Prioritized
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3; // Outside Working Hours
+        } else {
+            $type = 4; // Standard
+        }
+
+        return response()->json([
+            'fee' => $typeFees[$type],
+            'type' => $type,
+            'type_label' => $typeLabels[$type]
+        ]);
+    }
 
 }

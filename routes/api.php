@@ -23,7 +23,7 @@ Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUs
 
 Route::get('/about-us', [FrontendController::class, 'aboutUs']);
 Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy']);
-
+Route::get('/company-details', [FrontendController::class, 'companyDetails']);
 Route::get('/get-category', [FrontendController::class, 'getCategory']);
 Route::post('/review', [FrontendController::class, 'reviewStore']);
 Route::post('/join-us', [FrontendController::class, 'joinUsStore']);
@@ -73,6 +73,8 @@ Route::group(['middleware' => ['auth:api']], function () {
   Route::get('/services', [ServiceController::class, 'getServices']);
 
   Route::get('/types', [ServiceController::class, 'getTypes']);
+
+  Route::post('/booking/calculate-fee', [ServiceController::class, 'calculateFee']);
 
   Route::post('/service-booking', [ServiceController::class, 'serviceBookingStore']);
 

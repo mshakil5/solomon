@@ -549,4 +549,20 @@ class FrontendController extends Controller
         ], 200);
     }
 
+    public function companyDetails()
+    {
+        $data = CompanyDetails::find(1);
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Company details not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
 }
