@@ -93,7 +93,7 @@
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label for="date">{{ $lang ? 'Dată' : 'Date' }} <span class="text-danger">*</span></label>
-                                      <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                                      <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required @if(!is_null($type) && $type == 1) readonly @endif>
                                   </div>
                               </div>
                               <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">

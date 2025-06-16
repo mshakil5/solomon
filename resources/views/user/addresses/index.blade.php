@@ -38,10 +38,20 @@
                         <h5>{{ $lang ? 'Adrese de livrare' : 'Delivery Addresses' }}</h5>
                         <div class="list-group">
                             @forelse($shipping_addresses as $address)
-                                <div class="list-group-item mb-3">
+                                <div class="list-group-item mb-3 {{ $address->primary_shipping == 1 ? 'bg-success text-white' : '' }}">
                                     <div class="d-flex justify-content-between">
                                         <h6>{{ $address->name }}</h6>
                                         <div>
+                                            @if(!$address->primary_shipping == 1)
+                                              <form action="{{ route('user.addresses.primary.shipping') }}" method="POST" style="display:inline;">
+                                                  @csrf
+                                                  <input type="hidden" name="additional_address_id" value="{{ $address->id }}">
+                                                  <button type="submit" class="btn btn-sm btn-success">
+                                                      {{ $lang ? 'Setează principală' : 'Set as primary' }}
+                                                  </button>
+                                              </form>
+                                          @endif
+
                                             <button class="btn btn-sm btn-info edit-address"
                                                     data-id="{{ $address->id }}"
                                                     data-type="{{ $address->type }}"
@@ -93,10 +103,20 @@
                         <h5>{{ $lang ? 'Adrese de facturare' : 'Billing Addresses' }}</h5>
                         <div class="list-group">
                             @forelse($billing_addresses as $address)
-                                <div class="list-group-item mb-3">
+                                <div class="list-group-item mb-3 {{ $address->primary_billing == 1 ? 'bg-success text-white' : '' }}">
                                     <div class="d-flex justify-content-between">
                                         <h6>{{ $address->name }}</h6>
                                         <div>
+                                            @if(!$address->primary_billing == 1)
+                                                <form action="{{ route('user.addresses.primary.billing') }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="additional_address_id" value="{{ $address->id }}">
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        {{ $lang ? 'Setează principală' : 'Set as primary' }}
+                                                    </button>
+                                                </form>
+                                            @endif
+
                                             <button class="btn btn-sm btn-info edit-address"
                                                     data-id="{{ $address->id }}"
                                                     data-type="{{ $address->type }}"

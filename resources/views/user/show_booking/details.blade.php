@@ -1,6 +1,23 @@
 @extends('layouts.user')
 
 @section('content')
+
+<style>
+    .star-rating input {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 1.5rem;
+        color: #ccc;
+        cursor: pointer;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
+</style>
+
 <div class="row mt-3">
     <div class="col-10 mx-auto">
         @php
@@ -308,6 +325,71 @@
                       </table>
                     </div>
                   </div>
+                @endif
+
+                @if($booking->status == 1)
+                  <div class="row mt-4">
+                      <div class="col-12 text-center">
+                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelBookingModal">
+                              {{ $lang ? 'Anulează rezervarea' : 'Cancel Booking' }}
+                          </button>
+                      </div>
+                  </div>
+
+                  <div class="modal fade" id="cancelBookingModal" tabindex="-1" role="dialog" aria-labelledby="cancelBookingModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header bg-danger text-white">
+                                  <h5 class="modal-title" id="cancelBookingModalLabel">{{ $lang ? 'Confirmă anularea' : 'Confirm Cancellation' }}</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body">
+                                  {{ $lang ? 'Sigur doriți să anulați această rezervare?' : 'Are you sure you want to cancel this booking?' }}
+                              </div>
+                              <div class="modal-footer">
+                                  <form action="{{ route('user.bookings.cancel', $booking->id) }}" method="POST">
+                                      @csrf
+                                      @method('PUT')
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $lang ? 'Nu' : 'No' }}</button>
+                                      <button type="submit" class="btn btn-danger">{{ $lang ? 'Da, anulează' : 'Yes, Cancel' }}</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                @endif
+
+                @if($booking->status == 3)
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <h4>{{ $lang ? 'Recenzie' : 'Review' }}</h4>
+
+                            @if($booking->serviceReview)
+                                  <p><strong>{{ $lang ? 'Stele acordate' : 'Given Stars' }}:</strong></p>
+                                  <div class="text-warning">
+                                      @for($i = 1; $i <= 5; $i++)
+                                          <i class="fa fa-star{{ $i <= $booking->serviceReview->review_star ? '' : '-o' }}"></i>
+                                      @endfor
+                                  </div>
+                            @else
+                                <form action="{{ route('user.bookings.review.store', $booking->id) }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label>{{ $lang ? 'Evaluare' : 'Rating' }}</label>
+                                        <div class="star-rating d-flex flex-row-reverse justify-content-start">
+                                            @for($i = 5; $i >= 1; $i--)
+                                                <input type="radio" name="review_star" id="star{{ $i }}" value="{{ $i }}" required />
+                                                <label for="star{{ $i }}"><i class="fa fa-star"></i></label>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-2">{{ $lang ? 'Trimite recenzia' : 'Submit Review' }}</button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
                 @endif
 
             </div>

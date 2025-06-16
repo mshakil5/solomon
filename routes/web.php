@@ -142,11 +142,17 @@ Route::group(['prefix' => 'user/', 'middleware' => ['auth', 'is_user']], functio
     Route::get('/service-bookings/edit/{id}', [ServiceBookingController::class, 'editBooking'])->name('service.booking.edit');
     Route::put('/service-bookings/{id}', [ServiceBookingController::class, 'updateBooking'])->name('service.booking.update');
 
+    Route::put('/{booking}/cancel', [ServiceBookingController::class, 'cancelBooking'])->name('user.bookings.cancel');
+
+    Route::post('/user/bookings/{id}/review', [ServiceBookingController::class, 'reviewStore'])->name('user.bookings.review.store');
+
     Route::prefix('addresses')->group(function() {
         Route::get('/', [AddressController::class, 'index'])->name('user.addresses.index');
         Route::post('/', [AddressController::class, 'store'])->name('user.addresses.store');
         Route::put('/{id}', [AddressController::class, 'update'])->name('user.addresses.update');
         Route::delete('/{id}', [AddressController::class, 'destroy'])->name('user.addresses.destroy');
+        Route::post('/primary-shipping', [AddressController::class, 'primaryShippingAddressUpdate'])->name('user.addresses.primary.shipping');
+        Route::post('/primary-billing', [AddressController::class, 'primaryBillingAddressUpdate'])->name('user.addresses.primary.billing');
     });
 
     Route::get('/additional-addresses', [UserController::class, 'index'])->name('additional-addresses.index');

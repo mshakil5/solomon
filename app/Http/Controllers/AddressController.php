@@ -136,4 +136,44 @@ class AddressController extends Controller
         return redirect()->route('user.addresses.index')
             ->with('success', 'Address deleted successfully.');
     }
+
+    public function primaryBillingAddressUpdate(Request $request)
+    {
+        $request->validate([
+            'additional_address_id' => 'required|exists:additional_addresses,id',
+        ]);
+
+        $address = AdditionalAddress::where('id', $request->additional_address_id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        AdditionalAddress::where('user_id', auth()->id())
+            ->where('primary_billing', 1)
+            ->update(['primary_billing' => 0]);
+
+        $address->primary_billing = 1;
+        $address->save();
+
+        return back()->with('success', 'Primary billing address updated.');
+    }
+
+    public function primaryShippingAddressUpdate(Request $request)
+    {
+        $request->validate([
+            'additional_address_id' => 'required|exists:additional_addresses,id',
+        ]);
+
+        $address = AdditionalAddress::where('id', $request->additional_address_id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        AdditionalAddress::where('user_id', auth()->id())
+            ->where('primary_shipping', 1)
+            ->update(['primary_shipping' => 0]);
+
+        $address->primary_shipping = 1;
+        $address->save();
+
+        return back()->with('success', 'Primary shipping address updated.');
+    }
 }

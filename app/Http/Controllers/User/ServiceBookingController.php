@@ -11,6 +11,8 @@ use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
 use App\Models\ServiceImage;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceBookingReview;
 
 class ServiceBookingController extends Controller
 {
@@ -34,7 +36,8 @@ class ServiceBookingController extends Controller
                 'shippingAddress',
                 'files',
                 'invoices.transaction',
-                'transactions'
+                'transactions',
+                'serviceReview'
             ])->findOrFail($id);
             
         if ($booking->user_id != auth()->id()) {
@@ -156,4 +159,58 @@ class ServiceBookingController extends Controller
 
         return redirect()->route('user.service.bookings')->with('success', 'Booking updated successfully.');
     }
+
+    public function cancelBooking(Request $request, $id)
+    {
+        $booking = ServiceBooking::findOrFail($id);
+        if ($booking->user_id != Auth::id()) {
+            return redirect()->back()
+                ->with('error', $request->lang == 'ro' 
+                    ? 'Rezervarea nu a fost găsită' 
+                    : 'Booking not found');
+        }
+
+        if ($booking->status != 1) {
+            return redirect()->back()
+                ->with('error', $request->lang == 'ro'
+                    ? 'Rezervarea nu poate fi anulată în stadiul actual'
+                    : 'Booking cannot be cancelled in its current status');
+        }
+
+        $booking->update(['status' => 4]);
+
+        return redirect()->route('user.service.bookings')
+            ->with('success', $request->lang == 'ro'
+                ? 'Rezervarea a fost anulată cu succes'
+                : 'Booking cancelled successfully');
+    }
+
+    public function reviewStore(Request $request, $id)
+    {
+        $request->validate([
+            'review_star' => 'required|integer|min:1|max:5',
+        ]);
+
+        $booking = ServiceBooking::where('id', $id)->where('user_id', Auth::id())->first();
+
+        if (!$booking) {
+            return back()->with('error', 'Booking not found.');
+        }
+
+        if ($booking->status != 3) {
+            return back()->with('error', 'You can only review completed bookings.');
+        }
+
+        if ($booking->serviceReview) {
+            return back()->with('error', 'You have already reviewed this booking.');
+        }
+
+        ServiceBookingReview::create([
+            'service_booking_id' => $id,
+            'review_star' => $request->review_star,
+        ]);
+
+        return back()->with('success', 'Review submitted successfully.');
+    }
+
 }
