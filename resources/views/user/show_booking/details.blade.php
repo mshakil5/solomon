@@ -21,7 +21,7 @@
 <div class="row mt-3">
     <div class="col-10 mx-auto">
         @php
-            $lang = session('app_locale', 'en') == 'ro';
+            $lang = session('app_locale', 'ro') == 'ro';
         @endphp
         
         <a href="{{ route('user.service.bookings') }}" class="btn btn-primary mb-3">

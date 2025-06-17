@@ -1,6 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
+@php
+    $lang = session('app_locale', 'ro') == 'ro';
+@endphp
 
 <style>
     .login-form-container {
@@ -47,10 +50,9 @@
 <div class="col-lg-4 col-12 mx-auto login-form-container">
     <form class="custom-form contact-form" method="POST" action="{{ route('password.update') }}">
         @csrf
-
         <input type="hidden" name="token" value="{{ $token }}">
 
-        <h2>Reset Password</h2>
+        <h2>{{ $lang ? 'Resetare parolă' : 'Reset Password' }}</h2>
 
         @if (session('status'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -66,7 +68,11 @@
 
         <div class="row mb-3">
             <div class="col-12">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus placeholder="Email">
+                <input id="email" type="email" 
+                    class="form-control @error('email') is-invalid @enderror" 
+                    name="email" value="{{ $email ?? old('email') }}" 
+                    required autocomplete="email" autofocus 
+                    placeholder="{{ $lang ? 'Adresă email' : 'Email' }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -77,7 +83,10 @@
 
         <div class="row mb-3">
             <div class="col-12">
-                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="New Password">
+                <input id="password" type="password" 
+                    class="form-control @error('password') is-invalid @enderror" 
+                    name="password" required autocomplete="new-password" 
+                    placeholder="{{ $lang ? 'Parolă nouă' : 'New Password' }}">
                 @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -88,12 +97,16 @@
 
         <div class="row mb-3">
             <div class="col-12">
-                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
+                <input id="password-confirm" type="password" 
+                    class="form-control" name="password_confirmation" 
+                    required autocomplete="new-password" 
+                    placeholder="{{ $lang ? 'Confirmă parola' : 'Confirm Password' }}">
             </div>
         </div>
 
-        <button type="submit" class="mt-1">Reset Password</button>
+        <button type="submit" class="mt-1">
+            {{ $lang ? 'Resetează parola' : 'Reset Password' }}
+        </button>
     </form>
 </div>
-
 @endsection

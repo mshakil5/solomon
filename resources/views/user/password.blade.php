@@ -3,7 +3,7 @@
 @section('content')
 
 @php
-    $lang = session('app_locale', 'en') == 'ro';
+    $lang = session('app_locale', 'ro') == 'ro';
 @endphp
 
 <div class="row mt-3">

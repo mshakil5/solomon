@@ -47,10 +47,14 @@
     }
 </style>
 
+@php
+    $lang = session('app_locale', 'ro') == 'ro';
+@endphp
+
 <div class="col-lg-6 col-12 mx-auto register-form-container">
     <!-- Stage 1: Email Verification -->
     <div id="emailVerificationStage">
-        <h2>{{ __('Register with us') }}</h2>
+        <h2>{{ $lang ? 'Înregistrare la noi' : 'Register with us' }}</h2>
 
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -69,22 +73,18 @@
             @csrf
             <div class="row">
                 <div class="col-12">
-                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
-                           name="email" value="{{ old('email', session('email')) }}" required 
-                           autocomplete="email" placeholder="{{ __('Email Address *') }}" {{ session('otp_sent') ? 'readonly' : '' }}>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
+                           name="email" value="{{ old('email', session('email')) }}" required autocomplete="email"
+                           placeholder="{{ $lang ? 'Adresa de email *' : 'Email Address *' }}" {{ session('otp_sent') ? 'readonly' : '' }}>
                     @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                     @enderror
                 </div>
             </div>
 
             <div class="row justify-content-center">
                 <div class="col-4">
-                    <button type="submit" class="form-control">
-                        Send OTP
-                    </button>
+                    <button type="submit" class="form-control">{{ $lang ? 'Trimite OTP' : 'Send OTP' }}</button>
                 </div>
             </div>
         </form>
@@ -96,163 +96,138 @@
                 @csrf
                 <div class="row">
                     <div class="col-12">
-                        <input id="otp" type="text" class="form-control @error('otp') is-invalid @enderror" 
-                               name="otp" required placeholder="{{ __('Enter OTP') }}" maxlength="6">
-                         <input type="hidden" name="email" value="{{ old('email', session('email')) }}">      
+                        <input id="otp" type="text" class="form-control @error('otp') is-invalid @enderror"
+                               name="otp" required placeholder="{{ $lang ? 'Introduceți OTP' : 'Enter OTP' }}" maxlength="6">
+                        <input type="hidden" name="email" value="{{ old('email', session('email')) }}">
                         @error('otp')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-12">
-                        <button type="submit" class="form-control">
-                            {{ __('Verify OTP') }}
-                        </button>
+                        <button type="submit" class="form-control">{{ $lang ? 'Verifică OTP' : 'Verify OTP' }}</button>
                     </div>
                 </div>
             </form>
         @endif
     </div>
 
-
-
     <!-- Stage 2: Registration Form (hidden initially) -->
     @if(session('otp_verified'))
         <div id="registrationFormStage">
-            <h2>{{ __('Complete Your Registration') }}</h2>
+            <h2>{{ $lang ? 'Completează înregistrarea' : 'Complete Your Registration' }}</h2>
 
             <form method="POST" action="{{ route('register.submit') }}">
                 @csrf
                 <div class="row">
                     <div class="col-12">
-                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" 
-                               name="name" value="{{ old('name') }}" required autocomplete="name" 
-                               autofocus placeholder="{{ __('Name *') }}">
+                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
+                               name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
+                               placeholder="{{ $lang ? 'Nume *' : 'Name *' }}">
                         @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
-                        <input id="surname" type="text" class="form-control @error('surname') is-invalid @enderror" 
-                               name="surname" value="{{ old('surname') }}" autocomplete="surname" 
-                               placeholder="{{ __('Company Name') }}">
+                        <input id="surname" type="text" class="form-control @error('surname') is-invalid @enderror"
+                               name="surname" value="{{ old('surname') }}" autocomplete="surname"
+                               placeholder="{{ $lang ? 'Numele Companiei' : 'Company Name' }}">
                         @error('surname')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="col-6">
-                        <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror" 
-                               name="phone" value="{{ old('phone') }}" required autocomplete="phone" 
-                               placeholder="{{ __('Phone * ') }}">
+                        <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror"
+                               name="phone" value="{{ old('phone') }}" required autocomplete="phone"
+                               placeholder="{{ $lang ? 'Telefon *' : 'Phone *' }}">
                         @error('phone')
-                            <span class="invalid-feedback d-block mb-2" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback d-block mb-2" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
-                        <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror" 
-                               name="address_first_line" value="{{ old('address_first_line') }}" required 
-                               autocomplete="address_first_line" placeholder="{{ __('Address First Line') }}">
+                        <input id="address_first_line" type="text" class="form-control @error('address_first_line') is-invalid @enderror"
+                               name="address_first_line" value="{{ old('address_first_line') }}" required autocomplete="address_first_line"
+                               placeholder="{{ $lang ? 'Adresa linia 1' : 'Address First Line' }}">
                         @error('address_first_line')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="col-6">
-                        <input id="address_second_line" type="text" class="form-control @error('address_second_line') is-invalid @enderror" 
-                               name="address_second_line" value="{{ old('address_second_line') }}" 
-                               autocomplete="address_second_line" placeholder="{{ __('Address Second Line') }}">
+                        <input id="address_second_line" type="text" class="form-control @error('address_second_line') is-invalid @enderror"
+                               name="address_second_line" value="{{ old('address_second_line') }}" autocomplete="address_second_line"
+                               placeholder="{{ $lang ? 'Adresa linia 2' : 'Address Second Line' }}">
                         @error('address_second_line')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
-                        <input id="address_third_line" type="text" class="form-control @error('address_third_line') is-invalid @enderror" 
-                               name="address_third_line" value="{{ old('address_third_line') }}" 
-                               autocomplete="address_third_line" placeholder="{{ __('Address Third Line') }}">
+                        <input id="address_third_line" type="text" class="form-control @error('address_third_line') is-invalid @enderror"
+                               name="address_third_line" value="{{ old('address_third_line') }}" autocomplete="address_third_line"
+                               placeholder="{{ $lang ? 'Adresa linia 3' : 'Address Third Line' }}">
                         @error('address_third_line')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="col-6">
-                        <input id="town" type="text" class="form-control @error('town') is-invalid @enderror" 
-                               name="town" value="{{ old('town') }}" autocomplete="town" 
-                               placeholder="{{ __('Town / City') }}">
+                        <input id="town" type="text" class="form-control @error('town') is-invalid @enderror"
+                               name="town" value="{{ old('town') }}" autocomplete="town"
+                               placeholder="{{ $lang ? 'Oraș' : 'Town / City' }}">
                         @error('town')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
-                        <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror" 
-                               name="postcode" value="{{ old('postcode') }}" autocomplete="postcode" 
-                               placeholder="{{ __('Post Code') }}">
+                        <input id="postcode" type="text" class="form-control @error('postcode') is-invalid @enderror"
+                               name="postcode" value="{{ old('postcode') }}" autocomplete="postcode"
+                               placeholder="{{ $lang ? 'Cod poștal' : 'Post Code' }}">
                         @error('postcode')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="col-6">
-                        <input id="email-display" type="email" class="form-control" 
-                               value="{{ old('email', session('email')) }}" readonly>
+                        <input id="email-display" type="email" class="form-control" value="{{ old('email', session('email')) }}" readonly>
                         <input type="hidden" name="email" value="{{ old('email', session('email')) }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
-                               name="password" required autocomplete="new-password" 
-                               placeholder="{{ __('Password *') }}">
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+                               name="password" required autocomplete="new-password"
+                               placeholder="{{ $lang ? 'Parolă *' : 'Password *' }}">
                         @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
 
                     <div class="col-6">
-                        <input id="password-confirm" type="password" class="form-control" 
-                               name="password_confirmation" required autocomplete="new-password" 
-                               placeholder="{{ __('Confirm Password *') }}">
+                        <input id="password-confirm" type="password" class="form-control"
+                               name="password_confirmation" required autocomplete="new-password"
+                               placeholder="{{ $lang ? 'Confirmă Parola *' : 'Confirm Password *' }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="form-control">{{ __('Complete Registration') }}</button>
+                        <button type="submit" class="form-control">{{ $lang ? 'Finalizează înregistrarea' : 'Complete Registration' }}</button>
                     </div>
                 </div>
             </form>
@@ -261,7 +236,7 @@
 
     <div class="row">
         <div class="col-12 text-center">
-            <a href="{{ route('login') }}" class="btn btn-link">Already have an account? Login</a>
+            <a href="{{ route('login') }}" class="btn btn-link">{{ $lang ? 'Ai deja un cont? Autentifică-te' : 'Already have an account? Login' }}</a>
         </div>
     </div>
 </div>

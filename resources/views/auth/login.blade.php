@@ -44,10 +44,14 @@
     }
 </style>
 
+@php
+    $lang = session('app_locale', 'ro') == 'ro';
+@endphp
+
 <div class="col-lg-4 col-12 mx-auto login-form-container">
     <form class="custom-form contact-form" method="POST" action="{{ route('login') }}" role="form">
         @csrf
-        <h2>Login</h2>
+        <h2>{{ $lang ? 'Autentificare' : 'Login' }}</h2>
 
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -57,7 +61,7 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email *">
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="{{ $lang ? 'Email *' : 'Email *' }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -68,7 +72,7 @@
 
         <div class="row">
             <div class="col-12">
-                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password *">
+                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="{{ $lang ? 'Parolă *' : 'Password *' }}">
                 @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -77,13 +81,13 @@
             </div>
         </div>
 
-        <button type="submit" class="mt-1">Log In</button>
+        <button type="submit" class="mt-1">{{ $lang ? 'Autentificare' : 'Log In' }}</button>
 
         <div class="row mt-3">
             <div class="col-12 text-center">
-                <a href="{{ route('password.request.form') }}" class="btn btn-link">Forgot Password?</a>
+                <a href="{{ route('password.request.form') }}" class="btn btn-link">{{ $lang ? 'Ai uitat parola?' : 'Forgot Password?' }}</a>
                 <br>
-                <a href="{{ route('register') }}" class="btn btn-link">Register?</a>
+                <a href="{{ route('register') }}" class="btn btn-link">{{ $lang ? 'Înregistrare?' : 'Register?' }}</a>
             </div>
         </div>
 

@@ -36,7 +36,7 @@
 
     <div class="sticky-container">
     @php
-        $lang = session('app_locale', 'en') == 'ro';
+        $lang = session('app_locale', 'ro') == 'ro';
     @endphp
 
     <div class="header navbar navbar-expand-md navbar-light bg-white">

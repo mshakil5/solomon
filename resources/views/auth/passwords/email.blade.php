@@ -1,6 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
+@php
+    $lang = session('app_locale', 'ro') == 'ro';
+@endphp
 
 <style>
     .login-form-container {
@@ -65,7 +68,7 @@
 <div class="col-lg-4 col-12 mx-auto login-form-container">
     <form id="resetPasswordForm" class="custom-form contact-form" method="POST" action="{{ route('password.email') }}" role="form">
         @csrf
-        <h2>Password Reset</h2>
+        <h2>{{ $lang ? 'Resetare parolă' : 'Password Reset' }}</h2>
 
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -81,7 +84,9 @@
 
         <div class="row mt-3">
             <div class="col-12">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ Auth::check() ? Auth::user()->email : old('email') }}" required autocomplete="email" autofocus placeholder="Email">
+                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                       name="email" value="{{ Auth::check() ? Auth::user()->email : old('email') }}" 
+                       required autocomplete="email" autofocus placeholder="{{ $lang ? 'Adresă email' : 'Email' }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -90,14 +95,12 @@
             </div>
         </div>
 
-        <button type="submit" class="mt-1">Send Password Reset Link</button>
-
+        <button type="submit" class="mt-1">
+            {{ $lang ? 'Trimite link de resetare a parolei' : 'Send Password Reset Link' }}
+        </button>
     </form>
 </div>
-
 @endsection
 
 @section('script')
-
-
 @endsection
