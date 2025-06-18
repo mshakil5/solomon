@@ -191,7 +191,7 @@
                   </p>
                 @endif
 
-                @auth
+                @if(Auth::check())
                   <a href="{{ route('service.booking', $service->slug) }}" class="btn btn-sm btn-primary">
                     {{ session('app_locale', 'ro') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
                   </a>

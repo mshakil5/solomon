@@ -35,12 +35,6 @@ class ServiceController extends Controller
           return response()->json(['status'=> 303,'message'=>$message]);
           exit();
       }
-
-      if(empty($request->price)){
-          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Price \" field..!</b></div>";
-          return response()->json(['status'=> 303,'message'=>$message]);
-          exit();
-      }
       
       $data = new Service;
       $data->title_english = $request->title_english;
@@ -101,11 +95,6 @@ class ServiceController extends Controller
           return response()->json(['status'=> 303,'message'=>$message]);
           exit();
       }
-      if(empty($request->price)){
-          $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Price \" field..!</b></div>";
-          return response()->json(['status'=> 303,'message'=>$message]);
-          exit();
-      }
       if(empty($request->codeid)){
           $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \" Code ID \" field..!</b></div>";
           return response()->json(['status'=> 303,'message'=>$message]);
@@ -153,20 +142,27 @@ class ServiceController extends Controller
   public function delete($id)
   {
       $data = Service::find($id);
-      if($data->image){
-        $oldImage = public_path('images/service/' . $data->image);
-        if (file_exists($oldImage)) {
-            unlink($oldImage);
-        }
+
+      if (!$data) {
+          return response()->json(['status' => 404, 'message' => 'Service not found.']);
+      }
+
+      // Delete image if exists
+      if ($data->image) {
+          $oldImage = public_path('images/service/' . $data->image);
+          if (file_exists($oldImage)) {
+              @unlink($oldImage); // use @ to suppress errors if file already deleted
+          }
       }
 
       if ($data->delete()) {
-          $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Deleted successfully.</b></div>";
-          return response()->json(['status'=> 300,'message'=>$message]);
-      }else{
-          return response()->json(['status'=> 303,'message'=>'Server Error!!']);
+          $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Deleted successfully.</b></div>";
+          return response()->json(['status' => 300, 'message' => $message]);
+      } else {
+          return response()->json(['status' => 500, 'message' => 'Server Error!!']);
       }
   }
+
   public function toggleStatus(Request $request)
   {
       $data = Service::find($request->id);

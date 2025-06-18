@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="content mt-3" id="newBtnSection">
+<section class="content" id="newBtnSection">
     <div class="container-fluid">
       <div class="row">
         <div class="col-2">
@@ -12,7 +12,7 @@
     </div>
 </section>
 
-<section class="content" id="addThisFormContainer">
+<section class="content mt-3" id="addThisFormContainer">
   <div class="container-fluid">
     <div class="row justify-content-md-center">
       <div class="col-md-8">
@@ -83,38 +83,38 @@
               <table id="example1" class="table cell-border table-striped">
                 <thead>
                 <tr>
-                  <th style="text-align: center">Sl</th>
-                  <th style="text-align: center">Image</th>
-                  <th style="text-align: center">Title En
+                  <th>Sl</th>
+                  <th>Image</th>
+                  <th>Title En
                   </th>
-                  <th style="text-align: center">Title Ro
+                  <th>Title Ro
                   </th>
-                  <th style="text-align: center">
+                  <th>
                     Description En
                   </th>
-                  <th style="text-align: center">
+                  <th>
                     Description Ro
                   </th>
                   <th>Status </th>
-                  <th style="text-align: center">Action</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                   @foreach ($data as $key => $data)
                   <tr>
-                    <td style="text-align: center">{{ $key + 1 }}</td>
-                    <td style="text-align: center">
+                    <td>{{ $key + 1 }}</td>
+                    <td>
                       @if ($data->image != null)
                         <img src="{{ asset('images/type/'.$data->image) }}" alt="Image" style="width: 50px; height: 50px;">
                       @else
                         
                       @endif
                     </td>
-                    <td style="text-align: center">{{$data->title_english}}</td>
-                    <td style="text-align: center">{{$data->title_romanian}}</td>
+                    <td>{{$data->title_english}}</td>
+                    <td>{{$data->title_romanian}}</td>
 
-                    <td style="text-align: center">{!! $data->des_english !!}</td> 
-                    <td style="text-align: center">{!! $data->des_romanian !!}</td>
+                    <td>{!! $data->des_english !!}</td> 
+                    <td>{!! $data->des_romanian !!}</td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input toggle-status" id="status{{ $data->id }}" data-id="{{ $data->id }}"
@@ -122,7 +122,7 @@
                             <label class="custom-control-label" for="status{{ $data->id }}"></label>
                         </div>
                     </td>
-                    <td style="text-align: center">
+                    <td>
                       <a class="btn btn-link" id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="font-size: 20px;"></i></a>
                         <a class="btn btn-link" id="deleteBtn" rid="{{$data->id}}"><i class="fas fa-trash" style="color: red; font-size: 20px;"></i></a>
                     </td>
@@ -268,10 +268,10 @@
                 },
                 success: function(d){
                   alert('Deleted successfully!');
-                    if(d.success) {
-                      alert(d.message);
+                    // if(d.success) {
+                      // alert(d.message);
                       location.reload();
-                    }
+                    // }
                 },
                 error:function(d){
                   console.log(d);

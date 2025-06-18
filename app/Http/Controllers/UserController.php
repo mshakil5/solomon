@@ -269,9 +269,11 @@ class UserController extends Controller
 
     public function additionalAddress($id)
     {
-        $address = AdditionalAddress::where('user_id', $id)->get();
+        $user = User::find($id);
+        $deliveryAddresses = $user->additionalAddresses()->where('type', 1)->get();
+        $billingAddresses = $user->additionalAddresses()->where('type', 2)->get();
         $userName = User::where('id', $id)->first()->name;
-        return view('admin.user.address', compact('address', 'userName'));
+        return view('admin.user.address', compact('deliveryAddresses', 'billingAddresses', 'userName'));
     }
 
 

@@ -132,59 +132,6 @@
         </a>
       </li>
 
-      <li class="nav-item dropdown {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-envelope"></i>
-              <p>
-                  Mail Content
-                  <i class="fas fa-angle-left right"></i>
-              </p>
-          </a>
-          <ul class="nav nav-treeview">
-              <li class="nav-item">
-                  <a href="{{ route('admin.mail-content-type') }}" class="nav-link {{ (request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Mail Content Type</p>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{ route('admin.mail-content') }}" class="nav-link {{ (request()->is('admin/mail-content*')  && !request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Mail Content</p>
-                  </a>
-              </li>
-          </ul>
-      </li>
-
-     
-
-      <li class="nav-item">
-        <a href="{{route('allUserDeleteReq')}}" class="nav-link {{ (request()->is('admin/user-delete-request*')) ? 'active' : '' }}">
-          <i class="nav-icon fas fa-th"></i>
-          <p>
-            Account Delete Request
-          </p>
-        </a>
-      </li>
-      
-      <li class="nav-item">
-        <a href="{{route('allcategory')}}" class="nav-link {{ (request()->is('admin/category*')) ? 'active' : '' }}">
-          <i class="nav-icon fas fa-th"></i>
-          <p>
-            Work Categories
-          </p>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a href="{{route('allsubcategory')}}" class="nav-link {{ (request()->is('admin/sub-category*')) ? 'active' : '' }}">
-          <i class="nav-icon fas fa-th"></i>
-          <p>
-            Work Sub Categories
-          </p>
-        </a>
-      </li>
-
       <li class="nav-item">
         <a href="{{route('alltypes')}}" class="nav-link {{ (request()->is('admin/type*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
@@ -199,6 +146,64 @@
           <i class="nav-icon fas fa-th"></i>
           <p>
             Services
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item dropdown {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                  Feedbacks
+                  <i class="fas fa-angle-left right"></i>
+              </p>
+          </a>
+          <ul class="nav nav-treeview"> 
+              <li class="nav-item">
+                <a href="{{ route('allReviews') }}" class="nav-link {{ (request()->is('admin/reviews*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Reviews</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('allQuotes') }}" class="nav-link {{ (request()->is('admin/quotes*')) ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Quotes</p>
+                  </a>
+              </li>
+          </ul>
+      </li>
+
+      <li class="nav-item">
+          <a href="{{ route('admin.careers.index') }}" class="nav-link {{ (request()->is('admin/careers*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-briefcase"></i>
+              <p>Career</p>
+          </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{route('allUserDeleteReq')}}" class="nav-link {{ (request()->is('admin/user-delete-request*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Account Delete Request
+          </p>
+        </a>
+      </li>
+      
+      <li class="nav-item d-none">
+        <a href="{{route('allcategory')}}" class="nav-link {{ (request()->is('admin/category*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Work Categories
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item d-none">
+        <a href="{{route('allsubcategory')}}" class="nav-link {{ (request()->is('admin/sub-category*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Work Sub Categories
           </p>
         </a>
       </li>
@@ -251,42 +256,35 @@
           </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item d-none">
           <a href="{{ route('admin.homeFooter') }}" class="nav-link {{ (request()->is('admin/home-footer*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-home"></i>
               <p>Hero Content</p>
           </a>
       </li>
 
-      <li class="nav-item dropdown {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-th"></i>
+      <li class="nav-item dropdown {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/mail-content*') || request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-envelope"></i>
               <p>
-                  Feedbacks
+                  Mail Content
                   <i class="fas fa-angle-left right"></i>
               </p>
           </a>
-          <ul class="nav nav-treeview"> 
+          <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('allReviews') }}" class="nav-link {{ (request()->is('admin/reviews*')) ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Reviews</p>
-                </a>
+                  <a href="{{ route('admin.mail-content-type') }}" class="nav-link {{ (request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Mail Content Type</p>
+                  </a>
               </li>
               <li class="nav-item">
-                  <a href="{{ route('allQuotes') }}" class="nav-link {{ (request()->is('admin/quotes*')) ? 'active' : '' }}">
+                  <a href="{{ route('admin.mail-content') }}" class="nav-link {{ (request()->is('admin/mail-content*')  && !request()->is('admin/mail-content-type*')) ? 'active' : '' }}">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Quotes</p>
+                      <p>Mail Content</p>
                   </a>
               </li>
           </ul>
-      </li>
-
-      <li class="nav-item">
-          <a href="{{ route('admin.careers.index') }}" class="nav-link {{ (request()->is('admin/careers*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-briefcase"></i>
-              <p>Career</p>
-          </a>
       </li>
 
       <li class="nav-item" style="margin-top: 200px">
