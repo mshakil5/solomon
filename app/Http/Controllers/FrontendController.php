@@ -29,6 +29,7 @@ use App\Models\AdditionalAddress;
 use App\Models\ServiceBooking;
 use App\Models\Slider;
 use App\Models\Transaction;
+use App\Models\NewService;
 
 class FrontendController extends Controller
 {
@@ -315,6 +316,8 @@ class FrontendController extends Controller
 
     public function bookingStore(Request $request)
     {
+
+      dd($request->all());
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
@@ -541,11 +544,11 @@ class FrontendController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
-            'address_first_line' => 'required|string|max:255',
+            'address_first_line' => 'nullable|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
-            'town' => 'required|string|max:255',
-            'postcode' => 'required|string|max:10',
+            'town' => 'nullable|string|max:255',
+            'postcode' => 'nullable|string|max:10',
             // 'category_ids' => 'required|array',
             // 'category_ids.*' => 'exists:categories,id',
             'cv' => 'required|file|mimes:pdf,docx|max:3000',
@@ -564,6 +567,7 @@ class FrontendController extends Controller
         $career->address_third_line = $request->address_third_line;
         $career->town = $request->town;
         $career->postcode = $request->postcode;
+        $career->about = $request->about;
         // $career->category_ids = json_encode($request->category_ids);
         // $career->sub_category_ids = json_encode($request->sub_category_ids);
         $career->created_by = auth()->id();
@@ -666,6 +670,32 @@ class FrontendController extends Controller
       }])->where('status', 1)->get();
       $selectedType = $request->type;
       return view('frontend.services', compact('types', 'selectedType'));
+    }
+
+    public function inAfara()
+    {   
+        $sliders = Slider::where('id', 5)->get();
+        return view('frontend.in-afara', compact('sliders'));
+    }
+
+    public function newService()
+    {
+      $sliders = Slider::where('id', 6)->get();
+      return view('frontend.new-service', compact('sliders'));
+    }
+
+    public function newServiceStore(Request $request)
+    {
+        $request->validate([
+            'need' => 'required|string',
+        ]);
+
+        NewService::create([
+            'user_id' => Auth::id(),
+            'need' => $request->need,
+        ]);
+
+        return back()->with('success', 'Mesajul tău a fost trimis cu succes.');
     }
 
 }

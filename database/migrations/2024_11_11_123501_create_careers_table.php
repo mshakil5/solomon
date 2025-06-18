@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('cv')->nullable();
+            $table->longText('about')->nullable();
             $table->json('category_ids')->nullable();
             $table->json('sub_category_ids')->nullable();
             $table->string('address_first_line')->nullable();

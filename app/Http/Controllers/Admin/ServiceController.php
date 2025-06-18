@@ -123,7 +123,7 @@ class ServiceController extends Controller
       if ($request->hasFile('image')) {
           $oldImage = public_path('images/service/' . $data->image);
           if (file_exists($oldImage)) {
-              unlink($oldImage);
+              @unlink($oldImage);
           }
           $image = $request->file('image');
           $imageName = rand(10000000, 99999999) . '.' . $image->getClientOriginalExtension();

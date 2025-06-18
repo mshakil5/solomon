@@ -187,7 +187,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="name">{{ $lang ? 'Numele adresei' : 'Address Name' }} <span class="text-danger">*</span></label>
+                                <label for="name">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
                                 <input id="name" type="text" class="form-control" name="name" required>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="district">{{ $lang ? 'District' : 'District' }} <span class="text-danger">*</span></label>
+                                <label for="district">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
                                 <input id="district" type="text" class="form-control" name="district" required>
                             </div>
                         </div>
@@ -217,13 +217,13 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="first_line">{{ $lang ? 'Linia Adresei 1' : 'Address Line 1' }} <span class="text-danger">*</span></label>
+                                <label for="first_line">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
                                 <input id="first_line" type="text" class="form-control" name="first_line" required>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="second_line">{{ $lang ? 'Linia Adresei 2' : 'Address Line 2' }}</label>
+                                <label for="second_line">{{ $lang ? 'Strada' : 'Street' }}</label>
                                 <input id="second_line" type="text" class="form-control" name="second_line">
                             </div>
                         </div>
@@ -232,13 +232,13 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="third_line">{{ $lang ? 'Linia Adresei 3' : 'Address Line 3' }}</label>
+                                <label for="third_line">{{ $lang ? 'Numar' : 'Number' }}</label>
                                 <input id="third_line" type="text" class="form-control" name="third_line">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="town">{{ $lang ? 'Oraș/Sat' : 'Town/City' }} <span class="text-danger">*</span></label>
+                                <label for="town">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
                                 <input id="town" type="text" class="form-control" name="town" required>
                             </div>
                         </div>

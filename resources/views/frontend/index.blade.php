@@ -20,7 +20,7 @@
                     <img src="{{ asset('images/slider/' . $slider->image) }}" class="d-block w-100 h desktop-img" alt="Slider Image">
                     <div class="carousel-caption text-center">
                         @if($slider->link)
-                            <a href="{{ $slider->link }}" class="slider-link">
+                            <a href="{{ $slider->link }}" class="slider-link" data-type="{{ $slider->id == 1 ? 1 : 0 }}">
                                 <div class="slider-content">
                                     @if($slider->title)
                                         <h1 class="slider-title">{{ $slider->title }}</h1>
@@ -136,7 +136,9 @@
 
       @foreach ($workTypes as $value => $type)
         <div class="col-md-3 col-sm-6">
-          <a href="{{ route('booking.type.select', ['type' => $value]) }}" class="booking-type-option d-block text-decoration-none text-center">
+          <a href="{{ route('booking.type.select', ['type' => $value]) }}"
+            data-type="{{ $value }}"
+            class="booking-type-option d-block text-decoration-none text-center work-type-link">
             <div class="booking-type-icon mb-2"><i class="{{ $type['icon'] }}"></i></div>
             <div class="fw-semibold text-dark">{{ $type['title'] }}</div>
           </a>
@@ -186,7 +188,7 @@
                 @endphp
 
                 @if (!empty($description))
-                  <p class="text-muted small mb-3">
+                  <p class="text-muted mb-3">
                     {!! Str::limit($description, 60) !!}
                   </p>
                 @endif
@@ -466,5 +468,58 @@
 @endsection
 
 @section('script')
+<script>
+  $(document).on('click', '.work-type-link', function (e) {
+    e.preventDefault();
+    const type = $(this).data('type');
+    const url = $(this).attr('href');
+
+    if ([1, 2, 3].includes(type)) {
+      let msg = '';
+      if (type == 1) msg = 'Te informăm că, întrucât ai optat pentru regimul de urgență, serviciul implică costuri suplimentare. Pentru ca echipa noastră să poată interveni prompt, este necesară efectuarea unei plăți în avans.';
+      else if (type == 2) msg = 'Te informăm că, deoarece ai optat pentru regimul de prioritizare, serviciul implică costuri suplimentare. Pentru ca echipa noastră să acorde prioritate intervenției tale, este necesară efectuarea unei plăți în avans.';
+      else if (type == 3) msg = 'Te informăm că, deoarece solicitarea ta este în afara orelor de program, serviciul implică costuri suplimentare. Pentru ca echipa noastră să poată interveni în afara programului obișnuit, este necesară efectuarea unei plăți în avans.?';
+
+      Swal.fire({
+        title: 'Atenție!',
+        text: msg,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Da, continuă',
+        cancelButtonText: 'Anulează'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    } else {
+      window.location.href = url;
+    }
+  });
+
+  $(document).on('click', '.slider-link', function (e) {
+    e.preventDefault();
+    const type = parseInt($(this).data('type'));
+    const url = $(this).attr('href');
+
+    if (type == 1) {
+      Swal.fire({
+        title: 'Atenție!',
+        text: 'Te informăm că, întrucât ai optat pentru regimul de urgență, serviciul implică costuri suplimentare. Pentru ca echipa noastră să poată interveni prompt, este necesară efectuarea unei plăți în avans.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Da, continuă',
+        cancelButtonText: 'Anulează'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    } else {
+      window.location.href = url;
+    }
+  });
+
+</script>
 
 @endsection

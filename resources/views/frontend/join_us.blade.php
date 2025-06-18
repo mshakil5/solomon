@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    {{-- <div class="row mt-3">
                         <div class="col-lg-12 col-md-6 col-12">
                             <input type="text" name="address_first_line" id="address_first_line" class="form-control" value="{{ old('address_first_line', auth()->user()->address_first_line ?? '') }}" placeholder="{{ $lang ? 'Adresă linia 1 *' : 'Address Line 1 *' }}" required>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="col-lg-6 col-md-6 col-12">
                             <input type="text" name="postcode" id="postcode" class="form-control" placeholder="{{ $lang ? 'Cod poștal *' : 'Postcode *' }}" required value="{{ old('post_code', auth()->user()->postcode ?? '') }}">
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="row mt-3">
                         <div class="col-lg-12 col-md-6 col-12">
@@ -73,6 +73,15 @@
                             <small class="form-text text-muted">
                                 {{ $lang ? 'Te rugăm să încarci CV-ul în format PDF sau DOCX. Dimensiunea maximă: 2MB.' : 'Please upload your CV in PDF or DOCX format. Maximum file size: 2MB.' }}
                             </small>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-lg-12 col-md-6 col-12">
+                            <label for="about">
+                                {{ $lang ? 'Spune-ne despre tine (Opțional)' : 'Tell us about yourself (Optional)' }} :
+                            </label>
+                            <textarea name="about" id="about" class="form-control" rows="4" placeholder="{{ $lang ? 'Scrie câteva informații despre tine...' : 'Write a few details about yourself...' }}"></textarea>
                         </div>
                     </div>
 

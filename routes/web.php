@@ -91,6 +91,10 @@ Route::post('/join-us', [FrontendController::class, 'joinUsStore'])->name('join.
 
 Route::post('/callback-request', [FrontendController::class, 'callBack'])->name('callRequest');
 
+Route::get('/in-afara', [FrontendController::class, 'inAfara'])->name('in.afara');
+Route::get('/new-service', [FrontendController::class, 'newService'])->name('new.service');
+Route::post('/new-services', [FrontendController::class, 'newServiceStore'])->name('new.services.store');
+
 // payment
 Route::post('pay/{id}', [PaypalController::class, 'pay'])->name('payment');
 Route::get('success', [PaypalController::class, 'success']);
