@@ -30,6 +30,11 @@ use App\Models\ServiceBooking;
 use App\Models\Slider;
 use App\Models\Transaction;
 use App\Models\NewService;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
+use App\Models\Payment;
+use App\Models\Invoice;
+use App\Mail\PaymentSuccessUser;
 
 class FrontendController extends Controller
 {
@@ -381,7 +386,8 @@ class FrontendController extends Controller
             $requestData['temp_files'] = $tempFiles;
             session(['booking_request' => $requestData]);
 
-            return redirect()->route('paypal.booking.pay', ['amount' => $additionalFee]);
+            // return redirect()->route('paypal.booking.pay', ['amount' => $additionalFee]);
+            return redirect()->route('stripe.booking.pay');
         }
 
         // For free bookings, pass data directly
@@ -391,6 +397,67 @@ class FrontendController extends Controller
         $data['temp_files'] = $tempFiles;
 
         return $this->finalizeBooking($data, $type, $additionalFee);
+    }
+
+    public function stripeBookingPay()
+    {
+        $data = session('booking_request');
+
+        if (!$data || !isset($data['additional_fee'])) {
+            return redirect()->route('homepage')->with('error', 'Invalid booking session.');
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = StripeSession::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'gbp',
+                    'unit_amount' => $data['additional_fee'] * 100,
+                    'product_data' => [
+                        'name' => 'Booking Additional Fee',
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => route('stripe.booking.success'),
+            'cancel_url' => route('stripe.booking.cancel'),
+        ]);
+
+        return redirect($session->url);
+    }
+
+    public function stripeBookingSuccess()
+    {
+        $data = session('booking_request');
+
+        if (!$data) {
+            return redirect()->route('homepage')->with('error', 'Session expired.');
+        }
+
+        $fee = $data['additional_fee'];
+        $type = $data['type'];
+        $userId = auth()->id();
+
+        $transaction = new Transaction();
+        $transaction->date = now()->format('Y-m-d');
+        $transaction->user_id = $userId;
+        $transaction->amount = $fee;
+        $transaction->net_amount = $fee;
+        $transaction->tranid = now()->timestamp . $userId;
+        $transaction->payment_type = 'Additional Fee';
+        $transaction->save();
+
+        $data['transaction_id'] = $transaction->id;
+
+        return $this->finalizeBooking($data, $type, $fee);
+    }
+
+    public function stripeBookingCancel()
+    {
+        return redirect()->route('homepage')->with('error', 'Stripe payment was canceled.');
     }
 
     public function finalizeBooking(array $data, int $type, float $fee)
@@ -431,6 +498,103 @@ class FrontendController extends Controller
         session()->forget('booking_request');
 
         return redirect()->route('user.service.bookings')->with('success', 'Booking created successfully.');
+    }
+
+    public function payStripe(Request $request, $id)
+    {
+        $request->validate(['amount' => 'required|numeric']);
+
+        session(['invoice_id' => $id]);
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $session = StripeSession::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'gbp',
+                    'unit_amount' => $request->amount * 100,
+                    'product_data' => [
+                        'name' => "Invoice #$id Payment",
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('stripe.cancel'),
+        ]);
+
+        return redirect($session->url);
+    }
+
+    public function stripeSuccess(Request $request)
+    {
+        $invoice_id = session('invoice_id');
+        if (!$invoice_id) {
+            return redirect()->route('homepage')->with('error', 'Session expired.');
+        }
+
+        $session_id = $request->get('session_id');
+        if (!$session_id) {
+            return redirect()->route('homepage')->with('error', 'Invalid payment session.');
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            $session = StripeSession::retrieve($session_id);
+
+            if ($session->payment_status !== 'paid') {
+                return redirect()->route('homepage')->with('error', 'Payment not completed.');
+            }
+
+            $customer_email = $session->customer_details->email ?? auth()->user()->email;
+            $amount = $session->amount_total / 100;
+
+            $user = auth()->user();
+
+            $payment = new Payment();
+            $payment->user_id = $user->id;
+            $payment->payment_id = $session->id;
+            $payment->payer_email = $customer_email;
+            $payment->amount = $amount;
+            $payment->currency = strtoupper($session->currency);
+            $payment->payment_status = 'completed';
+            $payment->save();
+
+            $invoice = Invoice::find($invoice_id);
+            $transaction = new Transaction();
+            $transaction->date = now()->format('Y-m-d');
+            $transaction->user_id = $user->id;
+            $transaction->invoice_id = $invoice_id;
+            $transaction->payment_type = 'Stripe Payment';
+            $transaction->booking_id = $invoice->service_booking_id ?? null;
+            $transaction->amount = $amount;
+            $transaction->net_amount = $amount;
+            $transaction->tranid = now()->timestamp . $user->id;
+            $transaction->save();
+
+            $invoice = Invoice::find($invoice_id);
+            $invoice->status = 0;
+            $invoice->save();
+
+            session()->forget('invoice_id');
+
+            // Send email notifications
+            $adminEmail = Contact::where('id', 1)->value('email');
+            Mail::to($adminEmail)->send(new PaymentSuccessUser($user, $payment));
+            Mail::to($customer_email)->send(new PaymentSuccessUser($user, $payment));
+
+            return redirect()->route('user.service.bookings')->with('success', 'Payment successful.');
+        } catch (\Exception $e) {
+            return redirect()->route('homepage')->with('error', 'Payment verification failed: ' . $e->getMessage());
+        }
+    }
+
+    public function stripeCancel()
+    {
+        return redirect()->route('homepage')->with('error', 'Stripe payment was canceled.');
     }
 
     public function aboutUs()

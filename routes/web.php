@@ -96,13 +96,21 @@ Route::get('/new-service', [FrontendController::class, 'newService'])->name('new
 Route::post('/new-services', [FrontendController::class, 'newServiceStore'])->name('new.services.store');
 
 // payment
-Route::post('pay/{id}', [PaypalController::class, 'pay'])->name('payment');
+Route::post('pay/{id}', [PaypalController::class, 'pay'])->name('payment.paypal');
 Route::get('success', [PaypalController::class, 'success']);
 Route::get('error', [PaypalController::class, 'error']);
 
 Route::get('/paypal/booking/pay', [PaypalController::class, 'bookingPay'])->name('paypal.booking.pay');
 Route::get('/paypal/booking/success', [PaypalController::class, 'bookingSuccess'])->name('paypal.booking.success');
 Route::get('/paypal/booking/error', [PaypalController::class, 'bookingError'])->name('paypal.booking.error');
+
+Route::get('/stripe/booking/pay', [FrontendController::class, 'stripeBookingPay'])->name('stripe.booking.pay');
+Route::get('/stripe/booking/success', [FrontendController::class, 'stripeBookingSuccess'])->name('stripe.booking.success');
+Route::get('/stripe/booking/cancel', [FrontendController::class, 'stripeBookingCancel'])->name('stripe.booking.cancel');
+
+Route::post('stripe/pay/{id}', [FrontendController::class, 'payStripe'])->name('payment');
+Route::get('stripe/success', [FrontendController::class, 'stripeSuccess'])->name('stripe.success');
+Route::get('stripe/cancel', [FrontendController::class, 'stripeCancel'])->name('stripe.cancel');
 
 
 /*------------------------------------------
