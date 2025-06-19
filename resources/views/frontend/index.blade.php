@@ -127,20 +127,56 @@
     <div class="row g-3 justify-content-center">
       @php
         $workTypes = [
-          1 => ['title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu de urgență' : 'Emergency Service', 'icon' => 'fa-solid fa-triangle-exclamation'],
-          2 => ['title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu Prioritar' : 'Prioritized Service', 'icon' => 'fa-solid fa-bolt'],
-          3 => ['title' => session('app_locale', 'ro') == 'ro' ? 'În afara orelor de lucru' : 'Outside Working Hours', 'icon' => 'fa-solid fa-clock'],
-          4 => ['title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu Standard' : 'Standard Service', 'icon' => 'fa-solid fa-wrench']
+            1 => [
+              'title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu de urgență' : 'Emergency Service',
+              'image' => asset('urgent.png'),
+              'price' => session('app_locale', 'ro') == 'ro' ? 'Suprataxă de 400 RON' : 'Surcharge of 400 RON',
+              'desc' => session('app_locale', 'ro') == 'ro'
+                ? 'Dacă serviciul solicitat este necesar într-un interval <u style="color:green; font-weight:600;">mai scurt de 2 ore de la momentul comenzii</u>, acesta va fi tratat ca serviciu de urgență, fiind prioritizat imediat în programul de lucru.'
+                : 'If the requested service is needed within <u style="color:green; font-weight:600;">less than 2 hours from the time of order</u>, it will be treated as an emergency service and prioritized immediately in the work schedule.',
+            ],
+            2 => [
+              'title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu prioritar în ziua curentă' : 'Prioritized Same Day Service',
+              'image' => asset('prio.png'),
+              'price' => session('app_locale', 'ro') == 'ro' ? 'Suprataxă de 250 RON' : 'Surcharge of 250 RON',
+              'desc' => session('app_locale', 'ro') == 'ro'
+                  ? 'Pentru solicitările care necesită <u style="color:green; font-weight:600;">prestarea serviciului în aceeași zi, dar la un interval mai mare de 2 ore de la momentul comenzii</u>, se va percepe o taxă de prioritate, având în vedere necesitatea programării accelerate în cadrul zilei respective.'
+                  : 'For requests requiring <u style="color:green; font-weight:600;">same-day service but more than 2 hours after the order time</u>, a priority surcharge applies due to the need for accelerated scheduling within the day.',
+            ],
+            3 => [
+              'title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu în afara programului' : 'Outside Working Hours',
+              'image' => asset('afara.png'),
+              'price' => session('app_locale', 'ro') == 'ro' ? 'Suprataxă de 300 RON' : 'Surcharge of 300 RON',
+              'desc' => session('app_locale', 'ro') == 'ro'
+                ? 'Dacă serviciul ales este solicitat <u style="color:green; font-weight:600;">în afara programului normal de lucru</u>, se va aplica o suprataxă pentru prestare în regim special.'
+                : 'If the selected service is requested <u style="color:green; font-weight:600;">outside normal working hours</u>, a surcharge will apply for special scheduling.',
+            ],
+          // 4 => ['title' => session('app_locale', 'ro') == 'ro' ? 'Serviciu Standard' : 'Standard Service', 'image' => asset('prio.png')],
         ];
       @endphp
 
       @foreach ($workTypes as $value => $type)
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-4 col-sm-6">
           <a href="{{ route('booking.type.select', ['type' => $value]) }}"
             data-type="{{ $value }}"
-            class="booking-type-option d-block text-decoration-none text-center work-type-link">
-            <div class="booking-type-icon mb-2"><i class="{{ $type['icon'] }}"></i></div>
-            <div class="fw-semibold text-dark">{{ $type['title'] }}</div>
+            class="booking-type-option d-block text-decoration-none text-center work-type-link h-100"
+            style="min-height: 200px; display: flex; flex-direction: column; justify-content: space-between;">
+            
+            <div>
+              <div class="row">
+                <div class="col-4">
+                  <div class="booking-type-icon mb-2">
+                    <img src="{{ $type['image'] }}" alt="{{ $type['title'] }}" style="width: 50px; height: 50px;">
+                  </div>
+                </div>
+                <div class="col-8 text-start">
+                  <div class="fw-semibold text-dark fs-5">{{ $type['title'] }}</div>
+                  <div class="text-danger fw-bold">{{ $type['price'] }}</div>
+                </div>
+              </div>
+              <p class="text-dark mt-2 text-start" style="font-size: 0.95rem;">{!! $type['desc'] !!}</p>
+            </div>
+            
           </a>
         </div>
       @endforeach
