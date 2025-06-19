@@ -256,11 +256,11 @@ class FrontendController extends Controller
     public function calculateFee(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date' => 'required|string',
             'time' => 'nullable|string',
         ]);
 
-        $date = $request->date;
+        $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
         $time = $request->time;
         $now = now();
 
@@ -316,13 +316,10 @@ class FrontendController extends Controller
 
     public function bookingStore(Request $request)
     {
-
-      dd($request->all());
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'time' => 'nullable|string',
+            'date_time' => 'required',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
@@ -332,8 +329,18 @@ class FrontendController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $date = $request->date;
-        $time = $request->time;
+        if ($request->filled('date_time')) {
+            [$datePart, $timePart] = explode(' ', $request->date_time);
+            
+            $date = Carbon::createFromFormat('d/m/Y', $datePart)->format('Y-m-d');
+            $time = $timePart;
+
+            $request->merge([
+                'date' => $date,
+                'time' => $time,
+            ]);
+        }
+        
         $now = now();
 
         $typeFees = [1 => 400, 2 => 250, 3 => 300, 4 => 0];

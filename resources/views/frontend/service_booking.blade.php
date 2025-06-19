@@ -11,8 +11,25 @@
   <div class="row justify-content-center">
       <div class="col-lg-10 col-md-12 col-sm-12">
           <div class="card">
+
+              @php
+                $typeNames = [
+                  1 => 'Emergency Service',
+                  2 => 'Prioritized Same Day Service',
+                  3 => 'Outside Working Hours',
+                ];
+              @endphp
+
               <div class="card-header text-center bg-primary text-white">
-                  <h2>{{ $lang ? 'Finalizează rezervarea pentru' : 'Complete Your Booking for' }} {{ $lang ? $service->title_romanian : $service->title_english }}</h2>
+                <h2>
+                  {{ $lang ? 'Finalizează rezervarea pentru' : 'Complete Your Booking for' }} 
+                  {{ $lang ? $service->title_romanian : $service->title_english }}
+                  @if(!is_null($type) && isset($typeNames[$type]))
+                    <span class="badge bg-info ms-3" style="font-size: 0.5em;">
+                      {{ $lang ? 'Ați ales: ' : 'You have chosen: ' }}{{ $typeNames[$type] }}
+                    </span>
+                  @endif
+                </h2>
               </div>
               
               <div class="card-body">
@@ -26,25 +43,6 @@
                           {{ $lang ? 'Pasul 1 din 4 - Detalii serviciu' : 'Step 1 of 4 - Service Details' }}
                       </div>
                   </div>
-
-                  @if ($success = Session::get('success'))
-                      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                          <strong>{{ $success }}</strong>
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-                  @endif
-
-                  @if ($errors->any()))
-                      <div class="alert alert-danger">
-                          <ul>
-                              @foreach ($errors->all() as $error)
-                                  <li>{{ $error }}</li>
-                              @endforeach
-                          </ul>
-                      </div>
-                  @endif
 
                   <form id="bookingForm" action="{{ route('booking.store') }}" method="post" role="form" enctype="multipart/form-data">
                       @csrf
@@ -88,33 +86,48 @@
                       <!-- Step 2: Schedule -->
                       <div class="step step-2" style="display: none;">
                           <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Programează serviciul' : 'Schedule Your Service' }}</h4>
-                          
+                           <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">
+                          @if(!is_null($type) && $type == 1)
                           <div class="row">
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                      <label for="date">{{ $lang ? 'Dată' : 'Date' }} <span class="text-danger">*</span></label>
-                                      <input type="date" name="date" id="date" class="form-control" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required @if(!is_null($type) && $type == 1) readonly @endif>
+                              <div class="row">
+                                <label for="time" class="col-4 col-form-label">Pick Time</label>
+                                <div class="col-8">
+                                  <div class="input-group clockpicker">
+                                      <input type="text" id="timeInput" name="date_time" class="form-control" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mt-4">
+                                  <div class="col-6">
+                                      <button type="button" class="btn btn-secondary prev-step" data-step="2">{{ $lang ? 'Anterior' : 'Previous' }}</button>
+                                  </div>
+                                  <div class="col-6 text-end">
+                                      <button type="button" class="btn btn-primary next-step" data-step="2">{{ $lang ? 'Următorul' : 'Next' }}</button>
                                   </div>
                               </div>
-                              <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                      <label for="time">{{ $lang ? 'Ora' : 'Time' }} <span class="text-danger">*</span></label>
-                                      <input type="time" name="time" id="time" class="form-control" required>
+                          </div>    
+                          @else
+                          <div class="row">
+                              <div class="row">
+                                <label for="time" class="col-4 col-form-label">Pick Date and Time</label>
+                                <div class="col-8">
+                                  <div class="input-group clockpicker">
+                                      <input type="text" id="date_time_input" name="date_time" class="form-control" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mt-4">
+                                  <div class="col-6">
+                                      <button type="button" class="btn btn-secondary prev-step" data-step="2">{{ $lang ? 'Anterior' : 'Previous' }}</button>
+                                  </div>
+                                  <div class="col-6 text-end">
+                                      <button type="button" class="btn btn-primary next-step" data-step="2">{{ $lang ? 'Următorul' : 'Next' }}</button>
                                   </div>
                               </div>
-                          </div>
-                          
-                          <div class="row mt-4">
-                              <div class="col-6">
-                                  <button type="button" class="btn btn-secondary prev-step" data-step="2">{{ $lang ? 'Anterior' : 'Previous' }}</button>
-                              </div>
-                              <div class="col-6 text-end">
-                                  <button type="button" class="btn btn-primary next-step" data-step="2">{{ $lang ? 'Următorul' : 'Next' }}</button>
-                              </div>
-                          </div>
-                      </div>
-
+                          </div>           
+                          @endif
                       <!-- Step 3: Addresses -->
                       <div class="step step-3" style="display: none;">
                           <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Informații adresă' : 'Address Information' }}</h4>
@@ -302,31 +315,31 @@
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Județ' : 'District' }} <span class="text-danger">*</span></label>
+                          <label class="form-label">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
                           <input type="text" class="form-control" name="district" required id="district">
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
-                            <label class="form-label">{{ $lang ? 'Linia 1' : 'First Line' }} <span class="text-danger">*</span></label>
+                            <label class="form-label">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="first_line" required id="first_line">
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Linia 2' : 'Second Line' }}</label>
+                          <label class="form-label">{{ $lang ? 'Strada' : 'Street' }}</label>
                           <input type="text" class="form-control" name="second_line" id="second_line">
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Linia 3' : 'Third Line' }}</label>
+                          <label class="form-label">{{ $lang ? 'Numar' : 'Number' }}</label>
                           <input type="text" class="form-control" name="third_line" id="third_line">
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Oraș' : 'Town' }} <span class="text-danger">*</span></label>
+                          <label class="form-label">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
                           <input type="text" class="form-control" name="town" required id="town">
                         </div>
                       </div>
@@ -399,37 +412,98 @@
 @section('script')
 
 <script>
-  function updateFee() {
-    const date = $('#date').val();
-    const time = $('#time').val();
-
-    $.ajax({
-        url: '{{ route("booking.calculateFee") }}',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            date: date,
-            time: time
+  const timeInput = document.getElementById('timeInput');
+  if (timeInput) {
+    new tempusDominus.TempusDominus(timeInput, {
+      defaultDate: new Date(),
+      display: {
+        components: {
+          calendar: false,
+          date: false,
+          month: false,
+          year: false,
+          decades: false,
+          hours: true,
+          minutes: true,
+          seconds: false
         },
-        success: function(response) {
-            const additionalFee = parseFloat(response.fee);
-            
-            if (additionalFee > 0) {
-                $('#additional-fee-display').text(additionalFee.toFixed(2));
-                $('#additional_fee').val(additionalFee.toFixed(2));
-                $('#additional-fee-type').text(response.type_label);
-                $('#additional-fee-container').show();
-                $('#submit-button').text('{{ $lang ? "Plătește" : "Pay" }} ' + additionalFee.toFixed(2) + ' RON');
-            } else {
-                $('#additional_fee').val(0);
-                $('#additional-fee-container').hide();
-                $('#submit-button').text('{{ $lang ? "Finalizează rezervarea" : "Complete Booking" }}');
-            }
+        buttons: {
+          today: false,
+          clear: false,
+          close: true
         }
+      },
+      localization: {
+        format: 'dd/MM/yyyy HH:mm'
+      }
     });
   }
 
-  $('#date, #time, #selected_type').on('change input', updateFee);
+  const dateTimeInput = document.getElementById('date_time_input');
+  if (dateTimeInput) {
+    new tempusDominus.TempusDominus(dateTimeInput, {
+      defaultDate: new Date(),
+      display: {
+        components: {
+          calendar: true,
+          date: true,
+          month: true,
+          year: true,
+          decades: false,
+          hours: true,
+          minutes: true,
+          seconds: false
+        },
+        buttons: {
+          today: true,
+          clear: true,
+          close: true
+        },
+      },
+      localization: {
+        format: 'dd/MM/yyyy HH:mm'
+      }
+    });
+  }
+</script>
+
+<script>
+  function updateFee() {
+    let date, time;
+    const val = $('#date_time_input').val() || $('#timeInput').val() || '';
+    [date, time] = val.split(' ');
+
+      $.ajax({
+          url: '{{ route("booking.calculateFee") }}',
+          method: 'POST',
+          data: {
+              _token: '{{ csrf_token() }}',
+              date: date,
+              time: time
+          },
+          success: function(response) {
+              const additionalFee = parseFloat(response.fee);
+              
+              if (additionalFee > 0) {
+                  $('#additional-fee-display').text(additionalFee.toFixed(2));
+                  $('#additional_fee').val(additionalFee.toFixed(2));
+                  $('#additional-fee-type').text(response.type_label);
+                  $('#additional-fee-container').show();
+                  $('#submit-button').text('{{ $lang ? "Plătește" : "Pay" }} ' + additionalFee.toFixed(2) + ' RON');
+              } else {
+                  $('#additional_fee').val(0);
+                  $('#additional-fee-container').hide();
+                  $('#submit-button').text('{{ $lang ? "Finalizează rezervarea" : "Complete Booking" }}');
+              }
+          }
+      });
+  }
+
+  $('#date_time_input, #timeInput').on('change input', updateFee);
+
+  $(document).ready(function () {
+    updateFee();
+  });
 </script>
 
 <script>
@@ -516,7 +590,6 @@ $(document).ready(function() {
             });
         } else {
             toastr.error('{{ $lang ? "A apărut o eroare. Te rugăm să încerci din nou." : "An error occurred. Please try again." }}');
-            console.error('Error:', error);
         }
     }
 });
@@ -634,14 +707,18 @@ $(document).ready(function() {
     
     function updateReviewSection() {
         // Update date and time
-        const dateVal = $('#date').val();
-          if (dateVal) {
-            const parts = dateVal.split('-');
-            if (parts.length === 3) {
-              $('#review-date').text(`${parts[2]}/${parts[1]}/${parts[0]}`);
-            }
-          }
-        $('#review-time').text($('#time').val());
+        const dateTimeVal = $('#date_time_input').val();
+        const timeOnlyVal = $('#timeInput').val();
+
+        if (dateTimeVal) {
+          const [datePart, timePart] = dateTimeVal.split(' ');
+          $('#review-date').text(datePart || '');
+          $('#review-time').text(timePart || '');
+        } else if (timeOnlyVal) {
+          const [datePart, timePart] = timeOnlyVal.split(' ');
+          $('#review-date').text(datePart || '');
+          $('#review-time').text(timePart || '');
+        }
         
         // Update billing address
         if ($('select[name="billing_address_id"]').length) {

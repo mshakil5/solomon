@@ -225,7 +225,7 @@
 
                 @if (!empty($description))
                   <p class="text-muted mb-3">
-                    {!! Str::limit($description, 60) !!}
+                    {{ Str::limit(strip_tags(html_entity_decode($description)), 60) }}
                   </p>
                 @endif
 
@@ -234,10 +234,10 @@
                     {{ session('app_locale', 'ro') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
                   </a>
                 @else
-                  <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">
+                  <a href="/login" class="btn btn-sm btn-secondary">
                     {{ session('app_locale', 'ro') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
                   </a>
-                @endauth
+                @endif
               </div>
             </div>
           @endforeach

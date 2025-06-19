@@ -224,6 +224,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/service/{id}', [ServiceController::class, 'delete']);
     Route::get('/service-status', [ServiceController::class, 'toggleStatus'])->name('admin.service.status');
 
+    Route::get('/service-request', [ServiceController::class, 'getServiceRequest'])->name('allServiceRequest');
+
     // Slider crud
     Route::get('/slider', [SliderController::class, 'getSlider'])->name('allslider');
     Route::post('/slider', [SliderController::class, 'sliderStore']);

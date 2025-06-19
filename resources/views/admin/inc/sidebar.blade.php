@@ -142,10 +142,19 @@
       </li>
 
       <li class="nav-item">
-        <a href="{{route('allservices')}}" class="nav-link {{ (request()->is('admin/service*')) ? 'active' : '' }}">
+        <a href="{{route('allservices')}}" class="nav-link {{ (request()->is('admin/service')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
             Services
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{route('allServiceRequest')}}" class="nav-link {{ (request()->is('admin/service-request')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            Service Request
           </p>
         </a>
       </li>

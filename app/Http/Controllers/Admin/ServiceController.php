@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\NewService;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Models\Type;
@@ -173,5 +174,11 @@ class ServiceController extends Controller
           return response()->json(['status' => 200, 'message' => 'Status updated successfully.']);
       }
       return response()->json(['status' => 404, 'message' => 'Type not found.']);
+  }
+
+  public function getServiceRequest ()
+  {
+      $serviceRequest = NewService::with('user')->orderBy('id', 'desc')->get();
+      return view('admin.service-request', compact('serviceRequest'));
   }
 }
