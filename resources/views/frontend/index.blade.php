@@ -188,7 +188,7 @@
 
     @foreach ($types as $type)
       <div class="mb-5">
-        <h4 class="mb-4 text-primary text-center">
+        <h4 class="mb-4 text-primary text-center fw-semibold">
           {{ session('app_locale', 'ro') == 'ro' ? $type->title_romanian : $type->title_english }}
         </h4>
 

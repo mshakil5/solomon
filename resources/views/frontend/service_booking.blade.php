@@ -259,13 +259,23 @@
                                   <div id="file-previews" class="d-flex flex-wrap gap-2"></div>
                               </div>
                           </div>
+
+                          <div class="card mb-4">
+                              <div class="card-body">
+                                  <h5 class="card-title">{{ $lang ? 'Descriere' : 'Description' }}</h5>
+                                  <div id="description-preview" class="d-flex flex-wrap gap-2 w-100" style="white-space: normal; word-break: break-word;"></div>
+
+                              </div>
+                          </div>
                           
+                          @if ($service->information)
                           <div class="form-check mb-4">
                               <label class="form-check-label">
                                   {{ $lang ? 'Informații' : 'Information' }}
                               </label>
                               <p>{!! $service->information !!}</p>
                           </div>
+                          @endif
                           
                           <div class="row mt-4">
                               <div class="col-6">
@@ -754,6 +764,10 @@ $(document).ready(function() {
                 `);
             }
         });
+
+        //Update description
+        $('#description-preview').text($('#job_description').val());
+
     }
   });
 </script>

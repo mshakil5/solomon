@@ -248,7 +248,8 @@
                   <div class="row mt-2">
                     <div class="col-12">
                       <h4>{{ $lang ? 'Facturi' : 'Invoices' }}</h4>
-                      <table class="table table-responsive">
+                      <div class="table-responsive">         
+                      <table class="table">
                         <thead>
                           <tr>
                             <th>{{ $lang ? 'ID Factură' : 'Invoice ID' }}</th>
@@ -287,6 +288,7 @@
                           @endforeach
                         </tbody>
                       </table>
+                       </div>
                     </div>
                   </div>
                 @endif
@@ -295,7 +297,8 @@
                   <div class="row mt-4">
                     <div class="col-12">
                       <h4>{{ $lang ? 'Tranzacții' : 'Transactions' }}</h4>
-                      <table class="table table-responsive">
+                      <div class="table-responsive">
+                      <table class="table">
                         <thead>
                           <tr>
                             <th>{{ $lang ? 'Dată' : 'Date' }}</th>
@@ -323,6 +326,7 @@
                           @endforeach
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   </div>
                 @endif
