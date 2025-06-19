@@ -6,9 +6,6 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
                 <form class="custom-form contact-form" action="{{ route('quote.request') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <h2>Request a Quote</h2>

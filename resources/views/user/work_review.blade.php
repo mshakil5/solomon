@@ -9,12 +9,6 @@
         </div>
         <div class="card-body">
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="review-section mb-4">
                 @if($existingReview)
                     <div class="mb-4 p-3 border rounded bg-light shadow-sm">

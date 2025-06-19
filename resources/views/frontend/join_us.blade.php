@@ -10,9 +10,6 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
                 <form class="custom-form contact-form" action="{{ route('join.us.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <h2 class="text-primary text-center mb-4">

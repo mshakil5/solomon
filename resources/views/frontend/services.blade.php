@@ -12,7 +12,7 @@
     @foreach ($types as $type)
       <div class="mb-5">
         <h4 class="mb-4 text-primary text-center">
-          {{ session('app_locale', 'en') == 'ro' ? $type->title_romanian : $type->title_english }}
+          {{ session('app_locale', 'ro') == 'ro' ? $type->title_romanian : $type->title_english }}
         </h4>
 
         <div class="row g-3 justify-content-center">
@@ -20,26 +20,32 @@
             <div class="col-md-3 col-sm-6">
               <div class="service-option shadow-sm">
                 <img src="{{ asset('images/service/' . $service->image) }}" 
-                     alt="{{ $service->title_english }}" 
-                     class="service-img img-fluid">
+                    alt="{{ $service->title_english }}" 
+                    class="service-img img-fluid">
 
                 <h5 class="fw-semibold mb-2">
-                  {{ session('app_locale', 'en') == 'ro' ? $service->title_romanian : $service->title_english }}
+                  {{ session('app_locale', 'ro') == 'ro' ? $service->title_romanian : $service->title_english }}
                 </h5>
 
-                <p class="text-muted small mb-3">
-                  {!! session('app_locale', 'en') == 'ro' ? Str::limit($service->des_romanian, 60) : Str::limit($service->des_english, 60) !!}
-                </p>
+                @php
+                    $description = session('app_locale', 'ro') == 'ro' ? $service->des_romanian : $service->des_english;
+                @endphp
 
-                @auth
-                  <a href="{{ route('service.booking', [$service->slug, $selectedType ]) }}" class="btn btn-sm btn-primary">
-                    {{ session('app_locale', 'en') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
+                @if (!empty($description))
+                  <p class="text-muted mb-3">
+                    {{ Str::limit(strip_tags(html_entity_decode($description)), 60) }}
+                  </p>
+                @endif
+
+                @if(Auth::check())
+                  <a href="{{ route('service.booking', $service->slug) }}" class="btn btn-sm btn-primary">
+                    {{ session('app_locale', 'ro') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
                   </a>
                 @else
-                  <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">
-                    {{ session('app_locale', 'en') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
+                  <a href="/login" class="btn btn-sm btn-secondary">
+                    {{ session('app_locale', 'ro') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
                   </a>
-                @endauth
+                @endif
               </div>
             </div>
           @endforeach

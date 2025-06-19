@@ -10,9 +10,6 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-12 mx-auto">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ $lang == 'ro' ? 'Recenzia a fost trimisă cu succes!' : session('success') }}</div>
-                @endif
 
                 <form class="custom-form contact-form" id="reviewForm" action="{{ route('review.store') }}" method="post" enctype="multipart/form-data" role="form">
                     @csrf

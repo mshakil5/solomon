@@ -12,20 +12,6 @@
                 <h2 class="card-title text-white">{{ $lang ? 'Rezervări Servicii' : 'Service Bookings' }}</h2>
             </div>
             <div class="card-body">
-                @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-                @endif
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
             </div>
             <div class="table-responsive">
                 <table class="table">

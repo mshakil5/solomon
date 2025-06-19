@@ -1,16 +1,6 @@
 @extends('layouts.master')
 @section('content')
 
-{{-- @include('frontend.inc.hero') --}}
-
-<div class="categories">
-  @if(session('success'))
-      <div class="alert alert-success">
-          {{ session('success') }}
-      </div>
-  @endif
-</div>
-
 @if ($sliders->count() > 0)
 <section class="slider">
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -51,11 +41,6 @@
 <div class="categories mt-5 d-none">
 
     <div class="container col-10">
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
     </div>
 
     <h2>
@@ -339,19 +324,7 @@
                 <h2>{{ session('app_locale', 'ro') == 'ro' ? 'Sună-ne' : 'Call Us' }}</h2>
             
                 <div class="contact-info">
-                    <h5 class="mb-3">{{ session('app_locale', 'ro') == 'ro' ? 'Ai nevoie de ajutor? Sună-ne' : 'Need Help? Call Us' }}</h5>
-
-                    @if(session('callback_message'))
-                        <div class="alert alert-success">
-                            {{ session('callback_message') }}
-                        </div>
-                    @endif
-                    
-                    @if(session('callback_error'))
-                        <div class="alert alert-danger">
-                            {{ session('callback_error') }}
-                        </div>
-                    @endif     
+                    <h5 class="mb-3">{{ session('app_locale', 'ro') == 'ro' ? 'Ai nevoie de ajutor? Sună-ne' : 'Need Help? Call Us' }}</h5>     
             
                     @if(Auth::check())
                         <form action="{{ route('callRequest') }}" method="POST">

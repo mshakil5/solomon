@@ -30,6 +30,8 @@
 
     <link href="{{ asset('frontend/css/style.css')}}" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body id="section_1">
@@ -78,8 +80,6 @@
             </nav>
 
             <nav class="navbar-nav d-md-none">
-                <a class="nav-item nav-link" href="#">{{ $lang ? 'Proprietar' : 'Homeowner' }}</a>
-                <a class="nav-item nav-link" href="#">{{ $lang ? 'Meșteri' : 'Trades' }}</a>
 
                 @if(Auth::check())
                 <li class="nav-item dropdown">
@@ -90,7 +90,8 @@
                         <a class="dropdown-item" href="{{ route('user.profile') }}">{{ $lang ? 'Profil' : 'Profile' }}</a>
                         <a class="dropdown-item" href="{{ route('user.password') }}">{{ $lang ? 'Schimbă parola' : 'Change Password' }}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('user.works') }}">{{ $lang ? 'Istoric joburi' : 'Job History' }}</a>
+                        <a class="dropdown-item" href="{{ route('user.addresses.index') }}">{{ $lang ? 'Adresă' : 'Address' }}</a>
+                        <a class="dropdown-item" href="{{ route('user.service.bookings') }}">{{ $lang ? 'Istoric rezervări' : 'Booking History' }}</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="me-50" data-feather="power"></i> {{ $lang ? 'Deconectare' : 'Logout' }}
@@ -131,6 +132,26 @@
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> --}}
 
     @yield('script')
+
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: @json(session('success')),
+            });
+        </script>
+    @endif
+
+    @if($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: @json($errors->first()),
+            });
+        </script>
+    @endif
 
 </body>
 </html>

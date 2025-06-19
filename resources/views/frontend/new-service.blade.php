@@ -109,6 +109,10 @@
           height: 200px;
       }
 
+      .slider + .container {
+          margin-top: 220px !important; /* Push form below the slider */
+      }
+
       .slider-title {
           font-size: 24px;
           font-weight: semibold;

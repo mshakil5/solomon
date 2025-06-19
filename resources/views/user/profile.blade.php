@@ -13,11 +13,6 @@
                 <h4 class="card-title text-white">{{ $lang ? 'Profil' : 'Profile' }}</h4>
             </div>
             <div class="card-body">
-                @if (session('success'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('success') }}
-                    </div>
-                @endif
 
                 @if ($errors->any())
                     <div class="alert alert-danger">

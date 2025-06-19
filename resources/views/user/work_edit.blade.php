@@ -13,21 +13,6 @@
                     <h2 class="card-title text-white">Update Your Job Request for {{ $work->category->name }}</h2>
                 </div>
                 <div class="card-body">
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
 
                     @isset($work)
                     <form id="updateWorkForm" action="{{ route('work.update') }}" method="POST" enctype="multipart/form-data">

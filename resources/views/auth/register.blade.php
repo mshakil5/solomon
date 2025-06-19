@@ -62,12 +62,6 @@
             </div>
         @endif
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if(!session('otp_sent') && !session('otp_verified'))
         <form method="POST" action="{{ route('register.send-otp') }}">
             @csrf

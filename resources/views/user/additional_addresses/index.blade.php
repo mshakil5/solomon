@@ -7,12 +7,7 @@
             <div class="card-header">
                 <h4 class="card-title">Addresses</h4>
             </div>
-            <div class="card-body">
-                @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-                @endif
+            <div class="card-body">      
                  <a href="{{ route('additional-addresses.create') }}" class="btn btn-secondary mt-3 float-right btn-redish-hover">Create New</a>
             </div>
             <div class="table-responsive">

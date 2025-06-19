@@ -219,7 +219,7 @@ class FrontendController extends Controller
             Mail::to($adminmail)
                 ->send(new ContactMessageMail($array));
 
-            return redirect()->back()->with("message", "Message sent successfully!");
+            return redirect()->back()->with("success", "Message sent successfully!");
         } else {
             return redirect()->back()->with("error", "Server Error!");
         }
@@ -610,9 +610,9 @@ class FrontendController extends Controller
 
             Mail::to($adminEmail)->send(new CallbackMail($userData));
 
-            return redirect()->back()->with('callback_message', 'Callback request sent successfully.');
+            return redirect()->back()->with('success', 'Callback request sent successfully.');
         } else {
-          return redirect()->back()->with('callback_error', 'Failed to request a callback.');
+          return redirect()->back()->with('error', 'Failed to request a callback.');
       }
     }
 
