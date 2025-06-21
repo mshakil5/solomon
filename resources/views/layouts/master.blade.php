@@ -31,8 +31,8 @@
 
     <link href="{{ asset('frontend/css/style.css')}}" rel="stylesheet">
 
-    <div id="global-loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.6); z-index:9999; text-align:center; padding-top:200px;">
-        <img src="{{ asset('loader.gif') }}" alt="Loading..." />
+    <div id="global-loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.6); z-index:9999; text-align:center;">
+        <img src="{{ asset('loader.gif') }}" alt="Loading..." style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

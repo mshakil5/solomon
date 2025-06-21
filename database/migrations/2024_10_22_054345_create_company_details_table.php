@@ -46,6 +46,8 @@ return new class extends Migration
             $table->integer('language')->default(1); //1 = English, 2 = Romanian
             $table->string('created_by',191)->nullable();
             $table->string('updated_by',191)->nullable();
+            $table->string('short_video',191)->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

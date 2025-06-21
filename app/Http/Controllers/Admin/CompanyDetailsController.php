@@ -17,8 +17,6 @@ class CompanyDetailsController extends Controller
 
     public function updateCompanyInfo(Request $request)
     {
-
-
         $request->validate([
             'company_name' => 'required|string|max:255',
             'email1' => 'nullable|email|max:255',
@@ -82,6 +80,7 @@ class CompanyDetailsController extends Controller
         }
 
         $data->company_name = $request->company_name;
+        $data->status = $request->has('status') ? 1 : 0;
         $data->email1 = $request->email1;
         $data->email2 = $request->email2;
         $data->phone1 = $request->phone1;
@@ -186,6 +185,27 @@ class CompanyDetailsController extends Controller
         $companyDetails->save();
 
         return response()->json(['success' => 'Privacy policy updated successfully!']);
+    }
+
+    public function uploadVideo(Request $request)
+    {
+        $request->validate([
+            'short_video' => 'required|file|mimetypes:video/avi,video/mpeg,video/mp4,video/quicktime,video/webm|max:51200',
+        ]);
+
+        $company = CompanyDetails::first();
+
+        if ($company->short_video && file_exists(public_path('videos/company/' . $company->short_video))) {
+            unlink(public_path('videos/company/' . $company->short_video));
+        }
+
+        $videoName = rand(100000, 999999) . '_short_video.' . $request->short_video->extension();
+        $request->short_video->move(public_path('videos/company'), $videoName);
+
+        $company->short_video = $videoName;
+        $company->save();
+
+        return response()->json(['filename' => $videoName, 'status' => 'success']);
     }
 
     

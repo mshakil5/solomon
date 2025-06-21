@@ -176,6 +176,16 @@
                     <input type="time" class="form-control @error('closing_time') is-invalid @enderror" id="closing_time" name="closing_time" value="{{$data->closing_time}}">
                     </div>
                 </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Booking Order Status</label>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="status" name="status" value="1" {{ $data->status ? 'checked' : '' }}>
+                      <label class="custom-control-label" for="status">On / Off</label>
+                    </div>
+                  </div>
+                </div>
+
 
                 <div class="col-sm-4 d-none">
                     <div class="form-group">
@@ -184,7 +194,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-4 d-none">
                     <div class="form-group">
                         <label>Language</label>
                         <select class="form-control @error('language') is-invalid @enderror" id="language" name="language">
@@ -285,6 +295,24 @@
                     </div>
                 </div>
 
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Short Video</label>
+                        <input type="file" class="filepond" id="short_video" name="short_video">
+                    </div>
+
+                    <div class="card card-outline card-info">
+                        <div class="card-body pt-3">
+                            @if($data->short_video)
+                                <video width="230" controls>
+                                    <source src="{{ asset('videos/company/'.$data->short_video) }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 
               </div>
             
@@ -306,8 +334,56 @@
   </div>
 </section>
 
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+
 @endsection
 @section('script')
+
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+
+<script>
+  FilePond.registerPlugin(
+      FilePondPluginFileValidateType,
+      FilePondPluginFileValidateSize
+  );
+
+  const pond = FilePond.create(document.querySelector('input[name="short_video"]'), {
+      acceptedFileTypes: ['video/*'],
+      maxFileSize: '50MB',
+      allowMultiple: false,
+      labelIdle: 'Drag & Drop your video or <span class="filepond--label-action">Browse</span>',
+      server: {
+          process: {
+              url: '{{ route("video.upload") }}',
+              method: 'POST',
+              headers: {
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
+              },
+              onerror: (response) => {
+                  console.error('Raw error:', response);
+                  return 'Upload failed';
+              },
+              onload: (res) => {
+                  try {
+                      const parsed = JSON.parse(res);
+                      if (parsed.error) {
+                          console.error('Upload error:', parsed.error);
+                          return parsed.error;
+                      }
+                      return parsed;
+                  } catch (e) {
+                      console.error('Unexpected response:', res);
+                      return res;
+                  }
+              }
+          }
+      }
+  });
+</script>
+
 
 <script>
     $(document).ready(function() {
@@ -323,101 +399,56 @@
            output.src = reader.result;
          };
         reader.readAsDataURL(event.target.files[0]);
-    }
+     }
 </script>
 
 <script>
-    $(document).ready(function() {
-        $('#companyForm').validate({
-            rules: {
-                company_name: {
-                    required: true,
-                },
-                fav_icon: {
-                    required: true,
-                },
-                company_logo: {
-                    required: true,
-                },
-            },
-            messages: {
-                company_name: {
-                    required: "Company name is required",
-                },
-                fav_icon: {
-                    required: "Fav icon is required",
-                },
-                company_logo: {
-                    required: "Company logo is required",
-                },
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
-    });
-
-</script>
-<script>
-
-    
-$(document).ready(function () {
+    $(document).ready(function () {
 
 
-    //header for csrf-token is must in laravel
-    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-      //ajax request
+        //header for csrf-token is must in laravel
+        $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+          //ajax request
 
 
-    $('#companyForm').submit(function(e){
-        // console.log('submit2');
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('admin.companyinfo') }}",
-            data: formData,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(data){
-                // console.log(data);
-                $('html, body').animate({ scrollTop: 0 }, 'slow');
-                if(data.status == 'success'){
-                    $('.successMessage').html(data.success);
-                    $('.successMessage').show();
-                    setTimeout(function(){
-                        $('.successMessage').hide();
-                    }, 3000);
-                }else{
-                    $('.errMessage').html(data.error);
-                    $('.errMessage').show();
-                    setTimeout(function(){
-                        $('.errMessage').hide();
-                    }, 3000);
+        $('#companyForm').submit(function(e){
+            // console.log('submit2');
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('admin.companyinfo') }}",
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data){
+                    // console.log(data);
+                    $('html, body').animate({ scrollTop: 0 }, 'slow');
+                    if(data.status == 'success'){
+                        $('.successMessage').html(data.success);
+                        $('.successMessage').show();
+                        setTimeout(function(){
+                            $('.successMessage').hide();
+                        }, 3000);
+                    }else{
+                        $('.errMessage').html(data.error);
+                        $('.errMessage').show();
+                        setTimeout(function(){
+                            $('.errMessage').hide();
+                        }, 3000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
+            });
         });
+
     });
-
-});
-
-
-
 </script>
 
 @endsection

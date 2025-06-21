@@ -565,4 +565,43 @@ class FrontendController extends Controller
             'data' => $data
         ], 200);
     }
+
+    public function companyStatus()
+    {
+        $company = CompanyDetails::first();
+
+        if (!$company) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Company details not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'booking_status' => (int) $company->status,
+        ], 200);
+    }
+
+    public function companyShortVideo()
+    {
+        $company = CompanyDetails::select('short_video')->first();
+
+        if (!$company || !$company->short_video) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No short video available',
+                'video_url' => null,
+            ], 404);
+        }
+
+        $videoUrl = asset('videos/company/' . $company->short_video);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Short video fetched successfully',
+            'video_url' => $videoUrl,
+        ], 200);
+    }
+
 }

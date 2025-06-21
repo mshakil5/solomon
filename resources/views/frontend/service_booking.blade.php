@@ -304,74 +304,96 @@
             <form id="addressForm">
                 <div class="modal-body">
                     <input type="hidden" name="type" id="addressType" value="1">
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" id="name" name="name" required>
+
+                      <div class="card shadow-sm mb-3">
+                        <div class="card-header d-flex align-items-center">
+                          <i class="bi bi-person-fill me-2"></i>
+                          <h5 class="mb-0">{{ $lang ? 'Persoana de contact' : 'Contact Person' }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" required value="{{ auth()->user()->name ?? '' }}">
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="first_name" required id="first_name" value="{{ auth()->user()->first_name ?? '' }}">
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="phone" required id="phone" value="{{ auth()->user()->phone ?? '' }}">
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" name="first_name" required id="first_name">
+                        
+                     <div class="card shadow-sm">
+                      <div class="card-header d-flex align-items-center">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <h5 class="mb-0">{{ $lang ? 'Adresă' : 'Address' }}</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="mb-3">
+                              <label class="form-label">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" name="district" required id="district">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="first_line" required id="first_line">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                              <label class="form-label">{{ $lang ? 'Strada' : 'Street' }}</label>
+                              <input type="text" class="form-control" name="second_line" id="second_line">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                              <label class="form-label">{{ $lang ? 'Numar' : 'Number' }}</label>
+                              <input type="text" class="form-control" name="third_line" id="third_line">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                              <label class="form-label">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" name="town" required id="town">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                              <label class="form-label">{{ $lang ? 'Cod poștal' : 'Post Code' }} <span class="text-danger">*</span></label>
+                              <input type="text" class="form-control" name="post_code" required id="post_code">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Etaj' : 'Floor' }}</label>
+                                <input type="text" class="form-control" name="floor" id="floor">
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-3">
+                                <label class="form-label">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
+                                <input type="text" class="form-control" name="apartment" id="apartment">
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" name="phone" required id="phone">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" name="district" required id="district">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="first_line" required id="first_line">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Strada' : 'Street' }}</label>
-                          <input type="text" class="form-control" name="second_line" id="second_line">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Numar' : 'Number' }}</label>
-                          <input type="text" class="form-control" name="third_line" id="third_line">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" name="town" required id="town">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                          <label class="form-label">{{ $lang ? 'Cod poștal' : 'Post Code' }} <span class="text-danger">*</span></label>
-                          <input type="text" class="form-control" name="post_code" required id="post_code">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ $lang ? 'Etaj' : 'Floor' }}</label>
-                            <input type="text" class="form-control" name="floor" id="floor">
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="mb-3">
-                            <label class="form-label">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
-                            <input type="text" class="form-control" name="apartment" id="apartment">
-                        </div>
-                      </div>
-                    </div>         
+                     </div>
+      
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $lang ? 'Închide' : 'Close' }}</button>
@@ -492,6 +514,21 @@
               time: time
           },
           success: function(response) {
+
+              if (response.error) {
+                  $('#additional-fee-container').hide();
+                  $('#additional_fee').val(0);
+                  let text = '{{ $lang ? "Nu este disponibil" : "Not Available" }}';
+                  $('#submit-button').prop('disabled', true).text(text);
+                  Swal.fire({
+                      icon: 'error',
+                      title: '{{ $lang ? "Eroare" : "Error" }}',
+                      text: text,
+                      confirmButtonText: 'OK'
+                  });
+                  return;
+              }
+
               const additionalFee = parseFloat(response.fee);
               
               if (additionalFee > 0) {
@@ -511,9 +548,6 @@
 
   $('#date_time_input, #timeInput').on('change input', updateFee);
 
-  $(document).ready(function () {
-    updateFee();
-  });
 </script>
 
 <script>
@@ -648,6 +682,10 @@ $(document).ready(function() {
             $('.step-' + currentStep).hide();
             $('.step-' + nextStep).show();
             updateProgressBar(nextStep);
+            
+            if (nextStep === 2) {
+                updateFee();
+            }
             
             // Update review section when moving to step 4
             if (nextStep === 4) {

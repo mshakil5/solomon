@@ -179,99 +179,105 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" id="address_id">
 
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="name">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
-                                <input id="name" type="text" class="form-control" name="name" required>
+                    <div class="card shadow-sm mb-3">
+                      <div class="card-header d-flex align-items-center">
+                        <i class="bi bi-person-fill me-2"></i>
+                        <h5 class="mb-0">{{ $lang ? 'Persoana de contact' : 'Contact Person' }}</h5>
+                      </div>
+                        <div class="card-body">
+                          <div class="row">
+                              <div class="col-6">
+                                  <div class="form-group">
+                                      <label for="name">{{ $lang ? 'Nume' : 'Name' }} <span class="text-danger">*</span></label>
+                                      <input id="name" type="text" class="form-control" name="name" required>
+                                  </div>
+                              </div>
+                              <div class="col-6">
+                                  <div class="form-group">
+                                      <label for="first_name">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
+                                      <input id="first_name" type="text" class="form-control" name="first_name" required>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="phone">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
+                                    <input id="phone" type="text" class="form-control" name="phone" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="first_name">{{ $lang ? 'Prenume' : 'First Name' }} <span class="text-danger">*</span></label>
-                                <input id="first_name" type="text" class="form-control" name="first_name" required>
-                            </div>
-                        </div>
+                          </div>
+                      </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="phone">{{ $lang ? 'Telefon' : 'Phone' }} <span class="text-danger">*</span></label>
-                                <input id="phone" type="text" class="form-control" name="phone" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="district">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
-                                <input id="district" type="text" class="form-control" name="district" required>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card shadow-sm">
+                      <div class="card-header d-flex align-items-center">
+                        <i class="bi bi-geo-alt me-2"></i>
+                        <h5 class="mb-0">{{ $lang ? 'Adresă' : 'Address' }}</h5>
+                      </div>
+                      <div class="card-body">
 
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="first_line">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
-                                <input id="first_line" type="text" class="form-control" name="first_line" required>
+                        <div class="row">   
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="district">{{ $lang ? 'Scara' : 'District' }} <span class="text-danger">*</span></label>
+                                    <input id="district" type="text" class="form-control" name="district" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="first_line">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
+                                    <input id="first_line" type="text" class="form-control" name="first_line" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="second_line">{{ $lang ? 'Strada' : 'Street' }}</label>
+                                    <input id="second_line" type="text" class="form-control" name="second_line">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="third_line">{{ $lang ? 'Numar' : 'Number' }}</label>
+                                    <input id="third_line" type="text" class="form-control" name="third_line">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="town">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
+                                    <input id="town" type="text" class="form-control" name="town" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="post_code">{{ $lang ? 'Cod poștal' : 'Postal Code' }} <span class="text-danger">*</span></label>
+                                    <input id="post_code" type="text" class="form-control" name="post_code" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="floor">{{ $lang ? 'Etaj' : 'Floor' }}</label>
+                                    <input id="floor" type="text" class="form-control" name="floor">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="apartment">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
+                                    <input id="apartment" type="text" class="form-control" name="apartment">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="type">{{ $lang ? 'Tip adresă' : 'Address Type' }} <span class="text-danger">*</span></label>
+                                    <select id="type" class="form-control" name="type" required>
+                                        <option value="1">{{ $lang ? 'Adresă de livrare' : 'Delivery Address' }}</option>
+                                        <option value="2">{{ $lang ? 'Adresă de facturare' : 'Billing Address' }}</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="second_line">{{ $lang ? 'Strada' : 'Street' }}</label>
-                                <input id="second_line" type="text" class="form-control" name="second_line">
-                            </div>
-                        </div>
+                        
                     </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="third_line">{{ $lang ? 'Numar' : 'Number' }}</label>
-                                <input id="third_line" type="text" class="form-control" name="third_line">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="town">{{ $lang ? 'Bloc' : 'Block' }} <span class="text-danger">*</span></label>
-                                <input id="town" type="text" class="form-control" name="town" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="post_code">{{ $lang ? 'Cod poștal' : 'Postal Code' }} <span class="text-danger">*</span></label>
-                                <input id="post_code" type="text" class="form-control" name="post_code" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="floor">{{ $lang ? 'Etaj' : 'Floor' }}</label>
-                                <input id="floor" type="text" class="form-control" name="floor">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="apartment">{{ $lang ? 'Apartament' : 'Apartment' }}</label>
-                                <input id="apartment" type="text" class="form-control" name="apartment">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="type">{{ $lang ? 'Tip adresă' : 'Address Type' }} <span class="text-danger">*</span></label>
-                                <select id="type" class="form-control" name="type" required>
-                                    <option value="1">{{ $lang ? 'Adresă de livrare' : 'Delivery Address' }}</option>
-                                    <option value="2">{{ $lang ? 'Adresă de facturare' : 'Billing Address' }}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $lang ? 'Închide' : 'Close' }}</button>
@@ -313,6 +319,10 @@
 <script>
 
     var isRo = @json($lang);
+    const userName = @json(auth()->user()->name ?? '');
+    const userSurname = @json(auth()->user()->surname ?? '');
+    const userEmail = @json(auth()->user()->email ?? '');
+    const userPhone = @json(auth()->user()->phone ?? '');
 
     $(document).ready(function() {
         // Handle edit button click
@@ -350,6 +360,10 @@
             $('#addressForm input[name="_method"]').remove();
             $('#addressForm')[0].reset();
             $('#addAddressModalLabel').text(isRo ? 'Adaugă adresă nouă' : 'Add New Address');
+
+                $('#addressForm input[name="name"]').val(userName);
+                $('#addressForm input[name="first_name"]').val(userSurname);
+                $('#addressForm input[name="phone"]').val(userPhone);
         });
         
         // Handle delete button click

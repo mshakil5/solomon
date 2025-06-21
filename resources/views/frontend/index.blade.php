@@ -219,7 +219,7 @@
                     {{ session('app_locale', 'ro') == 'ro' ? 'Trimite Lucrarea' : 'Submit Work' }}
                   </a>
                 @else
-                  <a href="/login" class="btn btn-sm btn-secondary">
+                  <a href="{{ route('login', ['redirect_to' => route('service.booking', $service->slug)]) }}" class="btn btn-sm btn-secondary">
                     {{ session('app_locale', 'ro') == 'ro' ? 'Autentifică-te pentru detalii' : 'Login to View Details' }}
                   </a>
                 @endif

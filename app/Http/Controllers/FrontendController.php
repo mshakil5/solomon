@@ -287,7 +287,7 @@ class FrontendController extends Controller
 
         if ($serviceDateTime) {
             $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
-            $hour = $serviceDateTime->format('H');
+            $hour = (int)$serviceDateTime->format('H');
             $dayOfWeek = $serviceDateTime->dayOfWeek;
         } else {
             $diffInMinutes = null;
@@ -295,21 +295,29 @@ class FrontendController extends Controller
             $dayOfWeek = null;
         }
 
-        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
+
+        if (!$company || $company->status != 1) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Service not available in this time period',
+            ]);
+        }
+
         $openingHour = $company?->opening_time ?? '10:00';
         $closingHour = $company?->closing_time ?? '18:00';
 
-        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
-        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+        $opening = (int)Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int)Carbon::createFromFormat('H:i', $closingHour)->format('H');
 
         if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1;
-        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2;
-        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
-            $type = 3;
+            $type = 1; // Emergency
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120 && $hour >= $opening && $hour < $closing) {
+            $type = 2; // Prioritized
+        } elseif ($serviceDateTime && ($hour < $opening || $hour >= $closing)) {
+            $type = 3; // After-hours
         } else {
-            $type = 4;
+            $type = 4; // Standard
         }
 
         return response()->json([
@@ -350,21 +358,22 @@ class FrontendController extends Controller
 
         $typeFees = [1 => 400, 2 => 250, 3 => 300, 4 => 0];
         $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', "$date $time") : null;
-        $hour = $serviceDateTime?->format('H');
-        $day = $serviceDateTime?->dayOfWeek;
+
+        $hour = $serviceDateTime ? (int)$serviceDateTime->format('H') : null;
+        $day = $serviceDateTime ? $serviceDateTime->dayOfWeek : null;
 
         $company = CompanyDetails::select('opening_time', 'closing_time')->first();
-        $open = Carbon::createFromFormat('H:i', $company?->opening_time ?? '10:00')->format('H');
-        $close = Carbon::createFromFormat('H:i', $company?->closing_time ?? '18:00')->format('H');
+        $open = (int)Carbon::createFromFormat('H:i', $company?->opening_time ?? '10:00')->format('H');
+        $close = (int)Carbon::createFromFormat('H:i', $company?->closing_time ?? '18:00')->format('H');
 
-        if ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) <= 120) {
-            $type = 1;
-        } elseif ($serviceDateTime && $serviceDateTime->isToday()) {
-            $type = 2;
-        } elseif ($day === 0 || $hour < $open || $hour >= $close) {
-            $type = 3;
+        if ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) >= 0 && $now->diffInMinutes($serviceDateTime, false) <= 120) {
+            $type = 1; // Emergency
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) > 120 && $hour >= $open && $hour < $close) {
+            $type = 2; // Prioritized
+        } elseif ($serviceDateTime && ($hour < $open || $hour >= $close)) {
+            $type = 3; // After-hours
         } else {
-            $type = 4;
+            $type = 4; // Standard
         }
 
         $additionalFee = $typeFees[$type];
@@ -413,7 +422,7 @@ class FrontendController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'gbp',
+                    'currency' => 'ron',
                     'unit_amount' => $data['additional_fee'] * 100,
                     'product_data' => [
                         'name' => 'Booking Additional Fee',
@@ -512,7 +521,7 @@ class FrontendController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'gbp',
+                    'currency' => 'ron',
                     'unit_amount' => $request->amount * 100,
                     'product_data' => [
                         'name' => "Invoice #$id Payment",

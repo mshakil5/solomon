@@ -54,16 +54,17 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
      
+        $redirectTo = session('redirect_to', route('homepage'));
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
-            
+            session()->forget('redirect_to');
             if (auth()->user()->is_type == '1') {
                 return redirect()->route('admin.dashboard');
             }else if (auth()->user()->is_type == '2') {
                 return redirect()->route('staff.home');
-            }else if (auth()->user()->is_type == '0') {
-                return redirect()->route('homepage');
-            }else{
+            } elseif (auth()->user()->is_type == '0') {
+            return redirect()->to($redirectTo);
+            } else{
                 return redirect()->route('homepage');
             }
         }else{

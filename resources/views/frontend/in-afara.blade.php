@@ -31,7 +31,7 @@
 </section>
 @endif
 
-<div class="container mt-5 text-start">
+<div class="container mt-5 text-center">
     <div class="row">
         <div class="col-12 mx-auto">
             <h1 class="text-primary mb-4 fw-bold">
