@@ -112,13 +112,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'first_line' => 'required|string|max:255',
-            'second_line' => 'nullable|string|max:255',
-            'third_line' => 'nullable|string|max:255',
-            'town' => 'nullable|string|max:255',
-            'post_code' => 'nullable|string|max:255',
-        ]);
+        
 
         $address = AdditionalAddress::where('id', $id)->first();
         if (!$address) {
