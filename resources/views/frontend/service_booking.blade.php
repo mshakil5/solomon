@@ -196,7 +196,7 @@
                                 <label for="job_description">{{ $lang ? 'Descriere serviciu' : 'Job Description' }}</label>
                                 <textarea class="form-control" id="job_description" name="description" rows="4"></textarea>
                                 <div class="invalid-feedback">
-                                    {{ $lang ? 'Descrierea trebuie să fie de maxim 1000 de caractere.' : 'Description must be at most 1000 characters.' }}
+                                    {{ $lang ? 'Descrierea este obligatorie și trebuie să fie de maxim 1000 de caractere.' : 'Description is required and must be at most 1000 characters.' }}
                                 </div>
                             </div>
                             
@@ -1112,7 +1112,7 @@ $(document).ready(function() {
 
         if (step === 1) {
             const description = $('#job_description').val().trim();
-            if (description.length > 1000) {
+            if (description.length < 1) {
                 $('#job_description').addClass('is-invalid');
                 $('#job_description').next('.invalid-feedback').show();
                 isValid = false;
