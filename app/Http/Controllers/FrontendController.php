@@ -253,17 +253,15 @@ class FrontendController extends Controller
         }
 
         $service = Service::where('slug', $slug)->firstOrFail();
-        $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 1)->latest()->get();
-        $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->where('type', 2)->latest()->get();
+        $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->latest()->get();
+        $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->latest()->get();
+
+
         return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses','type'));
     }
 
-    public function calculateFee(Request $request)
+    public function calculateFee_old(Request $request)
     {
-        $request->validate([
-            'date' => 'required|string',
-            'time' => 'nullable|string',
-        ]);
 
         $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
         $time = $request->time;
@@ -283,7 +281,7 @@ class FrontendController extends Controller
             4 => 'Standard Service',
         ];
 
-        $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $time) : null;
+        $serviceDateTime = $time;
 
         if ($serviceDateTime) {
             $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
@@ -322,10 +320,88 @@ class FrontendController extends Controller
 
         return response()->json([
             'fee' => $typeFees[$type],
+            'date' => $date,
+            'time' => $time,
             'type' => $type,
             'type_label' => $typeLabels[$type]
         ]);
     }
+
+    public function calculateFee(Request $request)
+    {
+        try {
+            // Validate input
+            $request->validate([
+                'date' => 'required|regex:/^\d{2}\/\d{2}\/\d{4}$/',
+                'time' => 'required|regex:/^\d{2}:\d{2}:\d{2}$/'
+            ]);
+
+            // Parse date (dd/mm/yyyy) and time (HH:mm:ss)
+            $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
+            $time = $request->time;
+            // Combine date and time into a single Carbon instance
+            $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i:s', "$date $time");
+
+            $now = Carbon::now();
+
+            $typeFees = [
+                1 => 400.00, // Emergency
+                2 => 250.00, // Prioritized
+                3 => 300.00, // Outside working hours
+                4 => 0.00    // Standard
+            ];
+
+            $typeLabels = [
+                1 => 'Emergency Service',
+                2 => 'Prioritized Service',
+                3 => 'Outside Working Hours',
+                4 => 'Standard Service',
+            ];
+
+            $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
+
+            if (!$company || $company->status != 1) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Service not available in this time period',
+                ]);
+            }
+
+            $openingHour = $company->opening_time ?? '10:00';
+            $closingHour = $company->closing_time ?? '18:00';
+
+            $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+            $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+            $hour = (int) $serviceDateTime->format('H');
+            $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+
+            if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+                $type = 1; // Emergency
+            } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120 && $hour >= $opening && $hour < $closing) {
+                $type = 2; // Prioritized
+            } elseif ($hour < $opening || $hour >= $closing) {
+                $type = 3; // After-hours
+            } else {
+                $type = 4; // Standard
+            }
+
+            return response()->json([
+                'fee' => $typeFees[$type],
+                'date' => $request->date,
+                'time' => substr($time, 0, 5), // Return HH:mm format
+                'type' => $type,
+                'type_label' => $typeLabels[$type]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Calculate fee error: ' . $e->getMessage());
+            return response()->json([
+                'error' => true,
+                'message' => 'Invalid date or time format',
+            ], 422);
+        }
+    }
+
 
     public function bookingStore(Request $request)
     {
