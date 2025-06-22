@@ -136,7 +136,7 @@ class UserController extends Controller
 
     public function getUser()
     {
-        $data = User::where('is_type', '0')->whereNotNull('email_verified_at')->orderby('id','DESC')->get();
+        $data = User::where('is_type', '0')->orderby('id','DESC')->get();
         return view('admin.user.index', compact('data'));
     }
     
