@@ -37,8 +37,9 @@ Route::post('verify-reset-otp', [PassportAuthController::class, 'verifyResetOtp'
 Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
 
 Route::group(['middleware' => ['auth:api']], function () {
-  Route::get('booking-status', [FrontendController::class, 'companyStatus']);
+  Route::get('company-status', [FrontendController::class, 'companyStatus']);
   Route::get('company-short-video', [FrontendController::class, 'companyShortVideo']);
+  Route::get('holidays', [FrontendController::class, 'holidays']);
   Route::get('welcome', [FrontendController::class, 'welcome']);
   Route::get('slider', [FrontendController::class, 'slider']);
 

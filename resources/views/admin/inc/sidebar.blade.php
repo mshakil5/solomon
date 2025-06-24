@@ -296,6 +296,13 @@
           </ul>
       </li>
 
+      <li class="nav-item">
+          <a href="{{ route('allholiday') }}" class="nav-link {{ (request()->is('admin/holiday*')) ? 'active' : '' }}">
+              <i class="nav-icon fas fa-home"></i>
+              <p>Holidays</p>
+          </a>
+      </li>
+
       <li class="nav-item" style="margin-top: 200px">
       </li>
   

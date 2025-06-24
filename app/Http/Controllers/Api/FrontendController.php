@@ -24,6 +24,7 @@ use App\Models\CompanyDetails;
 use App\Models\Softcode;
 use App\Models\Master;
 use App\Models\Slider;
+use App\Models\Holiday;
 
 class FrontendController extends Controller
 {
@@ -579,7 +580,8 @@ class FrontendController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'booking_status' => (int) $company->status,
+            'company_status' => (int) $company->status,
+            'message' => 'Company is ' . ($company->status ? 'open' : 'closed'),
         ], 200);
     }
 
@@ -601,6 +603,20 @@ class FrontendController extends Controller
             'status' => 'success',
             'message' => 'Short video fetched successfully',
             'video_url' => $videoUrl,
+        ], 200);
+    }
+
+    public function holidays()
+    {
+        $holidays = Holiday::where('status', 1)
+            ->orderBy('month')
+            ->orderBy('day')
+            ->select('title', 'month', 'day')
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $holidays
         ], 200);
     }
 

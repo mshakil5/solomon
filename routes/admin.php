@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\MailContentTypeController;
 use App\Http\Controllers\Admin\MailContentController;
 use App\Http\Controllers\Admin\ServiceBookingController;
+use App\Http\Controllers\Admin\HolidayController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -250,6 +251,14 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/mail-content', [MailContentController::class, 'store']);
     Route::get('/mail-content/{id}/edit', [MailContentController::class, 'edit']);
     Route::post('/mail-content-update', [MailContentController::class, 'update']);
+
+    // Holiday crud
+    Route::get('/holiday', [HolidayController::class, 'getHoliday'])->name('allholiday');
+    Route::post('/holiday', [HolidayController::class, 'holidayStore']);
+    Route::get('/holiday/{id}/edit', [HolidayController::class, 'holidayEdit']);
+    Route::post('/holiday-update', [HolidayController::class, 'holidayUpdate']);
+    Route::get('/holiday/{id}', [HolidayController::class, 'holidayDelete']);
+    Route::post('/holiday-status', [HolidayController::class, 'toggleStatus']);
 
 });
   
