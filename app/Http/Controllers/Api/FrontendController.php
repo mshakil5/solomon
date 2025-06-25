@@ -473,8 +473,31 @@ class FrontendController extends Controller
     public function aboutUs()
     {
         $aboutUs = CompanyDetails::select('about_us')->first()->about_us;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
+        $openingDayTime = [
+            'sunday_to_friday' => [
+                'day' => $company->opening_time ?? null,
+                'opening_time' => $company->opening_time ?? null,
+                'closing_time' => $company->closing_time ?? null,
+            ],
+
+            'saturday' => [
+                'day' => "Saturday" ?? null,
+                'opening_time' => "09:00" ?? null,
+                'closing_time' => "14:00" ?? null,
+            ],
+
+            'closed' => [
+                'day' => "Sunday" ?? null,
+            ]
+        ];
+
+
+
         return response()->json([
-            'about_us' => $aboutUs
+            'about_us' => $aboutUs,
+            'openingDayTime' => $openingDayTime
         ], 200);
     }
 
