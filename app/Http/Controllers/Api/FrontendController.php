@@ -577,6 +577,24 @@ class FrontendController extends Controller
     {
         $data = CompanyDetails::find(1);
 
+        $openingDayTime = [
+            'sunday_to_friday' => [
+                'day' => $company->opening_time ?? null,
+                'opening_time' => $company->opening_time ?? null,
+                'closing_time' => $company->closing_time ?? null,
+            ],
+
+            'saturday' => [
+                'day' => "Saturday" ?? null,
+                'opening_time' => "09:00" ?? null,
+                'closing_time' => "14:00" ?? null,
+            ],
+
+            'closed' => [
+                'day' => "Sunday" ?? null,
+            ]
+        ];
+
         if (!$data) {
             return response()->json([
                 'success' => false,
@@ -584,9 +602,12 @@ class FrontendController extends Controller
             ], 404);
         }
 
+        
+
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => $data,
+            'openingDayTime' => $openingDayTime
         ], 200);
     }
 
