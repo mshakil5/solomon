@@ -224,9 +224,9 @@
                                     <!-- Calendar Section -->
                                     <div class="calendar-container">
                                         <div class="calendar-header">
-                                            <button class="btn btn-primary" onclick="changeMonth(-1)">← Prev</button>
+                                            <button type="button" class="btn btn-primary" onclick="changeMonth(-1)">← Prev</button>
                                             <h2 id="month-year">January 2025</h2>
-                                            <button class="btn btn-primary" onclick="changeMonth(1)">Next →</button>
+                                            <button type="button" class="btn btn-primary" onclick="changeMonth(1)">Next →</button>
                                         </div>
                                         <div class="calendar-grid" id="calendar">
                                             <!-- Day Names -->
@@ -477,6 +477,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     <input type="hidden" id="additional_fee" name="additional_fee" value="0">
+                                    <input type="hidden" id="type" name="type" value="4">
                                     <button type="submit" class="btn btn-success" id="submit-button">{{ $lang ? 'Finalizează rezervarea' : 'Complete Booking' }}</button>
                                 </div>
                             </div>
@@ -860,7 +861,7 @@ function updateFee() {
     const time = $('#eventTime').val().trim();
     if (!date || !time) return;
     
-    console.log(date, time);
+    // console.log(date, time);
 
     $.ajax({
         url: '{{ route("booking.calculateFee") }}',
@@ -871,7 +872,8 @@ function updateFee() {
             time: time
         },
         success: function(response) {
-            console.log(response);
+            $('#type').val(response.type);
+            // console.log(response);
             if (response.error) {
                 $('#additional-fee-container').hide();
                 $('#additional_fee').val(0);
