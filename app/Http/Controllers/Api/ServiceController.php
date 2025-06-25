@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
 use App\Models\Invoice;
+use App\Models\Holiday;
 
 class ServiceController extends Controller
 {
@@ -119,7 +120,7 @@ class ServiceController extends Controller
             $type = 1; $fee = 400.00;
         } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
             $type = 2; $fee = 250.00;
-        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+        } elseif ($hour < $opening || $hour >= $closing) {
             $type = 3; $fee = 300.00;
         } else {
             $type = 4; $fee = 0.00;
@@ -429,10 +430,37 @@ class ServiceController extends Controller
 
     public function calculateFee(Request $request)
     {
-        $request->validate([
-            'date' => 'required|date',
-            'time' => 'nullable|string',
+        $company = CompanyDetails::first();
+
+        if ($company->status == 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Company is currently closed. Fee calculation unavailable.',
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date_format:Y-m-d|after_or_equal:today',
+            'time' => [
+                'nullable',
+                'date_format:H:i',
+                function ($attribute, $value, $fail) use ($request) {
+                    $date = $request->input('date');
+                    if (Carbon::parse($date)->isToday()) {
+                        $combined = Carbon::createFromFormat('Y-m-d H:i', "$date $value");
+                        if ($combined->lte(now())) {
+                            $fail('The time must be after the current time for today.');
+                        }
+                    }
+                }
+            ],
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
         $date = $request->date;
         $time = $request->time;
@@ -465,13 +493,25 @@ class ServiceController extends Controller
         }
 
         $company = CompanyDetails::select('opening_time', 'closing_time')->first();
-        $openingHour = $company?->opening_time ?? '10:00';
+        $openingHour = $company?->opening_time ?? '09:00';
         $closingHour = $company?->closing_time ?? '18:00';
 
-        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
-        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
+        $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
 
-        if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+        $monthName = $serviceDateTime->format('F');
+        $day = $serviceDateTime->day;
+
+        $holiday = Holiday::where('month', $monthName)
+                  ->where('day', $day)
+                  ->where('status', true)
+                  ->first();
+
+        if ($holiday) {
+            $type = 3; //Holiday always Outside Working Hours
+        } elseif ($serviceDateTime && $dayOfWeek === 0) {
+            $type = 3; // Sunday always Outside Working Hours
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
             $type = 1; // Emergency
         } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
             $type = 2; // Prioritized
