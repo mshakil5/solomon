@@ -87,6 +87,7 @@
                 <thead>
                 <tr>
                   <th>Sl</th>
+                  <th>Date</th>
                   <!-- <th>Post Code</th> -->
                   <th>City</th>
                   <th>Status</th>
@@ -97,6 +98,7 @@
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
+                    <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
                     <!-- <td>{{$data->postcode}}</td> -->
                     <td>{{$data->city}}</td>
                     <td>

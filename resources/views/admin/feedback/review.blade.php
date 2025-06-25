@@ -17,6 +17,7 @@
                 <thead>
                 <tr>
                   <th>Sl</th>
+                  <th>Date</th>
                   <th>Name</th>
                   <th>Email/Phone</th>
                   <th>Rating</th>
@@ -28,6 +29,7 @@
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
+                    <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
                     <td>{{$data->name}}</td>
                     <td>{{$data->email}} <br> {{$data->phone}}</td>
                     <td>{{ $data->stars }} / 5</td>

@@ -82,6 +82,7 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
+                                    <th>Date</th>
                                     <th>Image</th>
                                     <th>Title</th>
                                     <th>Status</th>
@@ -92,6 +93,7 @@
                                 @foreach ($data as $key => $data)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
                                     <td> <a href="{{ asset('images/slider/'.$data->image) }}" target="_blank"> <img src="{{ asset('images/slider/'.$data->image) }}" alt="" style="max-width: 100px; width: 100%; height: auto;"> </a> </td>
                                     <td>{{ $data->title }}</td>
                                     <td>

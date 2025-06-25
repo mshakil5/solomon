@@ -17,6 +17,7 @@
                   <thead>
                   <tr>
                     <th>#</th>
+                    <th>Booking Date</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Type</th>
@@ -36,7 +37,8 @@
                   <tbody>
                     @foreach ($bookings as $key => $data)
                     <tr>
-                      <td>{{ $loop->iteration }}</td>    
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ date('d/m/Y', strtotime($data->created_at)) }}</td>    
                       <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
                       <td>{{ $data->time }}</td>
                       <td>

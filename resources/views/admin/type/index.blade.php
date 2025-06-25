@@ -84,6 +84,7 @@
                 <thead>
                 <tr>
                   <th>Sl</th>
+                  <th>Date</th>
                   <th>Image</th>
                   <th>Title En
                   </th>
@@ -103,6 +104,7 @@
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
+                    <td>{{ date('d/m/Y', strtotime($data->created_at)) }}</td>
                     <td>
                       @if ($data->image != null)
                         <img src="{{ asset('images/type/'.$data->image) }}" alt="Image" style="width: 50px; height: 50px;">

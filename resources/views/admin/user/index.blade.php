@@ -116,6 +116,7 @@
                 <thead>
                 <tr>
                   <th>Sl</th>
+                  <th>Date</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
@@ -126,6 +127,7 @@
                   @foreach ($data as $key => $data)
                   <tr>
                     <td>{{ $key + 1 }}</td>
+                    <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
                     <td>{{$data->name}} {{$data->surname}}</td>
                     <td>{{$data->email}}</td>
                     <td>{{$data->phone}}</td>
