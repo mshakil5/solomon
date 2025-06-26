@@ -13,6 +13,8 @@ use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
 use App\Models\Invoice;
 use App\Models\Holiday;
+use App\Models\NewService;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
@@ -535,6 +537,28 @@ class ServiceController extends Controller
             'type' => $type,
             'type_label' => $typeLabels[$type]
         ]);
+    }
+
+    public function newServiceStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'need' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        NewService::create([
+            'user_id' => Auth::id(),
+            'need' => $request->need,
+        ]);
+
+        return response()->json([
+            'message' => 'Your message has been sent successfully.',
+        ], 201);
     }
 
 }

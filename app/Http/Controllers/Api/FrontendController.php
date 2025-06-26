@@ -580,8 +580,8 @@ class FrontendController extends Controller
         $openingDayTime = [
             'sunday_to_friday' => [
                 'day' => "Saturday to Friday" ?? null,
-                'opening_time' => $company->opening_time ?? null,
-                'closing_time' => $company->closing_time ?? null,
+                'opening_time' => $data->opening_time ?? null,
+                'closing_time' => $data->closing_time ?? null,
             ],
 
             'saturday' => [
