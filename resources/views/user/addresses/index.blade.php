@@ -14,12 +14,6 @@
             </div>
             <div class="card-body">
 
-                @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
                 <div class="row mb-4">
                     <div class="col-12 text-right">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#addAddressModal">
@@ -224,10 +218,18 @@
                                     <input id="district" type="text" class="form-control" name="district" required>
                                 </div>
                             </div>
+
+                                @php
+                                  $cities = ['București'];
+                                @endphp
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="first_line">{{ $lang ? 'Judet' : 'County' }} <span class="text-danger">*</span></label>
-                                    <input id="first_line" type="text" class="form-control" name="first_line" required>
+                                    <label for="first_line">{{ $lang ? 'Judet' : 'City' }} <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="first_line" id="first_line" required>
+                                      @foreach ($cities as $option)
+                                        <option value="{{ $option }}">{{ $option }}</option>
+                                      @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-6">

@@ -553,12 +553,21 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                @php
+                                  $cities = ['București'];
+                                @endphp
+
                                 <div class="col-6">
                                     <div class="mb-3">
-                                        <label class="form-label">{{ $lang ? 'Județ' : 'County' }} <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="first_line" required id="first_line">
+                                        <label class="form-label">{{ $lang ? 'Județ' : 'City' }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="first_line" id="first_line" required>
+                                          @foreach ($cities as $option)
+                                            <option value="{{ $option }}">{{ $option }}</option>
+                                          @endforeach
+                                        </select>
                                         <div class="invalid-feedback">
-                                            {{ $lang ? 'Județul este obligatoriu.' : 'County is required.' }}
+                                            {{ $lang ? 'Județul este obligatoriu.' : 'City is required.' }}
                                         </div>
                                     </div>
                                 </div>
@@ -696,7 +705,7 @@ $(document).ready(function() {
             { id: 'first_name', message: '{{ $lang ? "Prenumele este obligatoriu." : "First name is required." }}' },
             { id: 'phone', message: '{{ $lang ? "Numărul de telefon este obligatoriu și trebuie să fie valid." : "Phone number is required and must be valid." }}', pattern: /^\+?\d{10,15}$/ },
             { id: 'district', message: '{{ $lang ? "Sectorul este obligatoriu." : "District is required." }}' },
-            { id: 'first_line', message: '{{ $lang ? "Județul este obligatoriu." : "County is required." }}' },
+            { id: 'first_line', message: '{{ $lang ? "Județul este obligatoriu." : "City is required." }}' },
             { id: 'town', message: '{{ $lang ? "Blocul este obligatoriu." : "Block is required." }}' },
             { id: 'post_code', message: '{{ $lang ? "Codul poștal este obligatoriu și trebuie să fie valid." : "Post code is required and must be valid." }}', pattern: /^\d{5,6}$/ }
         ];
@@ -805,7 +814,7 @@ $(document).ready(function() {
         if (details) {
             const fields = [
                 { key: 'district', label: '{{ $lang ? "Sector" : "District" }}' },
-                { key: 'first_line', label: '{{ $lang ? "Județ" : "County" }}' },
+                { key: 'first_line', label: '{{ $lang ? "Județ" : "City" }}' },
                 { key: 'second_line', label: '{{ $lang ? "Strada" : "Street" }}' },
                 { key: 'third_line', label: '{{ $lang ? "Număr" : "Number" }}' },
                 { key: 'town', label: '{{ $lang ? "Bloc" : "Block" }}' },
@@ -1223,7 +1232,7 @@ $(document).ready(function() {
                 { key: 'first_name', label: '{{ $lang ? "Prenume" : "First Name" }}' },
                 { key: 'phone', label: '{{ $lang ? "Telefon" : "Phone" }}' },
                 { key: 'district', label: '{{ $lang ? "Sector" : "District" }}' },
-                { key: 'first_line', label: '{{ $lang ? "Județ" : "County" }}' },
+                { key: 'first_line', label: '{{ $lang ? "Județ" : "City" }}' },
                 { key: 'second_line', label: '{{ $lang ? "Strada" : "Street" }}' },
                 { key: 'third_line', label: '{{ $lang ? "Număr" : "Number" }}' },
                 { key: 'town', label: '{{ $lang ? "Bloc" : "Block" }}' },
@@ -1249,7 +1258,7 @@ $(document).ready(function() {
                 { key: 'first_name', label: '{{ $lang ? "Prenume" : "First Name" }}' },
                 { key: 'phone', label: '{{ $lang ? "Telefon" : "Phone" }}' },
                 { key: 'district', label: '{{ $lang ? "Sector" : "District" }}' },
-                { key: 'first_line', label: '{{ $lang ? "Județ" : "County" }}' },
+                { key: 'first_line', label: '{{ $lang ? "Județ" : "City" }}' },
                 { key: 'second_line', label: '{{ $lang ? "Strada" : "Street" }}' },
                 { key: 'third_line', label: '{{ $lang ? "Număr" : "Number" }}' },
                 { key: 'town', label: '{{ $lang ? "Bloc" : "Block" }}' },
