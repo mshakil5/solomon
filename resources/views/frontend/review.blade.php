@@ -18,17 +18,6 @@
                         {{ $lang == 'ro' ? 'Formular de recenzie' : 'Review Form' }}
                     </h2>
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            {{ $lang == 'ro' ? 'Vă rugăm să corectați următoarele erori:' : 'Please fix the following errors:' }}
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $lang == 'ro' ? __('validation_translations.' . $error) : $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <div class="row">
                         <div class="col-12">
                             <input type="text" name="name" id="name" class="form-control" placeholder="{{ $lang == 'ro' ? 'Numele tău *' : 'Your Name *' }}" value="{{ old('name', auth()->check() ? auth()->user()->name : '') }}" required>
@@ -58,7 +47,7 @@
 
                     <div class="row mt-3">
                         <div class="col-12">
-                            <textarea name="review" rows="5" class="form-control" id="review" placeholder="{{ $lang == 'ro' ? 'Recenzia ta *' : 'Your Review *' }}" required>{{ old('review') }}</textarea>
+                            <textarea name="review" rows="5" class="form-control" id="review" placeholder="{{ $lang == 'ro' ? 'Recenzia ta *' : 'Your Review *' }}">{{ old('review') }}</textarea>
                         </div>
                     </div>
 
