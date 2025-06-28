@@ -13,6 +13,8 @@ use Illuminate\Support\Carbon;
 use App\Models\CompanyDetails;
 use App\Models\Invoice;
 use App\Models\Holiday;
+use App\Models\NewService;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
@@ -88,8 +90,8 @@ class ServiceController extends Controller
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'time' => 'required',
+            'date' => 'required|date_format:Y-m-d',
+            'time' => 'required|date_format:H:i',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
@@ -103,33 +105,50 @@ class ServiceController extends Controller
             ], 422);
         }
 
+        // Calculate type and additional fee
         $now = now();
         $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
         $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
-        $hour = $serviceDateTime->format('H');
+        $hour = (int) $serviceDateTime->format('H');
         $dayOfWeek = $serviceDateTime->dayOfWeek;
 
-        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
-        $openingHour = $company?->opening_time ?? '10:00';
-        $closingHour = $company?->closing_time ?? '18:00';
+        $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
 
-        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
-        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
-
-        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1; $fee = 400.00;
-        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2; $fee = 250.00;
-        } elseif ($hour < $opening || $hour >= $closing) {
-            $type = 3; $fee = 300.00;
-        } else {
-            $type = 4; $fee = 0.00;
+        if (!$company || $company->status == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Company is closed. Booking unavailable.'
+            ], 403);
         }
 
-        $service = Service::findOrFail($request->service_id);
-        $serviceFee = $service->price;
-        $totalFee = $serviceFee + $fee;
+        $openingHour = $company->opening_time ?? '09:00';
+        $closingHour = $company->closing_time ?? '18:00';
 
+        $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        $typeFees = [1 => 400.00, 2 => 250.00, 3 => 300.00, 4 => 0.00];
+
+        // Check holiday
+        $monthName = $serviceDateTime->format('F');
+        $day = $serviceDateTime->day;
+        $holiday = Holiday::where('month', $monthName)->where('day', $day)->where('status', true)->first();
+
+        if ($holiday || $dayOfWeek === 0) {
+            $type = 3;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2;
+        } elseif ($hour < $opening || $hour >= $closing) {
+            $type = 3;
+        } else {
+            $type = 4;
+        }
+
+        $additionalFee = $typeFees[$type];
+
+        // Create booking
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
             'service_id' => $request->service_id,
@@ -138,30 +157,22 @@ class ServiceController extends Controller
             'description' => $request->description,
             'date' => $request->date,
             'time' => $request->time,
-            'service_fee' => $serviceFee,
-            'additional_fee' => $fee,
-            'total_fee' => $totalFee,
-            'type' => $type
+            'additional_fee' => $additionalFee,
+            'type' => $type,
         ]);
-    
+
         if ($request->hasFile('files')) {
-            $files = is_array($request->file('files')) ? $request->file('files') : [$request->file('files')];
-        
-            foreach ($files as $file) {
+            foreach ($request->file('files') as $file) {
                 $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-                $storagePath = public_path('images/service');
-                $file->move($storagePath, $filename);
-        
-                $booking->files()->create([
-                    'file' => $filename
-                ]);
+                $file->move(public_path('images/service'), $filename);
+                $booking->files()->create(['file' => $filename]);
             }
-        }      
-    
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Booking created successfully',
-            'data' => $booking->load('files')
+            'data' => $booking->load('files'),
         ]);
     }
 
@@ -526,6 +537,28 @@ class ServiceController extends Controller
             'type' => $type,
             'type_label' => $typeLabels[$type]
         ]);
+    }
+
+    public function newServiceStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'need' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        NewService::create([
+            'user_id' => Auth::id(),
+            'need' => $request->need,
+        ]);
+
+        return response()->json([
+            'message' => 'Your message has been sent successfully.',
+        ], 201);
     }
 
 }

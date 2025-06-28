@@ -27,7 +27,7 @@
                   <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ date('d-m-Y', strtotime($data->created_at)) }}</td>
-                    <td>{{ $data->user->name ?? '' }} {{ $data->user->first_name ?? '' }}</td>
+                    <td>{{ $data->user->name ?? '' }} {{ $data->user->surname ?? '' }}</td>
                     <td>{!! $data->need !!}</td>
                   </tr>
                   @endforeach

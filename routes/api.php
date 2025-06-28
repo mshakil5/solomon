@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth:api']], function () {
   Route::get('/types', [ServiceController::class, 'getTypes']);
 
   Route::post('/booking/calculate-fee', [ServiceController::class, 'calculateFee']);
+  Route::post('/new-service', [ServiceController::class, 'newServiceStore']);
 
   Route::post('/service-booking', [ServiceController::class, 'serviceBookingStore']);
 

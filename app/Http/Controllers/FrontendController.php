@@ -35,6 +35,7 @@ use Stripe\Checkout\Session as StripeSession;
 use App\Models\Payment;
 use App\Models\Invoice;
 use App\Mail\PaymentSuccessUser;
+use App\Models\Holiday;
 
 class FrontendController extends Controller
 {
@@ -375,8 +376,19 @@ class FrontendController extends Controller
 
             $hour = (int) $serviceDateTime->format('H');
             $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+            $dayOfWeek = $serviceDateTime->dayOfWeek;
+            $monthName = $serviceDateTime->format('F');
+            $day = $serviceDateTime->day;
+            $holiday = Holiday::where('month', $monthName)
+            ->where('day', $day)
+            ->where('status', true)
+            ->first();
 
-            if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            if ($dayOfWeek === 0) {
+                $type = 3; // Sunday → Outside working hours
+            } elseif($holiday) {
+                $type = 3; // Holiday → Outside working hours
+            } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
                 $type = 1; // Emergency
             } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120 && $hour >= $opening && $hour < $closing) {
                 $type = 2; // Prioritized
@@ -412,49 +424,68 @@ class FrontendController extends Controller
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
+            // remove 'type' and 'additional_fee' from validation, since we'll calculate
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
+        // Parse date and time
         if ($request->filled('date_time')) {
             [$datePart, $timePart] = explode(' ', $request->date_time);
-            
             $date = Carbon::createFromFormat('d/m/Y', $datePart)->format('Y-m-d');
             $time = $timePart;
-
-            $request->merge([
-                'date' => $date,
-                'time' => $time,
-            ]);
+            $request->merge(['date' => $date, 'time' => $time]);
         }
-        
+
+        // Fetch company details & check status
+        $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
+        if (!$company || $company->status == 0) {
+            return back()->withErrors(['company' => 'Company is currently closed'])->withInput();
+        }
+
+        $openingHour = $company->opening_time ?? '09:00';
+        $closingHour = $company->closing_time ?? '18:00';
+
+        $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $date . ' ' . $time);
         $now = now();
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = (int) $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
 
-        $typeFees = [1 => 400, 2 => 250, 3 => 300, 4 => 0];
-        $serviceDateTime = $time ? Carbon::createFromFormat('Y-m-d H:i', "$date $time") : null;
+        // Check holiday
+        $monthName = $serviceDateTime->format('F');
+        $day = $serviceDateTime->day;
+        $holiday = Holiday::where('month', $monthName)->where('day', $day)->where('status', true)->first();
 
-        $hour = $serviceDateTime ? (int)$serviceDateTime->format('H') : null;
-        $day = $serviceDateTime ? $serviceDateTime->dayOfWeek : null;
+        // Fee structure
+        $typeFees = [
+            1 => 400, // Emergency
+            2 => 250, // Prioritized
+            3 => 300, // Outside working hours
+            4 => 0,   // Standard
+        ];
 
-        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
-        $open = (int)Carbon::createFromFormat('H:i', $company?->opening_time ?? '10:00')->format('H');
-        $close = (int)Carbon::createFromFormat('H:i', $company?->closing_time ?? '18:00')->format('H');
-
-        if ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) >= 0 && $now->diffInMinutes($serviceDateTime, false) <= 120) {
+        // Calculate type based on conditions
+        if ($holiday || $dayOfWeek === 0) {
+            $type = 3; // Holiday or Sunday → Outside working hours
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
             $type = 1; // Emergency
-        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $now->diffInMinutes($serviceDateTime, false) > 120 && $hour >= $open && $hour < $close) {
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
             $type = 2; // Prioritized
-        } elseif ($serviceDateTime && ($hour < $open || $hour >= $close)) {
-            $type = 3; // After-hours
+        } elseif ($hour < $opening || $hour >= $closing) {
+            $type = 3; // Outside working hours
         } else {
             $type = 4; // Standard
         }
 
         $additionalFee = $typeFees[$type];
 
-        // 🔄 Store uploaded files temporarily
+        // Handle files upload
         $tempFiles = [];
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
@@ -464,22 +495,15 @@ class FrontendController extends Controller
             }
         }
 
-        if ($additionalFee > 0) {
-            $requestData = $request->except('_token', 'files');
-            $requestData['type'] = $type;
-            $requestData['additional_fee'] = $additionalFee;
-            $requestData['temp_files'] = $tempFiles;
-            session(['booking_request' => $requestData]);
-
-            // return redirect()->route('paypal.booking.pay', ['amount' => $additionalFee]);
-            return redirect()->route('stripe.booking.pay');
-        }
-
-        // For free bookings, pass data directly
         $data = $request->except('_token', 'files');
         $data['type'] = $type;
         $data['additional_fee'] = $additionalFee;
         $data['temp_files'] = $tempFiles;
+
+        if ($additionalFee > 0) {
+            session(['booking_request' => $data]);
+            return redirect()->route('stripe.booking.pay');
+        }
 
         return $this->finalizeBooking($data, $type, $additionalFee);
     }
