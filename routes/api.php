@@ -20,6 +20,7 @@ Route::post('/register/send-otp', [PassportAuthController::class, 'requestRegist
 Route::post('/register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 Route::get('check-available-user/{id}', [PassportAuthController::class, 'checkUser']);
+Route::get('company-short-video', [FrontendController::class, 'companyShortVideo']);
 
 Route::get('/about-us', [FrontendController::class, 'aboutUs']);
 Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy']);
@@ -38,7 +39,6 @@ Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
 
 Route::group(['middleware' => ['auth:api']], function () {
   Route::get('company-status', [FrontendController::class, 'companyStatus']);
-  Route::get('company-short-video', [FrontendController::class, 'companyShortVideo']);
   Route::get('holidays', [FrontendController::class, 'holidays']);
   Route::get('welcome', [FrontendController::class, 'welcome']);
   Route::get('slider', [FrontendController::class, 'slider']);
