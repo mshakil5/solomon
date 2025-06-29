@@ -189,9 +189,10 @@ class CompanyDetailsController extends Controller
 
     public function uploadVideo(Request $request)
     {
-        $request->validate([
-            'short_video' => 'required|file|mimetypes:video/avi,video/mpeg,video/mp4,video/quicktime,video/webm|max:51200',
-        ]);
+      // return response()->json($request->all());
+        // $request->validate([
+        //     'short_video' => 'required|file|mimes:avi,mpeg,mp4,mov,webm|max:51200',
+        // ]);
 
         $company = CompanyDetails::first();
 
