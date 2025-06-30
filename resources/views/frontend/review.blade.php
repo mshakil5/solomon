@@ -47,7 +47,7 @@
 
                     <div class="row mt-3">
                         <div class="col-12">
-                            <textarea name="review" rows="5" class="form-control" id="review" placeholder="{{ $lang == 'ro' ? 'Recenzia ta *' : 'Your Review *' }}">{{ old('review') }}</textarea>
+                            <textarea name="review" rows="5" class="form-control" id="review" placeholder="{{ $lang == 'ro' ? 'Recenzia ta *' : 'Your Review *' }}" required>{{ old('review') }}</textarea>
                         </div>
                     </div>
 

@@ -162,27 +162,27 @@ class ServiceBookingController extends Controller
 
     public function cancelBooking(Request $request, $id)
     {
+        $lang = session('app_locale', 'ro');
+
         $booking = ServiceBooking::findOrFail($id);
+
         if ($booking->user_id != Auth::id()) {
-            return redirect()->back()
-                ->with('error', $request->lang == 'ro' 
-                    ? 'Rezervarea nu a fost găsită' 
-                    : 'Booking not found');
+            return redirect()->back()->with('error', $lang
+                ? 'Rezervarea nu a fost găsită'
+                : 'Booking not found');
         }
 
         if ($booking->status != 1) {
-            return redirect()->back()
-                ->with('error', $request->lang == 'ro'
-                    ? 'Rezervarea nu poate fi anulată în stadiul actual'
-                    : 'Booking cannot be cancelled in its current status');
+            return redirect()->back()->with('error', $lang
+                ? 'Rezervarea nu poate fi anulată în stadiul actual'
+                : 'Booking cannot be cancelled in its current status');
         }
 
         $booking->update(['status' => 4]);
 
-        return redirect()->route('user.service.bookings')
-            ->with('success', $request->lang == 'ro'
-                ? 'Rezervarea a fost anulată cu succes'
-                : 'Booking cancelled successfully');
+        return redirect()->route('user.service.bookings')->with('success', $lang
+            ? 'Rezervarea a fost anulată cu succes'
+            : 'Booking cancelled successfully');
     }
 
     public function reviewStore(Request $request, $id)

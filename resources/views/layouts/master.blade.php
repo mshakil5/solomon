@@ -141,24 +141,36 @@
 
     @yield('script')
 
+    @php
+        $lang = session('app_locale', 'ro');
+        $successTitle = $lang == 'ro' ? 'Succes!' : 'Success!';
+        $errorTitle = $lang == 'ro' ? 'Eroare' : 'Error';
+    @endphp
+
     @if(session('success'))
         <script>
             Swal.fire({
                 icon: 'success',
-                title: 'Success!',
+                title: {!! json_encode($successTitle) !!},
                 text: @json(session('success')),
             });
         </script>
+        @php
+            session()->forget('success');
+        @endphp
     @endif
 
     @if($errors->any())
         <script>
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
+                title: {!! json_encode($errorTitle) !!},
                 text: @json($errors->first()),
             });
         </script>
+        @php
+            session()->forget('errors');
+        @endphp
     @endif
 
 </body>

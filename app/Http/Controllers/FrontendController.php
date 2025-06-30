@@ -193,41 +193,56 @@ class FrontendController extends Controller
 
     public function contactMessage(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'contactemail.required' => 'Câmpul Email este obligatoriu.',
+            'contactemail.email' => 'Email-ul trebuie să fie valid.',
+            'firstname.required' => 'Câmpul Prenume este obligatoriu.',
+            'lastname.required' => 'Câmpul Nume este obligatoriu.',
+            'contactmessage.required' => 'Câmpul Mesaj este obligatoriu.',
+        ] : [
+            'contactemail.required' => 'Email field is required.',
+            'contactemail.email' => 'Email must be valid.',
+            'firstname.required' => 'First Name field is required.',
+            'lastname.required' => 'Last Name field is required.',
+            'contactmessage.required' => 'Message field is required.',
+        ];
+
         $request->validate([
             'contactemail' => ['required', 'email'],
             'firstname' => ['required', 'string'],
             'lastname' => ['required', 'string'],
             'contactmessage' => ['required'],
-        ], [
-            'firstname.required' => 'First Name field is required.',
-            'lastname.required' => 'Last Name field is required.',
-            'contactmessage.required' => 'Message field is required.',
-            'contactemail.required' => 'Email field is required.'
-        ]);
+        ], $messages);
 
-        $adminmail = Contact::where('id', 1)->first()->email;
+        $adminmail = Contact::where('id', 1)->value('email');
         $contactmail = $request->contactemail;
-        $ccEmails = $adminmail;
-        $msg = $request->contactmessage; 
+        $msg = $request->contactmessage;
 
-        if (isset($msg)) {
-            $array['firstname'] = $request->firstname; 
-            $array['lastname'] = $request->lastname; 
-            $array['email'] = $request->contactemail;
-            $array['subject'] = "Order Booking Confirmation";
-            $array['message'] = $msg;
-            $array['contactmail'] = $contactmail;
+        if ($msg) {
+            $array = [
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'email' => $contactmail,
+                'subject' => $lang == 'ro' ? 'Confirmarea comenzii' : 'Order Booking Confirmation',
+                'message' => $msg,
+                'contactmail' => $contactmail,
+            ];
 
-            Mail::to($ccEmails)
-                ->send(new ContactMessageMail($array));
-                
-                
-            Mail::to($adminmail)
-                ->send(new ContactMessageMail($array));
+            Mail::to($adminmail)->send(new ContactMessageMail($array));
 
-            return redirect()->back()->with("success", "Message sent successfully!");
+            $successMsg = $lang == 'ro' 
+                ? 'Mesajul a fost trimis cu succes!' 
+                : 'Message sent successfully!';
+
+            return redirect()->back()->with('success', $successMsg);
         } else {
-            return redirect()->back()->with("error", "Server Error!");
+            $errorMsg = $lang == 'ro' 
+                ? 'Eroare server!' 
+                : 'Server Error!';
+
+            return redirect()->back()->with('error', $errorMsg);
         }
     }
 
@@ -417,6 +432,30 @@ class FrontendController extends Controller
 
     public function bookingStore(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'service_id.required' => 'Serviciul este obligatoriu.',
+            'service_id.exists' => 'Serviciul selectat nu există.',
+            'date_time.required' => 'Data și ora sunt obligatorii.',
+            'billing_address_id.required' => 'Adresa de facturare este obligatorie.',
+            'billing_address_id.exists' => 'Adresa de facturare nu există.',
+            'shipping_address_id.required' => 'Adresa de livrare este obligatorie.',
+            'shipping_address_id.exists' => 'Adresa de livrare nu există.',
+            'files.*.file' => 'Fișierul trebuie să fie valid.',
+            'files.*.max' => 'Fișierul nu trebuie să depășească 10MB.',
+        ] : [
+            'service_id.required' => 'Service is required.',
+            'service_id.exists' => 'Selected service does not exist.',
+            'date_time.required' => 'Date and time are required.',
+            'billing_address_id.required' => 'Billing address is required.',
+            'billing_address_id.exists' => 'Billing address does not exist.',
+            'shipping_address_id.required' => 'Shipping address is required.',
+            'shipping_address_id.exists' => 'Shipping address does not exist.',
+            'files.*.file' => 'File must be valid.',
+            'files.*.max' => 'File must not exceed 10MB.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
@@ -424,14 +463,12 @@ class FrontendController extends Controller
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
-            // remove 'type' and 'additional_fee' from validation, since we'll calculate
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        // Parse date and time
         if ($request->filled('date_time')) {
             [$datePart, $timePart] = explode(' ', $request->date_time);
             $date = Carbon::createFromFormat('d/m/Y', $datePart)->format('Y-m-d');
@@ -442,7 +479,8 @@ class FrontendController extends Controller
         // Fetch company details & check status
         $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
         if (!$company || $company->status == 0) {
-            return back()->withErrors(['company' => 'Company is currently closed'])->withInput();
+            $errorMsg = $lang == 'ro' ? 'Compania este închisă momentan.' : 'Company is currently closed';
+            return back()->withErrors(['company' => $errorMsg])->withInput();
         }
 
         $openingHour = $company->opening_time ?? '09:00';
@@ -505,7 +543,12 @@ class FrontendController extends Controller
             return redirect()->route('stripe.booking.pay');
         }
 
-        return $this->finalizeBooking($data, $type, $additionalFee);
+        $successMsg = $lang == 'ro' 
+            ? 'Cererea de rezervare a fost trimisă cu succes!' 
+            : 'Booking request submitted successfully!';
+
+        return $this->finalizeBooking($data, $type, $additionalFee)
+                    ->with('success', $successMsg);
     }
 
     public function stripeBookingPay()
@@ -720,20 +763,43 @@ class FrontendController extends Controller
 
     public function reviewStore(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'name.required' => 'Numele este obligatoriu.',
+            'name.max' => 'Numele nu poate depăși 255 caractere.',
+            'email.required' => 'Email-ul este obligatoriu.',
+            'email.email' => 'Email-ul trebuie să fie valid.',
+            'email.max' => 'Email-ul nu poate depăși 255 caractere.',
+            'phone.required' => 'Telefonul este obligatoriu.',
+            'phone.size' => 'Telefonul trebuie să aibă exact 10 cifre.',
+            'phone.regex' => 'Telefonul trebuie să conțină doar cifre.',
+            'stars.required' => 'Rating-ul este obligatoriu.',
+            'stars.integer' => 'Rating-ul trebuie să fie un număr întreg.',
+            'stars.min' => 'Rating-ul minim este 1.',
+            'stars.max' => 'Rating-ul maxim este 5.',
+            'review.required' => 'Recenzia este obligatorie.',
+            'review.max' => 'Recenzia nu poate depăși 1000 caractere.',
+        ] : [
+            'review.max' => 'The review may not be greater than 1000 characters.',
+        ];
+
         $validated = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
             'stars' => 'required|integer|min:1|max:5',
-            'review' => 'required|max:1000'
-        ], [
-            'review.max' => 'The review may not be greater than 1000 characters.',
-        ]);
+            'review' => 'required|max:1000',
+        ], $messages);
 
         $validated['status'] = 0;
         Review::create($validated);
 
-        return redirect()->back()->with('success', 'Review submitted successfully!');
+        $successMsg = $lang == 'ro' 
+            ? 'Recenzia a fost trimisă cu succes!' 
+            : 'Review submitted successfully!';
+
+        return redirect()->back()->with('success', $successMsg);
     }
 
     public function showRequestQuoteForm()
@@ -743,27 +809,83 @@ class FrontendController extends Controller
 
     public function requestQuote(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'name.required' => 'Numele este obligatoriu.',
+            'name.string' => 'Numele trebuie să fie text.',
+            'name.max' => 'Numele nu poate depăși 255 caractere.',
+            'email.required' => 'Email-ul este obligatoriu.',
+            'email.email' => 'Email-ul trebuie să fie valid.',
+            'email.max' => 'Email-ul nu poate depăși 255 caractere.',
+            'phone.required' => 'Telefonul este obligatoriu.',
+            'phone.size' => 'Telefonul trebuie să aibă exact 10 cifre.',
+            'phone.regex' => 'Telefonul trebuie să conțină doar cifre.',
+            'address_first_line.required' => 'Adresa este obligatorie.',
+            'address_first_line.string' => 'Adresa trebuie să fie text.',
+            'address_first_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'address_second_line.string' => 'Adresa trebuie să fie text.',
+            'address_second_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'address_third_line.string' => 'Adresa trebuie să fie text.',
+            'address_third_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'town.string' => 'Localitatea trebuie să fie text.',
+            'town.max' => 'Localitatea nu poate depăși 400 caractere.',
+            'postcode.string' => 'Codul poștal trebuie să fie text.',
+            'postcode.max' => 'Codul poștal nu poate depăși 400 caractere.',
+            'details.required' => 'Detaliile sunt obligatorii.',
+            'details.string' => 'Detaliile trebuie să fie text.',
+            'details.min' => 'Detaliile trebuie să aibă cel puțin 10 caractere.',
+            'details.max' => 'Detaliile nu pot depăși 1500 caractere.',
+            'file.max' => 'Fișierul nu poate depăși 10MB.',
+        ] : [
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name may not be greater than 255 characters.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email must be valid.',
+            'email.max' => 'Email may not be greater than 255 characters.',
+            'phone.required' => 'Phone is required.',
+            'phone.size' => 'Phone must be exactly 10 digits.',
+            'phone.regex' => 'Phone must contain only digits.',
+            'address_first_line.required' => 'Address is required.',
+            'address_first_line.string' => 'Address must be a string.',
+            'address_first_line.max' => 'Address may not be greater than 255 characters.',
+            'address_second_line.string' => 'Address must be a string.',
+            'address_second_line.max' => 'Address may not be greater than 255 characters.',
+            'address_third_line.string' => 'Address must be a string.',
+            'address_third_line.max' => 'Address may not be greater than 255 characters.',
+            'town.string' => 'Town must be a string.',
+            'town.max' => 'Town may not be greater than 400 characters.',
+            'postcode.string' => 'Postcode must be a string.',
+            'postcode.max' => 'Postcode may not be greater than 400 characters.',
+            'details.required' => 'Details are required.',
+            'details.string' => 'Details must be a string.',
+            'details.min' => 'Details must be at least 10 characters.',
+            'details.max' => 'Details may not be greater than 1500 characters.',
+            'file.max' => 'File size may not exceed 10MB.',
+        ];
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|size:10|regex:/^[0-9]+$/',
+            'phone' => ['required', 'string', 'size:10', 'regex:/^[0-9]+$/'],
             'address_first_line' => 'required|string|max:255',
             'address_second_line' => 'nullable|string|max:255',
             'address_third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:400',
             'postcode' => 'nullable|string|max:400',
             'details' => 'required|string|min:10|max:1500',
-            'file' => 'nullable|max:10240'
-        ]);
+            'file' => 'nullable|max:10240',
+        ], $messages);
 
         $quote = new Quote();
         $quote->name = $validatedData['name'];
         $quote->email = $validatedData['email'];
         $quote->phone = $validatedData['phone'];
         $quote->address_first_line = $validatedData['address_first_line'];
-        $quote->address_second_line = $validatedData['address_second_line'];
-        $quote->address_third_line = $validatedData['address_third_line'];
-        $quote->postcode = $validatedData['postcode'];
+        $quote->address_second_line = $validatedData['address_second_line'] ?? null;
+        $quote->address_third_line = $validatedData['address_third_line'] ?? null;
+        $quote->postcode = $validatedData['postcode'] ?? null;
         $quote->town = $validatedData['town'] ?? null;
         $quote->details = $validatedData['details'];
         $quote->save();
@@ -776,7 +898,11 @@ class FrontendController extends Controller
             $quote->save();
         }
 
-        return redirect()->back()->with('success', 'Your quote request has been submitted successfully!');
+        $successMsg = $lang == 'ro' 
+            ? 'Cererea ta de ofertă a fost trimisă cu succes!' 
+            : 'Your quote request has been submitted successfully!';
+
+        return redirect()->back()->with('success', $successMsg);
     }
 
     public function checkCity(Request $request)
@@ -820,6 +946,58 @@ class FrontendController extends Controller
 
     public function joinUsStore(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'name.required' => 'Numele este obligatoriu.',
+            'name.string' => 'Numele trebuie să fie text.',
+            'name.max' => 'Numele nu poate depăși 255 caractere.',
+            'email.required' => 'Email-ul este obligatoriu.',
+            'email.email' => 'Email-ul trebuie să fie valid.',
+            'email.max' => 'Email-ul nu poate depăși 255 caractere.',
+            'phone.required' => 'Telefonul este obligatoriu.',
+            'phone.size' => 'Telefonul trebuie să aibă exact 10 cifre.',
+            'phone.regex' => 'Telefonul trebuie să conțină doar cifre.',
+            'address_first_line.string' => 'Adresa trebuie să fie text.',
+            'address_first_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'address_second_line.string' => 'Adresa trebuie să fie text.',
+            'address_second_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'address_third_line.string' => 'Adresa trebuie să fie text.',
+            'address_third_line.max' => 'Adresa nu poate depăși 255 caractere.',
+            'town.string' => 'Localitatea trebuie să fie text.',
+            'town.max' => 'Localitatea nu poate depăși 255 caractere.',
+            'postcode.string' => 'Codul poștal trebuie să fie text.',
+            'postcode.max' => 'Codul poștal nu poate depăși 10 caractere.',
+            'cv.required' => 'CV-ul este obligatoriu.',
+            'cv.file' => 'CV-ul trebuie să fie un fișier.',
+            'cv.mimes' => 'CV-ul trebuie să fie în format pdf sau docx.',
+            'cv.max' => 'CV-ul nu poate depăși 3MB.',
+        ] : [
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name may not be greater than 255 characters.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email must be valid.',
+            'email.max' => 'Email may not be greater than 255 characters.',
+            'phone.required' => 'Phone is required.',
+            'phone.size' => 'Phone must be exactly 10 digits.',
+            'phone.regex' => 'Phone must contain only digits.',
+            'address_first_line.string' => 'Address must be a string.',
+            'address_first_line.max' => 'Address may not be greater than 255 characters.',
+            'address_second_line.string' => 'Address must be a string.',
+            'address_second_line.max' => 'Address may not be greater than 255 characters.',
+            'address_third_line.string' => 'Address must be a string.',
+            'address_third_line.max' => 'Address may not be greater than 255 characters.',
+            'town.string' => 'Town must be a string.',
+            'town.max' => 'Town may not be greater than 255 characters.',
+            'postcode.string' => 'Postcode must be a string.',
+            'postcode.max' => 'Postcode may not be greater than 10 characters.',
+            'cv.required' => 'CV is required.',
+            'cv.file' => 'CV must be a file.',
+            'cv.mimes' => 'CV must be a pdf or docx file.',
+            'cv.max' => 'CV size may not exceed 3MB.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -829,10 +1007,8 @@ class FrontendController extends Controller
             'address_third_line' => 'nullable|string|max:255',
             'town' => 'nullable|string|max:255',
             'postcode' => 'nullable|string|max:10',
-            // 'category_ids' => 'required|array',
-            // 'category_ids.*' => 'exists:categories,id',
             'cv' => 'required|file|mimes:pdf,docx|max:3000',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -848,8 +1024,6 @@ class FrontendController extends Controller
         $career->town = $request->town;
         $career->postcode = $request->postcode;
         $career->about = $request->about;
-        // $career->category_ids = json_encode($request->category_ids);
-        // $career->sub_category_ids = json_encode($request->sub_category_ids);
         $career->created_by = auth()->id();
 
         if ($request->hasFile('cv')) {
@@ -861,11 +1035,17 @@ class FrontendController extends Controller
 
         $career->save();
 
-        return redirect()->back()->with('success', 'Your data has been submitted successfully!');
+        $successMsg = $lang == 'ro'
+            ? 'Datele tale au fost trimise cu succes!'
+            : 'Your data has been submitted successfully!';
+
+        return redirect()->back()->with('success', $successMsg);
     }
 
     public function callBack(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
         $callback = new CallBack();
         $callback->user_id = Auth::id();
         $callback->date = Carbon::now()->format('Y-m-d');
@@ -876,17 +1056,25 @@ class FrontendController extends Controller
                 'name' => Auth::user()->name,
                 'email' => Auth::user()->email,
                 'phone' => Auth::user()->phone,
-                'subject' => 'Callback Request', 
+                'subject' => $lang == 'ro' ? 'Cerere de apelare' : 'Callback Request',
             ];
 
             $adminEmail = Contact::where('id', 1)->value('email');
 
             Mail::to($adminEmail)->send(new CallbackMail($userData));
 
-            return redirect()->back()->with('success', 'Callback request sent successfully.');
+            $successMsg = $lang == 'ro' 
+                ? 'Cererea de apelare a fost trimisă cu succes.' 
+                : 'Callback request sent successfully.';
+
+            return redirect()->back()->with('success', $successMsg);
         } else {
-          return redirect()->back()->with('error', 'Failed to request a callback.');
-      }
+            $errorMsg = $lang == 'ro' 
+                ? 'Cererea de apelare a eșuat.' 
+                : 'Failed to request a callback.';
+
+            return redirect()->back()->with('error', $errorMsg);
+        }
     }
 
     public function storeAdditionalAddress(Request $request)

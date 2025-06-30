@@ -47,30 +47,43 @@ class LoginController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {   
-        $input = $request->all();
-     
-        $this->validate($request, [
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'email.required' => 'Email este obligatoriu.',
+            'email.email' => 'Email-ul trebuie să fie valid.',
+            'password.required' => 'Parola este obligatorie.',
+        ] : [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email must be valid.',
+            'password.required' => 'Password is required.',
+        ];
+
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-        ]);
-     
+        ], $messages);
+
         $redirectTo = session('redirect_to', route('homepage'));
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
+
+        if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
             session()->forget('redirect_to');
             if (auth()->user()->is_type == '1') {
                 return redirect()->route('admin.dashboard');
-            }else if (auth()->user()->is_type == '2') {
+            } elseif (auth()->user()->is_type == '2') {
                 return redirect()->route('staff.home');
             } elseif (auth()->user()->is_type == '0') {
-            return redirect()->to($redirectTo);
-            } else{
+                return redirect()->to($redirectTo);
+            } else {
                 return redirect()->route('homepage');
             }
-        }else{
-            return redirect()->route('login')->withInput()->with('error', 'Wrong credentials. Please try again.');
+        } else {
+            $errorMessage = $lang == 'ro' 
+                ? 'Datele de autentificare sunt greșite. Încearcă din nou.' 
+                : 'Wrong credentials. Please try again.';
+            
+            return redirect()->route('login')->withInput()->with('error', $errorMessage);
         }
-          
     }
 
     public function showPasswordRequestForm()
