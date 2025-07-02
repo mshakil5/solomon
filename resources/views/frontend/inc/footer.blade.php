@@ -13,11 +13,11 @@
         </a>
         |
         <a href="{{ route('privacy') }}">
-            {{ session('app_locale', 'ro') == 'ro' ? 'Politica de confidențialitate' : 'Privacy Policy' }}
+            {{ session('app_locale', 'ro') == 'ro' ? 'Privacy Policy' : 'Privacy Policy' }}
         </a>
         |
         <a href="{{ route('terms') }}">
-            {{ session('app_locale', 'ro') == 'ro' ? 'Termeni și condiții' : 'Terms & Conditions' }}
+            {{ session('app_locale', 'ro') == 'ro' ? 'Terms & Conditions' : 'Terms & Conditions' }}
         </a>
     </p>
     <div class="social-icons">
