@@ -41,11 +41,19 @@ class HomeController extends Controller
      */
     public function adminHome(): View
     {
-        $newJobsCount = ServiceBooking::where('status', 1)->count();
+        $newJobs = ServiceBooking::where('notified', false)->latest()->get();
+        $newJobsCount = $newJobs->count();
+
+        $placedJobsCount = ServiceBooking::where('status', 1)->count();
         $processingJobsCount = ServiceBooking::where('status', 2)->count();
         $completedJobsCount = ServiceBooking::where('status', 3)->count();
-        $cancelledJobsCount = ServiceBooking::where('status', 3)->count();
-        return view('admin.dashboard', compact('newJobsCount', 'processingJobsCount', 'completedJobsCount', 'cancelledJobsCount'));
+        $cancelledJobsCount = ServiceBooking::where('status', 4)->count();
+
+        return view('admin.dashboard', compact(
+            'newJobs', 'newJobsCount',
+            'placedJobsCount', 'processingJobsCount',
+            'completedJobsCount', 'cancelledJobsCount'
+        ));
     }
   
     /**

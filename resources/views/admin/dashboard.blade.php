@@ -18,7 +18,7 @@
                         <p>Placed Bookings</p>
                     </div>
                     <div class="badge badge-light" style="font-size: 1.5rem;">
-                        {{ $newJobsCount }}
+                        {{ $placedJobsCount }}
                     </div>
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
@@ -77,6 +77,95 @@
                 </div>
             </a>
         </div>
+
+        <div class="col-lg-12">
+            <section class="connectedSortable">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="ion ion-clipboard mr-1"></i>
+                            <b id="newJobsCount">{{ count($newJobs) }}</b> New Bookings
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped" id="newJobsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($newJobs as $job)
+                                    @php
+                                        $createdAt = \Carbon\Carbon::parse($job->created_at);
+                                        $timeDiff = $createdAt->diffForHumans();
+                                        $timeDiffInHours = $createdAt->diffInHours();
+                                        $badgeClass = match(true) {
+                                            $timeDiffInHours <= 1 => 'badge-primary',
+                                            $timeDiffInHours <= 6 => 'badge-secondary',
+                                            $timeDiffInHours <= 24 => 'badge-info',
+                                            $timeDiffInHours <= 168 => 'badge-warning',
+                                            default => 'badge-danger',
+                                        };
+                                    @endphp
+                                    <tr id="job-{{ $job->id }}">
+                                        <td>
+                                            <input type="checkbox" onclick="return markAsNotified(this, {{ $job->id }})" style="cursor: pointer;" title="Mark as notified">
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($job->created_at)->format('d-m-Y') }}</td>
+                                        <td><b>{{ ($job->user->name ?? '') . ' ' . ($job->user->surname ?? '') ?: 'Unknown' }}</b></td>
+                                        <td>
+                                            @php
+                                                $typeText = match($job->type) {
+                                                    1 => 'Emergency',
+                                                    2 => 'Prioritized',
+                                                    3 => 'Outside Hours',
+                                                    default => 'Standard',
+                                                };
+                                                $badgeClass = match($job->type) {
+                                                    1 => 'bg-danger',
+                                                    2 => 'bg-warning',
+                                                    3 => 'bg-info',
+                                                    default => 'bg-success',
+                                                };
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }}">{{ $typeText }}</span>
+                                        </td>
+
+                                        <td>
+                                            @php
+                                                $statusLabel = match($job->status) {
+                                                    1 => 'Placed',
+                                                    2 => 'Confirmed',
+                                                    3 => 'Completed',
+                                                    4 => 'Cancelled',
+                                                    default => 'Unknown',
+                                                };
+                                            @endphp
+                                            {{ $statusLabel }}
+                                        </td>
+                                        <td>
+                                            <small class="badge {{ $badgeClass }}">
+                                                <i class="far fa-clock"></i> {{ $timeDiff }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.booking.details', $job->id) }}" class="btn btn-sm btn-info">View</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 
       <!-- /.row -->
@@ -86,5 +175,40 @@
 @endsection
 
 @section('script')
+
+<script>
+  function markAsNotified(checkbox, bookingId) {
+      if (!confirm('Mark this booking as notified?')) {
+          checkbox.checked = false;
+          return false;
+      }
+
+      $.ajax({
+          url: '{{ route("service.bookings.notify") }}',
+          method: 'POST',
+          data: {
+              _token: '{{ csrf_token() }}',
+              booking_id: bookingId
+          },
+          success: function (res) {
+              if (res.success) {
+                  $('#job-' + bookingId).fadeOut();
+                  let count = parseInt($('#newJobsCount').text()) || 0;
+                  $('#newJobsCount').text(count - 1);
+              }
+          },
+          error: function (err) {
+              checkbox.checked = false;
+              console.error(err);
+          }
+      });
+
+      return true;
+  }
+  $('#newJobsTable').DataTable({
+      responsive: true,
+      autoWidth: false,
+  });
+</script>
 
 @endsection

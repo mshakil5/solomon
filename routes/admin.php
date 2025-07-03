@@ -54,6 +54,9 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/get-complete', [WorkController::class, 'complete'])->name('admin.complete');
     Route::get('/get-cancel', [WorkController::class, 'cancel'])->name('admin.cancel');
 
+    Route::post('/service-bookings/notify', [ServiceBookingController::class, 'markAsNotified'])->name('service.bookings.notify');
+
+
     Route::get('/service-bookings', [ServiceBookingController::class, 'allServiceBooking'])->name('admin.service.bookings');
 
     Route::get('/new-service-bookings', [ServiceBookingController::class, 'newServiceBooking'])->name('admin.service.bookings.new');

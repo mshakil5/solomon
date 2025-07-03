@@ -74,4 +74,14 @@ class ServiceBookingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function markAsNotified(Request $request)
+    {
+        $booking = ServiceBooking::findOrFail($request->booking_id);
+        $booking->notified = true;
+        $booking->save();
+
+        return response()->json(['success' => true]);
+    }
+
+
 }
