@@ -15,6 +15,7 @@ use App\Models\Invoice;
 use App\Models\Holiday;
 use App\Models\NewService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
@@ -551,13 +552,23 @@ class ServiceController extends Controller
             ], 422);
         }
 
-        NewService::create([
-            'user_id' => Auth::id(),
-            'need' => $request->need,
+        $title = $request->need;
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Service::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        $service = Service::create([
+            'title_english'  => $title,
+            'slug'           => $slug,
+            'status'         => 2,
         ]);
 
         return response()->json([
-            'message' => 'Your message has been sent successfully.',
+            'message' => 'New Service Created Go to service booking url.',
+            'service' => $service,
         ], 201);
     }
 

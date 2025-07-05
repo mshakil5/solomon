@@ -165,7 +165,7 @@
             Swal.fire({
                 icon: 'error',
                 title: {!! json_encode($errorTitle) !!},
-                text: @json($errors->first()),
+                html: {!! json_encode($errors->first()) !!},
             });
         </script>
         @php

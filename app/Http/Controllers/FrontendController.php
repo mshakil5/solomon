@@ -36,6 +36,7 @@ use App\Models\Payment;
 use App\Models\Invoice;
 use App\Mail\PaymentSuccessUser;
 use App\Models\Holiday;
+use Illuminate\Support\Str;
 
 class FrontendController extends Controller
 {
@@ -1154,16 +1155,54 @@ class FrontendController extends Controller
 
     public function newServiceStore(Request $request)
     {
+        $lang = session('app_locale', 'ro');
+
+        $messages = $lang == 'ro' ? [
+            'need.required' => 'Câmpul „Detalii serviciu” este obligatoriu.',
+            'need.string'   => 'Câmpul „Detalii serviciu” trebuie să fie text.',
+            'auth.required' => 'Trebuie să fii autentificat pentru a trimite mesajul.',
+        ] : [
+            'need.required' => 'The Service Details field is required.',
+            'need.string'   => 'The Service Details field must be a string.',
+            'auth.required' => 'You must be logged in to submit the message.',
+        ];
+
+        if (!Auth::check()) {
+            $loginUrl = route('login', ['redirect_to' => route('new.service')]);
+
+            $errorMessage = $lang == 'ro'
+                ? 'Trebuie să fii autentificat pentru a trimite mesajul. <a href="' . $loginUrl . '">Autentifică-te aici</a>.'
+                : 'You must be logged in to submit the message. <a href="' . $loginUrl . '">Login here</a>.';
+
+            return back()
+                ->withErrors(['auth' => $errorMessage])
+                ->withInput();
+        }
+
+
         $request->validate([
             'need' => 'required|string',
+        ], $messages);
+
+        $title = $request->need;
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Service::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        $service = Service::create([
+            'title_english'   => $lang == 'en' ? $title : null,
+            'title_romanian'  => $lang == 'ro' ? $title : null,
+            'slug'            => $slug,
+            'status'          => 2,
         ]);
 
-        NewService::create([
-            'user_id' => Auth::id(),
-            'need' => $request->need,
-        ]);
-
-        return back()->with('success', 'Mesajul tău a fost trimis cu succes.');
+        return redirect()->route('service.booking', ['slug' => $slug])
+            ->with('success', $lang == 'ro' 
+                ? 'Mesajul tău a fost trimis cu succes.' 
+                : 'Your message has been sent successfully.');
     }
 
 }

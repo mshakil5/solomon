@@ -135,16 +135,16 @@
                         
                       @endif
                     <td>
-                      {{$data->title_english}}( {{$data->title_romanian}} )
+                      {{$data->title_english ?? ''}}( {{$data->title_romanian ?? ''}} )
                     </td>
                     <td>
-                      {{$data->type->title_english}} ({{$data->type->title_romanian}})
+                      {{$data->type->title_english ?? ''}} ({{$data->type->title_romanian ?? ''}})
                     </td>
                     <td>
-                      {!! $data->des_english !!} 
+                      {!! $data?->des_english ?? '' !!}
                     </td>
                     <td>
-                       {!! $data->des_romanian !!}</td>
+                       {!! $data->des_romanian ?? '' !!}</td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input toggle-status" id="status{{ $data->id }}" data-id="{{ $data->id }}"

@@ -40,7 +40,7 @@
                 <label for="need" class="form-label fw-bold">
                     Spune-ne mai jos ce ai nevoie, iar noi îți pregătim o ofertă personalizată
                 </label>
-                <textarea id="need" name="need" class="form-control" rows="4" placeholder="Scrie aici..." required></textarea>
+                <textarea id="need" name="need" class="form-control" rows="4" placeholder="Scrie aici..." required>{{ old('need') }}</textarea>
               </div>
               <div class="d-flex justify-content-center my-5">
                   <div class="col-6">
