@@ -595,6 +595,8 @@ class FrontendController extends Controller
             ]
         ];
 
+        $cities = ['București'];
+
         if (!$data) {
             return response()->json([
                 'success' => false,
@@ -607,8 +609,11 @@ class FrontendController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data,
-            'openingDayTime' => $openingDayTime
+            'openingDayTime' => $openingDayTime,
+            'cities' => $cities
         ], 200);
+
+
     }
 
     public function companyStatus()
