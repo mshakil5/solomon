@@ -579,19 +579,19 @@ class FrontendController extends Controller
 
         $openingDayTime = [
             'sunday_to_friday' => [
-                'day' => "Saturday to Friday" ?? null,
+                'day' => "Luni - Vineri" ?? null,
                 'opening_time' => $data->opening_time ?? null,
                 'closing_time' => $data->closing_time ?? null,
             ],
 
             'saturday' => [
-                'day' => "Saturday" ?? null,
+                'day' => "Sâmbătă" ?? null,
                 'opening_time' => "09:00" ?? null,
                 'closing_time' => "14:00" ?? null,
             ],
 
             'closed' => [
-                'day' => "Sunday" ?? null,
+                'day' => "închis" ?? null,
             ]
         ];
 
