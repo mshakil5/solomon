@@ -146,8 +146,12 @@
 
                 <div class="card-header text-center bg-primary text-white">
                     <h2>
+                      @if($service)
                         {{ $lang ? 'Finalizează rezervarea pentru' : 'Complete Your Booking for' }} 
                         {{ $lang ? $service->title_romanian : $service->title_english }}
+                      @else
+                        {{ $lang ? 'Solicitare serviciu personalizat' : 'Custom service request' }}
+                      @endif
                         @if(!is_null($type) && isset($typeNames[$type]))
                             <span class="badge bg-info ms-3" style="font-size: 0.5em;">
                                 {{ $lang ? 'Ați ales: ' : 'You have chosen: ' }}{{ $typeNames[$type] }}
@@ -170,13 +174,18 @@
 
                     <form id="bookingForm" action="{{ route('booking.store') }}" method="post" role="form" enctype="multipart/form-data">
                         @csrf
+                        @if($service)
                         <input type="hidden" name="service_id" value="{{ $service->id }}">
+                        @else
+                            <input type="hidden" name="description" value="{{ $description }}">
+                        @endif
                         <input type="hidden" name="selected_type" value="{{ $type }}" id="selected_type">
                         <input type="hidden" name="date_time" id="date_time" value="">
 
                         <!-- Step 1: Service Details -->
                         <div class="step step-1">
                             <div class="row mb-4">
+                              @if($service)
                                 <div class="col-md-4">
                                     <img src="{{ asset('images/service/' . $service->image) }}" 
                                          alt="{{ $lang ? $service->title_romanian : $service->title_english }}" 
@@ -188,6 +197,12 @@
                                     <p class="lead">{!! $lang ? $service->des_romanian : $service->des_english !!}</p>
                                     <h4 class="text-success d-none">{{ $lang ? 'Preț:' : 'Price:' }} {{ number_format($service->price, 2) }}RON</h4>
                                 </div>
+                                @else
+                                    <div class="col-12">
+                                        <h3 class="text-primary">{{ $description }}</h3>
+                                        <p class="lead">{{ $lang ? 'Serviciu personalizat' : 'Custom service' }}</p>
+                                    </div>
+                                @endif
                             </div>
                             
                             <h4 class="mb-3 border-bottom pb-2">{{ $lang ? 'Informații suplimentare' : 'Additional Information' }}</h4>
@@ -402,6 +417,7 @@
                         <!-- Step 4: Review & Submit -->
                         <div class="step step-4" style="display: none;">
                             <h4 class="mb-4 border-bottom pb-2">{{ $lang ? 'Verifică rezervarea' : 'Review Your Booking' }}</h4>
+                            @if($service)
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $lang ? 'Detalii serviciu' : 'Service Details' }}</h5>
@@ -423,6 +439,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $lang ? 'Programare' : 'Schedule' }}</h5>
@@ -463,7 +480,7 @@
                                     <div id="description-preview" class="d-flex flex-wrap gap-2 w-100" style="white-space: normal; word-break: break-word;"></div>
                                 </div>
                             </div>
-                            @if ($service->information)
+                            @if ($service && $service->information)
                                 <div class="form-check mb-4">
                                     <label class="form-check-label">
                                         {{ $lang ? 'Informații' : 'Information' }}

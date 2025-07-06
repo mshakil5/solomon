@@ -263,18 +263,24 @@ class FrontendController extends Controller
         return view('frontend.post_job', compact('category', 'companyDetails','subcategory'));
     }
 
-    public function serviceBooking($slug, $type = null)
+    public function serviceBooking($slug=null, $type = null)
     {
         if (!auth()->check()) {
             abort(403);
         }
+        $description = null;
+        $service = null;
 
-        $service = Service::where('slug', $slug)->firstOrFail();
+          if ($slug !== null) {
+              $service = Service::where('slug', $slug)->firstOrFail();
+          } else {
+              $description = request('need') ?? 'Requested Service';
+          }
         $shippingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->latest()->get();
         $billingAddresses = AdditionalAddress::where('user_id', auth()->user()->id)->latest()->get();
 
 
-        return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses','type'));
+        return view('frontend.service_booking', compact('service','shippingAddresses','billingAddresses','type','description'));
     }
 
     public function calculateFee_old(Request $request)
@@ -436,7 +442,6 @@ class FrontendController extends Controller
         $lang = session('app_locale', 'ro');
 
         $messages = $lang == 'ro' ? [
-            'service_id.required' => 'Serviciul este obligatoriu.',
             'service_id.exists' => 'Serviciul selectat nu există.',
             'date_time.required' => 'Data și ora sunt obligatorii.',
             'billing_address_id.required' => 'Adresa de facturare este obligatorie.',
@@ -446,7 +451,6 @@ class FrontendController extends Controller
             'files.*.file' => 'Fișierul trebuie să fie valid.',
             'files.*.max' => 'Fișierul nu trebuie să depășească 10MB.',
         ] : [
-            'service_id.required' => 'Service is required.',
             'service_id.exists' => 'Selected service does not exist.',
             'date_time.required' => 'Date and time are required.',
             'billing_address_id.required' => 'Billing address is required.',
@@ -458,7 +462,7 @@ class FrontendController extends Controller
         ];
 
         $validator = Validator::make($request->all(), [
-            'service_id' => 'required|exists:services,id',
+            'service_id' => 'nullable|exists:services,id',
             'description' => 'nullable|string',
             'date_time' => 'required',
             'billing_address_id' => 'required|exists:additional_addresses,id',
@@ -615,11 +619,14 @@ class FrontendController extends Controller
 
     public function finalizeBooking(array $data, int $type, float $fee)
     {
-        $service = Service::findOrFail($data['service_id']);
+        $service = null;
+        if (!empty($data['service_id'])) {
+            $service = Service::findOrFail($data['service_id']);
+        }
 
         $booking = ServiceBooking::create([
             'user_id' => auth()->id(),
-            'service_id' => $data['service_id'],
+            'service_id' => $data['service_id'] ?? null,
             'billing_address_id' => $data['billing_address_id'],
             'shipping_address_id' => $data['shipping_address_id'],
             'description' => $data['description'],
@@ -1179,30 +1186,11 @@ class FrontendController extends Controller
                 ->withInput();
         }
 
-
         $request->validate([
             'need' => 'required|string',
         ], $messages);
 
-        $title = $request->need;
-        $slug = Str::slug($title);
-        $originalSlug = $slug;
-        $counter = 1;
-        while (Service::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter++;
-        }
-
-        $service = Service::create([
-            'title_english'   => $lang == 'en' ? $title : null,
-            'title_romanian'  => $lang == 'ro' ? $title : null,
-            'slug'            => $slug,
-            'status'          => 2,
-        ]);
-
-        return redirect()->route('service.booking', ['slug' => $slug])
-            ->with('success', $lang == 'ro' 
-                ? 'Mesajul tău a fost trimis cu succes.' 
-                : 'Your message has been sent successfully.');
+        return redirect()->route('service.booking')->withInput(['need' => $request->need]);
     }
 
 }

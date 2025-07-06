@@ -59,7 +59,7 @@ Route::get('/about-us', [FrontendController::class, 'aboutUs'])->name('aboutUs')
 Route::post('/work', [FrontendController::class, 'workStore'])->name('work.store');
 // Route::get('/contact', [FrontendController::class, 'showContactForm'])->name('contact.show');
 Route::post('/contact-message', [FrontendController::class, 'contactMessage'])->name('contactMessage');
-Route::get('/service/booking/{slug}/{type?}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
+Route::get('/service/booking/{slug?}/{type?}', [FrontendController::class, 'serviceBooking'])->name('service.booking');
 Route::post('/booking-store', [FrontendController::class, 'bookingStore'])->name('booking.store');
 
 Route::post('/calculate-fee', [FrontendController::class, 'calculateFee'])->name('booking.calculateFee');
