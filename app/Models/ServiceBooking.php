@@ -13,7 +13,12 @@ class ServiceBooking extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class)->withDefault(function ($service) {
+            $service->title_english = 'Requested Service';
+            $service->title_romanian = 'Serviciu Solicitat';
+            $service->slug = 'requested-service';
+            $service->status = 2;
+        });
     }
 
     public function files()

@@ -90,12 +90,12 @@ class ServiceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
-            'description' => 'nullable|string',
-            'date' => 'required|date_format:Y-m-d',
+            'description' => 'required|string',
+            'date' => 'required|date|after_or_equal:today',
             'time' => 'required|date_format:H:i',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
-            'files.*' => 'nullable|file|max:10240',
+            'files.*' => 'required|file|max:10240',
         ]);
 
         if ($validator->fails()) {
@@ -103,6 +103,18 @@ class ServiceController extends Controller
                 'status' => false,
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
+            ], 422);
+        }
+
+        
+        $selectedDate = $request->date;
+        $selectedTime = $request->time;
+
+        if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Time must be after the current time for today.',
+                'errors' => ['time' => ['The time must be after now.']]
             ], 422);
         }
 
@@ -235,6 +247,11 @@ class ServiceController extends Controller
 
     public function serviceBookingUpdate(Request $request, $id)
     {
+        return response()->json([
+            'success' => true,
+            'message' => 'Updated successfully.',
+        ], 200);
+
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
@@ -543,33 +560,108 @@ class ServiceController extends Controller
     public function newServiceStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'need' => 'required|string',
+            'description' => 'required|string',
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'required|date_format:H:i',
+            'billing_address_id' => 'required|exists:additional_addresses,id',
+            'shipping_address_id' => 'required|exists:additional_addresses,id',
+            'files.*' => 'required|file|max:10240',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        $title = $request->need;
-        $slug = Str::slug($title);
-        $originalSlug = $slug;
-        $counter = 1;
-        while (Service::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter++;
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        $service = Service::create([
-            'title_english'  => $title,
-            'slug'           => $slug,
-            'status'         => 2,
+        $selectedDate = $request->date;
+        $selectedTime = $request->time;
+
+        if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Time must be after the current time for today.',
+                'errors' => ['time' => ['The time must be after now.']]
+            ], 422);
+        }
+
+
+        $now = now();
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = (int) $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
+
+        if (!$company || $company->status == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Company is closed. Booking unavailable.'
+            ], 403);
+        }
+
+        $openingHour = $company->opening_time ?? '09:00';
+        $closingHour = $company->closing_time ?? '18:00';
+
+        $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        $typeFees = [1 => 400.00, 2 => 250.00, 3 => 300.00, 4 => 0.00];
+
+        $monthName = $serviceDateTime->format('F');
+        $day = $serviceDateTime->day;
+        $holiday = Holiday::where('month', $monthName)->where('day', $day)->where('status', true)->first();
+
+        if ($holiday || $dayOfWeek === 0) {
+            $type = 3;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2;
+        } elseif ($hour < $opening || $hour >= $closing) {
+            $type = 3;
+        } else {
+            $type = 4;
+        }
+
+        $additionalFee = $typeFees[$type];
+
+        $booking = ServiceBooking::create([
+            'user_id' => auth()->id(),
+            'service_id' => null,
+            'billing_address_id' => $request->billing_address_id,
+            'shipping_address_id' => $request->shipping_address_id,
+            'description' => $request->description,
+            'date' => $request->date,
+            'time' => $request->time,
+            'additional_fee' => $additionalFee,
+            'type' => $type,
         ]);
 
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/service'), $filename);
+                $booking->files()->create(['file' => $filename]);
+            }
+        }
+
         return response()->json([
-            'message' => 'New Service Created Go to service booking url.',
-            'service' => $service,
-        ], 201);
+            'success' => true,
+            'message' => 'Booking created successfully without service.',
+            'data' => $booking->load('files'),
+        ]);
     }
 
 }
