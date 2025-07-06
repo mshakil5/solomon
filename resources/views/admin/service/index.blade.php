@@ -154,7 +154,9 @@
                     </td>
                     <td>
                       <a class="btn btn-link" id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="font-size: 20px;"></i></a>
+                      @if($data->id != 16)
                         <a class="btn btn-link" id="deleteBtn" rid="{{$data->id}}"><i class="fas fa-trash" style="color: red; font-size: 20px;"></i></a>
+                      @endif
                     </td>
                   </tr>
                   @endforeach

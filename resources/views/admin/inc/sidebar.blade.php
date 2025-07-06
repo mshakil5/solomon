@@ -29,7 +29,7 @@
         </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item d-none">
         <a href="{{route('allStaff')}}" class="nav-link {{ (request()->is('admin/staff*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
@@ -38,8 +38,8 @@
         </a>
       </li>
 
-      <li class="nav-item dropdown {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'menu-open' : '' }}">
-        <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'active' : '' }}">
+      <li class="nav-item dropdown {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/requested-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'menu-open' : '' }}">
+        <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/service-bookings*') || request()->is('admin/new-service-bookings*') || request()->is('admin/processing-service-bookings*') || request()->is('admin/requested-service-bookings*') || request()->is('admin/completed-service-bookings*') || request()->is('admin/cancelled-service-bookings*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                   Service Bookings
@@ -69,6 +69,12 @@
                 <a href="{{ route('admin.service.bookings.cancelled') }}" class="nav-link {{ (request()->is('admin/cancelled-service-bookings*')) ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Cancelled</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.service.bookings.requested') }}" class="nav-link {{ (request()->is('admin/requested-service-bookings*')) ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Requested</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -127,7 +133,7 @@
         <a href="{{route('allTransactions')}}" class="nav-link {{ (request()->is('admin/all-transaction*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            All Transaction
+            Transactions
           </p>
         </a>
       </li>
@@ -150,7 +156,7 @@
         </a>
       </li>
 
-      <li class="nav-item">
+      <li class="nav-item d-none">
         <a href="{{route('allServiceRequest')}}" class="nav-link {{ (request()->is('admin/service-request')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
@@ -159,8 +165,8 @@
         </a>
       </li>
 
-      <li class="nav-item dropdown {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*')) ? 'active' : '' }}">
+      <li class="nav-item dropdown {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*') || request()->is('admin/careers*')) ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link dropdown-toggle {{ (request()->is('admin/reviews*') || request()->is('admin/quotes*') || request()->is('admin/careers*')) ? 'active' : '' }}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                   Feedbacks
@@ -180,17 +186,16 @@
                       <p>Quotes</p>
                   </a>
               </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.careers.index') }}" class="nav-link {{ (request()->is('admin/careers*')) ? 'active' : '' }}">
+                      <i class="nav-icon fas fa-briefcase"></i>
+                      <p>Career</p>
+                  </a>
+              </li>
           </ul>
       </li>
 
-      <li class="nav-item">
-          <a href="{{ route('admin.careers.index') }}" class="nav-link {{ (request()->is('admin/careers*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-briefcase"></i>
-              <p>Career</p>
-          </a>
-      </li>
-
-      <li class="nav-item">
+      <li class="nav-item d-none">
         <a href="{{route('allUserDeleteReq')}}" class="nav-link {{ (request()->is('admin/user-delete-request*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
@@ -217,14 +222,7 @@
         </a>
       </li>
 
-      <li class="nav-item">
-          <a href="{{ route('allslider') }}" class="nav-link {{ (request()->is('admin/slider*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-sliders-h"></i>
-              <p>Slider</p>
-          </a>
-      </li>
-
-      <li class="nav-item">
+      <li class="nav-item d-none">
         <a href="{{route('admin.location')}}" class="nav-link {{ (request()->is('admin/location*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
@@ -242,27 +240,46 @@
         </a>
       </li>
 
-      <li class="nav-item">
-        <a href="{{route('admin.companyDetail')}}" class="nav-link {{ (request()->is('admin/company-details*')) ? 'active' : '' }}">
-          <i class="nav-icon fas fa-th"></i>
-          <p>
-            Company Details
-          </p>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a href="{{ route('admin.aboutUs') }}" class="nav-link {{ (request()->is('admin/about-us*')) ? 'active' : '' }}">
-            <i class="nav-icon fas fa-info-circle"></i>
-            <p>About Us</p>
-        </a>
-      </li>
-
-      <li class="nav-item">
-          <a href="{{ route('admin.privacy-policy') }}" class="nav-link {{ (request()->is('admin/privacy-policy*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-shield-alt"></i>
-              <p>Privacy Policy</p>
+      <li class="nav-item dropdown {{ request()->is('admin/company-details*') || request()->is('admin/slider*') || request()->is('admin/about-us*') || request()->is('admin/privacy-policy*') || request()->is('admin/holiday*') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link dropdown-toggle {{ request()->is('admin/company-details*') || request()->is('admin/slider*') || request()->is('admin/about-us*') || request()->is('admin/privacy-policy*') || request()->is('admin/holiday*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                  Settings
+                  <i class="fas fa-angle-left right"></i>
+              </p>
           </a>
+          <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('admin.companyDetail') }}" class="nav-link {{ request()->is('admin/company-details*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Company Details</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('allslider') }}" class="nav-link {{ request()->is('admin/slider*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Slider</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.aboutUs') }}" class="nav-link {{ request()->is('admin/about-us*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>About Us</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.privacy-policy') }}" class="nav-link {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Privacy Policy</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('allholiday') }}" class="nav-link {{ request()->is('admin/holiday*') ? 'active' : '' }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Holidays</p>
+                  </a>
+              </li>
+          </ul>
       </li>
 
       <li class="nav-item d-none">
@@ -294,13 +311,6 @@
                   </a>
               </li>
           </ul>
-      </li>
-
-      <li class="nav-item">
-          <a href="{{ route('allholiday') }}" class="nav-link {{ (request()->is('admin/holiday*')) ? 'active' : '' }}">
-              <i class="nav-icon fas fa-home"></i>
-              <p>Holidays</p>
-          </a>
       </li>
 
       <li class="nav-item" style="margin-top: 200px">

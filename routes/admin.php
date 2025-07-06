@@ -67,6 +67,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     Route::get('/cancelled-service-bookings', [ServiceBookingController::class, 'cancelledServiceBooking'])->name('admin.service.bookings.cancelled');
 
+    Route::get('/requested-service-bookings', [ServiceBookingController::class, 'requestedServiceBooking'])->name('admin.service.bookings.requested');
+
     Route::post('/booking/set-price', [ServiceBookingController::class, 'setPrice'])->name('admin.booking.setPrice');
 
     Route::get('/change-booking-status', [ServiceBookingController::class, 'changeBookingStatus']);

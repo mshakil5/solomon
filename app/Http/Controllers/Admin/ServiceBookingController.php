@@ -20,6 +20,15 @@ class ServiceBookingController extends Controller
         return view('admin.service-booking.all-service-booking', compact('bookings'));
     }
 
+    public function requestedServiceBooking()
+    {
+      $bookings = ServiceBooking::with(['user', 'billingAddress', 'invoices'])
+          ->where('service_id', 16)
+          ->latest()
+          ->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings'));
+    }
+
     public function completedServiceBooking()
     {
         $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('status', 3)->latest()->get();

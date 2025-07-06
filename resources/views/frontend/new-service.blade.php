@@ -31,28 +31,40 @@
 </section>
 @endif
 
+@php
+    $lang = session('app_locale', 'ro');
+@endphp
+
 <div class="container mt-5 text-start">
     <div class="row">
-        <form action="{{ route('new.services.store') }}" method="post">
-            @csrf
-            <div class="col-12 mx-auto">
-              <div class="mb-3">
+        <div class="col-12 mx-auto">
+            <div class="mb-3">
                 <label for="need" class="form-label fw-bold">
-                    Spune-ne mai jos ce ai nevoie, iar noi îți pregătim o ofertă personalizată
+                    {{ $lang == 'ro' 
+                        ? 'Spune-ne mai jos ce ai nevoie, iar noi îți pregătim o ofertă personalizată' 
+                        : 'Tell us what you need below, and we’ll prepare a personalized offer' }}
                 </label>
-                <textarea id="need" name="need" class="form-control" rows="4" placeholder="Scrie aici..." required>{{ old('need') }}</textarea>
-              </div>
-              <div class="d-flex justify-content-center my-5">
-                  <div class="col-6">
-                      <button type="submit" class="form-control btn btn-primary">
-                          Mai departe
-                      </button>
-                  </div>
-              </div>
+                <textarea id="need" class="form-control" rows="4" placeholder="{{ $lang == 'ro' ? 'Scrie aici...' : 'Type here...' }}" required></textarea>
             </div>
-        </form>
+            <div class="d-flex justify-content-center my-5">
+                <div class="col-6">
+                    <button type="button" onclick="goToBooking()" class="btn btn-primary form-control">
+                        {{ $lang == 'ro' ? 'Mai departe' : 'Continue' }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    function goToBooking() {
+        const input = document.getElementById('need').value.trim();
+        const baseUrl = "{{ route('service.booking', ['slug' => 'tell-us-what-you-need']) }}";
+        const redirectUrl = input ? `${baseUrl}?summary=${encodeURIComponent(input)}` : baseUrl;
+        window.location.href = redirectUrl;
+    }
+</script>
 
 
 <style>
