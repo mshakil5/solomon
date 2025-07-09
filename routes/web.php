@@ -69,7 +69,7 @@ Route::get('/booking/select-type', [FrontendController::class, 'selectType'])->n
 Route::get('/category/{category}/{subcategory?}', [FrontendController::class, 'showCategoryDetails'])->name('category.show');
 Route::post('/addresses-store', [FrontendController::class, 'storeAdditionalAddress'])->name('addresses.store');
 
-Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');
+Route::get('/privacy-policy', [FrontendController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
 
 Route::get('/review', [FrontendController::class, 'review'])->name('review');
