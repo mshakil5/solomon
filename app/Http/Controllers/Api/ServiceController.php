@@ -262,6 +262,51 @@ class ServiceController extends Controller
             ], 422);
         }
 
+        // Calculate type and additional fee
+        $now = now();
+        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
+        $hour = (int) $serviceDateTime->format('H');
+        $dayOfWeek = $serviceDateTime->dayOfWeek;
+
+        $company = CompanyDetails::select('opening_time', 'closing_time', 'status')->first();
+
+        if (!$company || $company->status == 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Company is closed. Booking unavailable.'
+            ], 403);
+        }
+
+        $openingHour = $company->opening_time ?? '09:00';
+        $closingHour = $company->closing_time ?? '18:00';
+
+        $opening = (int) Carbon::createFromFormat('H:i', $openingHour)->format('H');
+        $closing = (int) Carbon::createFromFormat('H:i', $closingHour)->format('H');
+
+        $typeFees = [1 => 400.00, 2 => 250.00, 3 => 300.00, 4 => 0.00];
+
+        // Check holiday
+        $monthName = $serviceDateTime->format('F');
+        $day = $serviceDateTime->day;
+        $holiday = Holiday::where('month', $monthName)->where('day', $day)->where('status', true)->first();
+
+        if ($holiday || $dayOfWeek === 0) {
+            $type = 3;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
+            $type = 1;
+        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2;
+        } elseif ($hour < $opening || $hour >= $closing) {
+            $type = 3;
+        } else {
+            $type = 4;
+        }
+
+        $additionalFee = $typeFees[$type];
+
+
+
         $booking = ServiceBooking::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
@@ -277,6 +322,9 @@ class ServiceController extends Controller
             'billing_address_id' => $request->billing_address_id,
             'shipping_address_id' => $request->shipping_address_id,
             'description' => $request->description,
+            'date' => $request->date,
+            'time' => $request->time,
+            'additional_fee' => $additionalFee,
         ]);
 
         if ($request->hasFile('files')) {
