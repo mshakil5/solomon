@@ -552,12 +552,12 @@ class ServiceController extends Controller
                   ->where('status', true)
                   ->first();
 
-        if ($holiday) {
+        if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 121) {
+            $type = 1; // Emergency
+        } elseif ($holiday) {
             $type = 3; //Holiday always Outside Working Hours
         } elseif ($serviceDateTime && $dayOfWeek === 0) {
             $type = 3; // Sunday always Outside Working Hours
-        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1; // Emergency
         } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
             $type = 2; // Prioritized
         } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
