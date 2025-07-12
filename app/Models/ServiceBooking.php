@@ -60,4 +60,14 @@ class ServiceBooking extends Model
     {
         return $this->hasMany(Transaction::class, 'booking_id');
     }
+
+    public function workAssign()
+    {
+        return $this->hasOne(WorkAssign::class);
+    }
+
+    public function workTimes()
+    {
+        return $this->hasMany(WorkTime::class);
+    }
 }

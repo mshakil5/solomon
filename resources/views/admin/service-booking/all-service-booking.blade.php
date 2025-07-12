@@ -101,13 +101,13 @@
                         <div class="btn-group">
                           <button type="button" class="btn btn-secondary">
                             <span id="stsval{{$data->id}}">
-                            @if ($data->status == 1) Placed
-                            @elseif($data->status == 2) Confirmed
-                            @elseif($data->status == 3) Completed
-                            @elseif($data->status == 4) Cancelled
-                            @endif
-                          </span>
-                        </button>
+                              @if ($data->status == 1) Placed
+                              @elseif($data->status == 2) Confirmed
+                              @elseif($data->status == 3) Completed
+                              @elseif($data->status == 4) Cancelled
+                              @endif
+                            </span>
+                          </button>
                           <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                           </button>
@@ -118,6 +118,35 @@
                             <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="4">Cancelled</a>
                           </div>
                         </div>
+                        @if (!$data->workAssign)
+                          <button class="btn btn-secondary assign-staff mt-2" 
+                                  data-booking-id="{{ $data->id }}" 
+                                  data-toggle="modal" 
+                                  data-target="#assignStaffModal">
+                              Assign Staff
+                          </button>
+                        @else
+                          <p class="mt-2 text-success">
+                            Assigned to: {{ $data->workAssign->staff->name ?? '' }}
+                          </p>
+                              @php
+                                $totalDurationInSeconds = 0;
+
+                                  foreach ($data->workTimes as $workTime) {
+                                      if ($workTime->start_time && $workTime->end_time && !$workTime->is_break) {
+                                          $totalDurationInSeconds += $workTime->duration;
+                                      }
+                                  }
+
+                                  $hours = floor($totalDurationInSeconds / 3600);
+                                  $minutes = floor(($totalDurationInSeconds % 3600) / 60);
+                                  $seconds = $totalDurationInSeconds % 60;
+                              @endphp
+
+                                <span>{{ $hours }}h {{ $minutes }}m {{ $seconds }}s</span>
+
+                        @endif
+
                       </td>
                      
                       <td>
@@ -155,6 +184,64 @@
       </div>
     </div>
 </section>
+
+<div class="modal fade" id="assignStaffModal" tabindex="-1" role="dialog" aria-labelledby="assignStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignStaffModalLabel">Assign Staff</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="assignStaffForm">
+                    <input type="hidden" id="bookingId" name="service_booking_id">
+                    <div class="form-group">
+                        <label for="staffSelect">Staff<span class="text-danger">*</span></label>
+                        <select class="form-control" id="staffSelect" name="staff_id" required>
+                            <option value="" disabled selected>Select Staff</option>
+                            @foreach ($staffs as $staff)
+                                <option value="{{ $staff->id }}">{{ $staff->name }} {{ $staff->surname }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="startDate">Start Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="startDate" name="start_date" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="endDate">End Date<span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="endDate" name="end_date" required>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="startTime">Start Time</label>
+                        <input type="time" class="form-control" id="startTime" name="start_time">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="endTime">End Time</label>
+                        <input type="time" class="form-control" id="endTime" name="end_time">
+                    </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="note">Note</label>
+                      <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitAssignStaff">Assign</button>
+                <div id='loading' style='display:none ;'>
+                    <img src="{{ asset('loader.gif') }}" id="loading-image" alt="Loading..." />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="setPriceModal" tabindex="-1" aria-labelledby="setPriceModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -272,6 +359,64 @@
         alert('Error updating service fee');
       }
     });
+  });
+
+  $('.assign-staff').on('click', function() {
+      var bookingId = $(this).data('booking-id');
+
+      $('#bookingId').val(bookingId);
+
+      $('#assignStaffModal').modal('show');
+  });
+
+  $('#submitAssignStaff').on('click', function() {
+      $('#loading').show();
+      var formData = {
+          booking_id: $('#bookingId').val(),
+          staff_id: $('#staffSelect').val(),
+          start_date: $('#startDate').val(),
+          end_date: $('#endDate').val(),
+          start_time: $('#startTime').val(),
+          end_time: $('#endTime').val(),
+          note: $('#note').val(),
+          _token: '{{ csrf_token() }}'
+      };
+
+      var requiredFields = [];
+      if (!formData.staff_id) {
+          requiredFields.push('Staff');
+      }
+      if (!formData.start_date) {
+          requiredFields.push('Start Date');
+      }
+      if (!formData.end_date) {
+          requiredFields.push('End Date');
+      }
+
+      if (requiredFields.length > 0) {
+          $('#loading').hide();
+          alert('Please fill in the following required fields: ' + requiredFields.join(', '));
+          return;
+      }
+
+      $.ajax({
+          url: '/admin/assign-staff',
+          type: 'POST',
+          data: formData,
+          success: function(response) {
+              $('#loading').hide();
+              alert('Assigned Successfully');
+              $('#assignStaffModal').modal('hide');
+              setTimeout(function() {
+                  window.location.reload();
+              }, 100);
+          },
+          error: function(xhr, status, error) {
+            alert(xhr.responseText);
+              $('#loading').hide();
+              console.error(xhr.responseText);
+          }
+      });
   });
 </script>
 

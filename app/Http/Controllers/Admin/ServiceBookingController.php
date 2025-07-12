@@ -5,46 +5,53 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ServiceBooking;
+use App\Models\User;
 
 class ServiceBookingController extends Controller
 {
     public function newServiceBooking()
     {
-        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('status', 1)->latest()->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])->where('status', 1)->latest()->get();
+        $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function processingServiceBooking()
     {
-        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('status', 2)->latest()->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])->where('status', 2)->latest()->get();
+        $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function requestedServiceBooking()
     {
-      $bookings = ServiceBooking::with(['user', 'billingAddress', 'invoices'])
+      $bookings = ServiceBooking::with(['user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])
           ->where('service_id', 16)
           ->latest()
           ->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+      $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function completedServiceBooking()
     {
-        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('status', 3)->latest()->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])->where('status', 3)->latest()->get();
+        $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function cancelledServiceBooking()
     {
-        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('status', 4)->latest()->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])->where('status', 4)->latest()->get();
+        $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function allServiceBooking()
     {
-        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->latest()->get();
-        return view('admin.service-booking.all-service-booking', compact('bookings'));
+        $bookings = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices', 'workAssign.staff', 'workAssign'])->latest()->get();
+        $staffs = User::orderby('id','DESC')->where('is_type','2')->get();
+        return view('admin.service-booking.all-service-booking', compact('bookings','staffs'));
     }
 
     public function changeBookingStatus(Request $request)

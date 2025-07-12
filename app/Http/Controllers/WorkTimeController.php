@@ -13,7 +13,7 @@ class WorkTimeController extends Controller
     public function startWork(Request $request)
     {
         $workTime = new WorkTime();
-        $workTime->work_id = $request->input('work_id');
+        $workTime->service_booking_id = $request->input('work_id');
         $workTime->staff_id = auth()->id();
         $workTime->start_time = Carbon::now()->format('Y-m-d H:i');
         $workTime->start_date = Carbon::today()->format('d-m-Y');

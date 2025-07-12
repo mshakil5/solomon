@@ -29,7 +29,7 @@
         </a>
       </li>
 
-      <li class="nav-item d-none">
+      <li class="nav-item">
         <a href="{{route('allStaff')}}" class="nav-link {{ (request()->is('admin/staff*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>

@@ -33,20 +33,31 @@
                                 <table class="table table-bordered" id="assignedTasksTable">
                                     <thead>
                                         <tr>
-                                            <th>Job ID</th>
-                                            <th>Client Details</th>
+                                            <th>Date</th>
+                                            <th>Service</th>
                                             <th>Address</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($assignedTasks as $task)
                                             <tr>
-                                                <td>{{ $task->work->orderid }}</td>
-                                                <td>{{ $task->work->name }} <br> {{ $task->work->phone }} <br>
-                                                    {{ $task->work->email }}
+                                                <td>{{ \Carbon\Carbon::parse($task->serviceBooking->date)->format('d/m/Y') }}</td>
+                                                <td>
+                                                    {{$task->serviceBooking->service->title_english}}
                                                 </td>
                                                 <td>
-                                                    {{$task->work->address_first_line}} {{$task->work->address_second_line}} {{$task->work->address_third_line}} {{$task->work->town}} {{$task->work->post_code}} 
+                                                    {{$task->serviceBooking->service->title_english}}</br> <br>
+                                                    {{$task->serviceBooking->user->name ?? ''}} </br> <br>
+                                                    {{$task->serviceBooking->user->surname}} </br> <br>
+                                                    {{$task->serviceBooking->user->email}} </br> <br>
+                                                    {{$task->serviceBooking->user->phone}}
+                                                    {{ $task->serviceBooking->shippingAddress->first_line }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->second_line ?? '' }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->third_line ?? '' }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->town }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->post_code }}<br>
+                                                    @if($task->serviceBooking->shippingAddress->floor) Floor: {{ $task->serviceBooking->shippingAddress->floor }}<br>@endif
+                                                    @if($task->serviceBooking->shippingAddress->apartment) Apartment: {{ $task->serviceBooking->shippingAddress->apartment }}@endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -71,19 +82,32 @@
                                 <table class="table table-bordered" id="completedTasksTable">
                                     <thead>
                                         <tr>
-                                            <th>Job ID</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
+                                            <th>Date</th>
+                                            <th>Service</th>
+                                            <th>Address</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($completedTasks as $task)
                                             <tr>
-                                                <td>{{ $task->work->orderid }}</td>
-                                                <td>{{ $task->work->name }}</td>
-                                                <td>{{ $task->work->email }}</td>
-                                                <td>{{ $task->work->phone }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($task->serviceBooking->date)->format('d/m/Y') }}</td>
+                                                <td>
+                                                    {{$task->serviceBooking->service->title_english}}
+                                                </td>
+                                                <td>
+                                                    {{$task->serviceBooking->service->title_english}}</br> <br>
+                                                    {{$task->serviceBooking->user->name ?? ''}} </br> <br>
+                                                    {{$task->serviceBooking->user->surname}} </br> <br>
+                                                    {{$task->serviceBooking->user->email}} </br> <br>
+                                                    {{$task->serviceBooking->user->phone}}
+                                                    {{ $task->serviceBooking->shippingAddress->first_line }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->second_line ?? '' }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->third_line ?? '' }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->town }}<br>
+                                                    {{ $task->serviceBooking->shippingAddress->post_code }}<br>
+                                                    @if($task->serviceBooking->shippingAddress->floor) Floor: {{ $task->serviceBooking->shippingAddress->floor }}<br>@endif
+                                                    @if($task->serviceBooking->shippingAddress->apartment) Apartment: {{ $task->serviceBooking->shippingAddress->apartment }}@endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

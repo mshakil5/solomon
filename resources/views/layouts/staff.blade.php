@@ -44,10 +44,6 @@
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light ">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="{{ route('homepage') }}">
-                        <img src="{{ asset('frontend/images/image-1200x500.jpg')}}" class="img-fluid d-block" alt=""
-                            style="width: 200px;">
-                    </a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -98,14 +94,14 @@
                     <li class="nav-item {{ request()->routeIs('assigned.tasks.staff') ? 'active' : '' }}">
                         <a href="{{ route('assigned.tasks.staff') }}" class="d-flex align-items-center">
                             <span class="iconify" data-icon="ant-design:file-outlined" data-inline="false" style="font-size: 1.5em;"></span>
-                            <span class="ms-2">Due Tasks</span>
+                            <span class="ms-2">Confirmed</span>
                         </a>
                     </li>
 
                     <li class="nav-item {{ request()->routeIs('completed.tasks.staff') ? 'active' : '' }}">
                         <a href="{{ route('completed.tasks.staff') }}" class="d-flex align-items-center">
                             <span class="iconify" data-icon="ant-design:check-outlined" data-inline="false" style="font-size: 1.5em;"></span>
-                            <span class="ms-2">Completed Tasks</span>
+                            <span class="ms-2">Completed</span>
                         </a>
                     </li>
                 </ul>
@@ -142,60 +138,6 @@
         </div>
 
     </section>
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="footer-block">
-                        <a class="navbar-brand" href="#">
-                            <img src="{{ asset('frontend/images/image-1200x500.jpg')}}" class="img-fluid d-block" alt=""
-                                style="width: 150px; height: 70px;">
-                        </a>
-                        <div class="copyright">
-                            <!-- <span> &copy;</span> 2021 ifundEducation -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <ul class="links">
-                                <li><a href="">Terms</a></li>
-                                <li><a href="">Privacy Policy</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-4">
-                            <ul class="links">
-                                <li><a href="">FAQS</a></li>
-                                <li><a href="">About</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-4 d-none">
-                            <h5 class="social-title">Connect with us</h5>
-                            <div class="social">
-                                <a href="" title="Facebook">
-                                    <span class="iconify" data-icon="ic:baseline-facebook" data-inline="false"></span>
-                                </a>
-                                <a href="" title="Instagram">
-                                    <span class="iconify" data-icon="ant-design:instagram-filled" data-inline="false"></span>
-                                </a>
-                                <a href="" title="LinkedIn">
-                                    <span class="iconify" data-icon="entypo-social:linkedin-with-circle" data-inline="false"></span>
-                                </a>
-                                <a href="" title="Twitter">
-                                    <span class="iconify" data-icon="entypo-social:twitter-with-circle" data-inline="false"></span>
-                                </a>
-                                <a href="" title="Email">
-                                    <span class="iconify" data-icon="carbon:email" data-inline="false"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 
     <script src="https://code.iconify.design/2/2.0.1/iconify.min.js"></script>

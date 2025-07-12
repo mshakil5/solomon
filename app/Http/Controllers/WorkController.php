@@ -19,6 +19,7 @@ use App\Models\ReviewAnswer;
 use App\Models\WorkReviewReply;
 use Illuminate\Support\Carbon;
 use App\Jobs\SendWorkAssignedEmail;
+use App\Models\ServiceBooking;
 
 class WorkController extends Controller
 {
@@ -225,7 +226,7 @@ class WorkController extends Controller
     {
         //Validation
         $request->validate([
-            'work_id' => 'required|exists:works,id',
+            'booking_id' => 'required',
             'staff_id' => 'required|exists:users,id',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
@@ -234,18 +235,18 @@ class WorkController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $workId = $request->input('work_id');
+        $booking_id = $request->input('booking_id');
         $staffId = $request->input('staff_id');
 
-        $work = Work::find($workId);
+        $booking = ServiceBooking::find($booking_id);
 
-        if (!$work) {
-            return response()->json(['error' => 'Work item not found'], 404);
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
         }
 
         //Assign Staff
         WorkAssign::create([
-            'work_id' => $workId,
+            'service_booking_id' => $booking_id,
             'staff_id' => $staffId,
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
@@ -255,9 +256,8 @@ class WorkController extends Controller
         ]);
 
         //Status Update
-        $work->status = 2;
-        $work->is_new = 0;
-        $work->save();
+        $booking->status = 2;
+        $booking->save();
 
         $staff = User::find($staffId);
         $contactmail = $staff->email;
@@ -266,14 +266,9 @@ class WorkController extends Controller
 
         $emailData = [
             'staffname' => $staff->name,
-            'firstname' => $work->name,
-            'email' => $work->email,
-            'phone' => $work->phone,
-            'address1' => $work->address_first_line,
-            'address2' => $work->address_second_line,
-            'address3' => $work->address_third_line,
-            'town' => $work->town,
-            'postcode' => $work->post_code,
+            'firstname' => $booking->user->name,
+            'email' => $booking->user->email,
+            'phone' => $booking->user->phone,
             'subject' => "Work Assign",
             'message' => $msg,
             'contactmail' => $contactmail,
@@ -287,9 +282,9 @@ class WorkController extends Controller
 
     public function getAssignedTasks()
     {
-        $data = WorkAssign::with(['work', 'work.workTimes'])
+        $data = WorkAssign::with(['serviceBooking', 'serviceBooking.workTimes'])
                       ->where('staff_id', auth()->id())
-                      ->whereHas('work', function($query) {
+                      ->whereHas('serviceBooking', function($query) {
                           $query->where('status', 2);
                       })
                       ->orderBy('id', 'DESC')
@@ -299,9 +294,9 @@ class WorkController extends Controller
 
     public function getCompletedTasks()
     {
-        $data = WorkAssign::with('work')
+        $data = WorkAssign::with('serviceBooking', 'serviceBooking.workTimes')
             ->where('staff_id', auth()->id())
-            ->whereHas('work', function ($query) {
+            ->whereHas('serviceBooking', function ($query) {
                 $query->where('status', '3');
             })
             ->orderBy('id', 'DESC')
@@ -324,7 +319,7 @@ class WorkController extends Controller
 
     public function changeWorkStatusStaff(Request $request)
     {
-        $work = Work::find($request->id);
+        $work = ServiceBooking::find($request->id);
 
         $work->status = $request->status;
 

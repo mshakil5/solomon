@@ -13,4 +13,9 @@ class WorkTime extends Model
     {
         return $this->belongsTo(Work::class);
     }
+
+    public function serviceBooking()
+    {
+        return $this->belongsTo(ServiceBooking::class);
+    }
 }

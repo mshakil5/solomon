@@ -20,4 +20,10 @@ class WorkAssign extends Model
     {
         return $this->belongsTo(User::class, 'staff_id');
     }
+
+    public function serviceBooking()
+    {
+        return $this->belongsTo(ServiceBooking::class);
+    }
+
 }

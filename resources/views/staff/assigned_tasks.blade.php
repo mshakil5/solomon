@@ -32,56 +32,82 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Job ID</th>
+                    <th>#</th>
                     <th>Date</th>
-                    <th>Client Details</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Description</th>
                     <th>Address</th>
                     <th>Status</th>
                     <th>Timer</th>
-                    <th>Details</th>
+                    {{-- <th>Details</th> --}}
                   </tr>
                   </thead>
                   <tbody>
                     @foreach ($data as $key => $data)
 
                     <tr>
-                        <td>{{ $data->work->orderid }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->work->date)->format('d/m/Y') }}</td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ \Carbon\Carbon::parse($data->serviceBooking->date)->format('d/m/Y') }}</td>
+                        <td>{{ $data->serviceBooking->time }}</td>
+                        <td>
+                            <span class="badge 
+                                @if( $data->serviceBooking->type == 1) bg-danger
+                                @elseif( $data->serviceBooking->type == 2) bg-warning
+                                @elseif( $data->serviceBooking->type == 3) bg-info
+                                @else bg-success @endif">
+                                @if( $data->serviceBooking->type == 1) Emergency
+                                @elseif( $data->serviceBooking->type == 2) Prioritized
+                                @elseif( $data->serviceBooking->type == 3) Outside Hours
+                                @else Standard @endif
+                            </span>
+                        </td>
                         
                         <td style="text-align: left">
-                            {{ $data->work->name }} <br><br>
-                            {{ $data->work->email }} <br><br>
-                            {{ $data->work->phone }}
+                            {{$data->serviceBooking->user->name}} </br> <br>
+                            {{$data->serviceBooking->user->surname}} </br> <br>
+                            {{$data->serviceBooking->user->email}} </br> <br>
+                            {{$data->serviceBooking->user->phone}}
+                        </td>
+                         <td>
+                            {{$data->serviceBooking->service->title_english}} ( {{$data->serviceBooking->service->title_romanian}} )
+                        </td>
+                        <td>
+                            {!! $data->description !!}
                         </td>
 
                         <td style="text-align: left">
-                            {{ $data->work->address_first_line }} <br>
-                            {{ $data->work->address_second_line }} <br>
-                            {{ $data->work->address_third_line }} <br>
-                            {{ $data->work->town }} <br>
-                            {{ $data->work->post_code }}
+                            {{ $data->serviceBooking->shippingAddress->first_line }}<br>
+                            {{ $data->serviceBooking->shippingAddress->second_line ?? '' }}<br>
+                            {{ $data->serviceBooking->shippingAddress->third_line ?? '' }}<br>
+                            {{ $data->serviceBooking->shippingAddress->town }}<br>
+                            {{ $data->serviceBooking->shippingAddress->post_code }}<br>
+                            @if($data->serviceBooking->shippingAddress->floor) Floor: {{ $data->serviceBooking->shippingAddress->floor }}<br>@endif
+                            @if($data->serviceBooking->shippingAddress->apartment) Apartment: {{ $data->serviceBooking->shippingAddress->apartment }}@endif
                         </td>
 
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-secondary" 
-                                        @if (!$data->work->workTimes->isEmpty()) data-toggle="dropdown" @else disabled @endif>
+                                        @if (!$data->serviceBooking->workTimes->isEmpty()) data-toggle="dropdown" @else disabled @endif>
                                     <span id="stsval{{$data->id}}">
-                                        @if ($data->work->status == 1) New
-                                        @elseif($data->work->status == 2) In progress
-                                        @elseif($data->work->status == 3) Completed
-                                        @elseif($data->work->status == 4) Cancelled
+                                        @if ($data->serviceBooking->status == 1) Placed
+                                        @elseif($data->serviceBooking->status == 2) Confirmed
+                                        @elseif($data->serviceBooking->status == 3) Completed
+                                        @elseif($data->serviceBooking->status == 4) Cancelled
                                         @endif
                                     </span>
                                 </button>
                                 
-                                @if (!$data->work->workTimes->isEmpty())
+                                @if (!$data->serviceBooking->workTimes->isEmpty())
                                 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu" role="menu">
-                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->work->id }}" value="2">In Progress</a>
-                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->work->id }}" value="3">Completed</a>
+                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->serviceBooking->id }}" value="2">In Progress</a>
+                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->serviceBooking->id }}" value="3">Completed</a>
                                 </div>
                                 @endif
                             </div>
@@ -89,7 +115,7 @@
 
                         <td>
                             @php
-                                $workTimes = $data->work->workTimes;
+                                $workTimes = $data->serviceBooking->workTimes;
                                 $hasActiveWorkTime = false;
                                 $workTimeId = null;
                                 $hasEndTime = false;
@@ -106,24 +132,24 @@
                                 }
                             @endphp
 
-                            @if ($data->work->status == 2)
+                            @if ($data->serviceBooking->status == 2)
                                 @if ($hasActiveWorkTime)
-                                    <button type="button" class="btn btn-secondary stop-button" data-worktime-id="{{ $workTimeId }}" data-work-id="{{ $data->work->id }}">
+                                    <button type="button" class="btn btn-secondary stop-button" data-worktime-id="{{ $workTimeId }}" data-work-id="{{ $data->serviceBooking->id }}">
                                         Stop
                                     </button>
                                 @else
-                                    <button type="button" class="btn btn-secondary start-button" data-work-id="{{ $data->work->id }}">
+                                    <button type="button" class="btn btn-secondary start-button" data-work-id="{{ $data->serviceBooking->id }}">
                                         Start
                                     </button>
                                 @endif
                             @endif
                         </td>
 
-                        <td>
-                            <a href="{{ route('staff.work.details', $data->work->id) }}" class="btn btn-secondary">
+                        {{-- <td>
+                            <a href="{{ route('staff.work.details', $data->serviceBooking->id) }}" class="btn btn-secondary">
                                 <i class="fas fa-eye"></i>
                             </a>
-                        </td>
+                        </td> --}}
 
                     </tr>
 
@@ -173,18 +199,12 @@
                   if (d.new_status == 3) {
                       swal({
                           title: "Success!",
-                          text: "Status changed successfully. Do you want to upload an image?",
+                          text: "Status changed successfully",
                           icon: "success",
                           buttons: {
                               cancel: "No",
                               confirm: "Yes"
                           },
-                      }).then((willUpload) => {
-                          if (willUpload) {
-                              window.location.href = "{{ url('/staff/upload/') }}" + '/' + d.id;
-                          } else {
-                              window.setTimeout(function() { location.reload() }, 2000);
-                          }
                       });
                   } else {
                       swal({
@@ -214,6 +234,7 @@
   $(document).ready(function() {
       $('.start-button').click(function() {
           var workId = $(this).data('work-id');
+          // console.log(workId);
 
           $.ajax({
               url: '{{ route("worktime.start") }}', 

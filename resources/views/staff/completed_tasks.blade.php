@@ -32,59 +32,90 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Job ID</th>
+                    <th>#</th>
                     <th>Date</th>
-                    <th>Client Details</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Description</th>
                     <th>Address</th>
                     <th>Status</th>
-                    <th>Duration</th>
-                    <th>Details</th>
+                    <th>Timer</th>
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach ($data as $key => $workAssign)
+                    @foreach ($data as $key => $data)
                         <tr>
-                            <td>{{ $workAssign->work->orderid }}</td>
-                            <td>{{ \Carbon\Carbon::parse($workAssign->work->date)->format('d/m/Y') }}</td>
-                            <td style="text-align: left">
-                                {{$workAssign->work->name}} </br> <br>
-                                {{$workAssign->work->email}} </br> <br>
-                                {{$workAssign->work->phone}}
-                            </td>
-                            <td style="text-align: left">
-                                {{$workAssign->work->address_first_line}} </br>
-                                {{$workAssign->work->address_second_line}} </br>
-                                {{$workAssign->work->address_third_line}} </br>
-                                {{$workAssign->work->town}} </br>
-                                {{$workAssign->work->post_code}}
-                            </td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ \Carbon\Carbon::parse($data->serviceBooking->date)->format('d/m/Y') }}</td>
+                        <td>{{ $data->serviceBooking->time }}</td>
+                        <td>
+                            <span class="badge 
+                                @if( $data->serviceBooking->type == 1) bg-danger
+                                @elseif( $data->serviceBooking->type == 2) bg-warning
+                                @elseif( $data->serviceBooking->type == 3) bg-info
+                                @else bg-success @endif">
+                                @if( $data->serviceBooking->type == 1) Emergency
+                                @elseif( $data->serviceBooking->type == 2) Prioritized
+                                @elseif( $data->serviceBooking->type == 3) Outside Hours
+                                @else Standard @endif
+                            </span>
+                        </td>
+                        
+                        <td style="text-align: left">
+                            {{$data->serviceBooking->user->name}} </br> <br>
+                            {{$data->serviceBooking->user->surname}} </br> <br>
+                            {{$data->serviceBooking->user->email}} </br> <br>
+                            {{$data->serviceBooking->user->phone}}
+                        </td>
+                        <td>
+                            {{$data->serviceBooking->service->title_english}} ( {{$data->serviceBooking->service->title_romanian}} )
+                        </td>
+                        <td>
+                            {!! $data->description !!}
+                        </td>
 
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary">
-                                        <span id="stsval{{$workAssign->work->id}}">
-                                            @if ($workAssign->work->status == 1) New
-                                            @elseif($workAssign->work->status == 2) In progress
-                                            @elseif($workAssign->work->status == 3) Completed
-                                            @elseif($workAssign->work->status == 4) Cancelled
-                                            @endif
-                                        </span>
-                                    </button>
-                                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$workAssign->work->id}}" value="2">In Progress</a>
-                                        <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$workAssign->work->id}}" value="3">Completed</a>
-                                    </div>
+                        <td style="text-align: left">
+                            {{ $data->serviceBooking->shippingAddress->first_line }}<br>
+                            {{ $data->serviceBooking->shippingAddress->second_line ?? '' }}<br>
+                            {{ $data->serviceBooking->shippingAddress->third_line ?? '' }}<br>
+                            {{ $data->serviceBooking->shippingAddress->town }}<br>
+                            {{ $data->serviceBooking->shippingAddress->post_code }}<br>
+                            @if($data->serviceBooking->shippingAddress->floor) Floor: {{ $data->serviceBooking->shippingAddress->floor }}<br>@endif
+                            @if($data->serviceBooking->shippingAddress->apartment) Apartment: {{ $data->serviceBooking->shippingAddress->apartment }}@endif
+                        </td>
+
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary" 
+                                        @if (!$data->serviceBooking->workTimes->isEmpty()) data-toggle="dropdown" @else disabled @endif>
+                                    <span id="stsval{{$data->id}}">
+                                        @if ($data->serviceBooking->status == 1) Placed
+                                        @elseif($data->serviceBooking->status == 2) Confirmed
+                                        @elseif($data->serviceBooking->status == 3) Completed
+                                        @elseif($data->serviceBooking->status == 4) Cancelled
+                                        @endif
+                                    </span>
+                                </button>
+                                
+                                @if (!$data->serviceBooking->workTimes->isEmpty())
+                                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu" role="menu">
+                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->serviceBooking->id }}" value="2">In Progress</a>
+                                    <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{ $data->serviceBooking->id }}" value="3">Completed</a>
                                 </div>
-                            </td>
+                                @endif
+                            </div>
+                        </td>
 
                             <td>
                                 @php
                                     $totalDurationInSeconds = 0;
 
-                                    foreach ($workAssign->work->workTimes as $workTime) {
+                                    foreach ($data->serviceBooking->workTimes as $workTime) {
                                         if ($workTime->start_time && $workTime->end_time && !$workTime->is_break) {
                                             $totalDurationInSeconds += $workTime->duration;
                                         }
@@ -98,18 +129,6 @@
                                 <span>{{ $hours }}h {{ $minutes }}m {{ $seconds }}s</span>
                             </td>
                             
-                            <td>
-                                <a href="{{ route('staff.work.details', $workAssign->work->id) }}" class="btn btn-secondary">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-
-                                <a href="{{ route('upload.page', $workAssign->work->id) }}" class="btn btn-secondary">
-                                    <i class="fas fa-upload"></i>
-                                </a>
-                                {{-- <a href="{{ route('staff.work.images', $workAssign->work->id) }}" class="btn btn-secondary">
-                                    <i class="fas fa-camera"></i>
-                                </a> --}}
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>

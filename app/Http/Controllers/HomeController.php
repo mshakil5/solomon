@@ -68,7 +68,7 @@ class HomeController extends Controller
         $formattedToday = Carbon::createFromFormat('Y-m-d', $today)->format('d-m-Y');
 
         $assignedTasks = WorkAssign::where('staff_id', $userId)
-                            ->whereHas('work', function($query) {
+                            ->whereHas('serviceBooking', function($query) {
                                 $query->where('status', 2);
                             })
                             ->whereDate('updated_at', $today)
@@ -76,7 +76,7 @@ class HomeController extends Controller
                             ->get();
                             
         $completedTasks = WorkAssign::where('staff_id', $userId)
-                            ->whereHas('work', function($query) {
+                            ->whereHas('serviceBooking', function($query) {
                                 $query->where('status', 3);
                             })
                             ->whereDate('updated_at', $today)
