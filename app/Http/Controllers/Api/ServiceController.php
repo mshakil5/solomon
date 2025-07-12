@@ -147,17 +147,23 @@ class ServiceController extends Controller
         $day = $serviceDateTime->day;
         $holiday = Holiday::where('month', $monthName)->where('day', $day)->where('status', true)->first();
 
-        if ($holiday || $dayOfWeek === 0) {
-            $type = 3;
-        } elseif ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1;
-        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2;
-        } elseif ($hour < $opening || $hour >= $closing) {
-            $type = 3;
+
+        if ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 121) {
+            $type = 1; // Emergency
+        } elseif ($holiday) {
+            $type = 3; //Holiday always Outside Working Hours
+        } elseif ($serviceDateTime && $dayOfWeek === 0) {
+            $type = 3; // Sunday always Outside Working Hours
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; // Prioritized
+        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
+            $type = 3; // Outside Working Hours
         } else {
-            $type = 4;
+            $type = 4; // Standard
         }
+
+
+
 
         $additionalFee = $typeFees[$type];
 
