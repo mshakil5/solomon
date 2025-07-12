@@ -251,6 +251,8 @@ class ServiceController extends Controller
             'description' => 'nullable|string',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
+            'date' => 'required|date|after_or_equal:today',
+            'time' => 'required|date_format:H:i',
             'files.*' => 'nullable|file|max:10240',
         ]);
 
@@ -259,6 +261,17 @@ class ServiceController extends Controller
                 'status' => false,
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $selectedDate = $request->date;
+        $selectedTime = $request->time;
+
+        if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Time must be after the current time for today.',
+                'errors' => ['time' => ['The time must be after now.']]
             ], 422);
         }
 
@@ -325,6 +338,7 @@ class ServiceController extends Controller
             'date' => $request->date,
             'time' => $request->time,
             'additional_fee' => $additionalFee,
+            'type' => $type
         ]);
 
         if ($request->hasFile('files')) {

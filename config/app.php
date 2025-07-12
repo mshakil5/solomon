@@ -71,8 +71,8 @@ return [
     */
 
     // 'timezone' => 'UTC',
-    // 'timezone' => 'Asia/Dhaka',
-    'timezone' => 'Europe/Bucharest',
+    'timezone' => 'Asia/Dhaka',
+    // 'timezone' => 'Europe/Bucharest',
     // 'timezone' => 'Europe/London',
     /*
     |--------------------------------------------------------------------------
