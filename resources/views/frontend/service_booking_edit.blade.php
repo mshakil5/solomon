@@ -64,7 +64,7 @@
                           <input type="file" class="filepond" name="files[]" multiple data-max-file-size="10MB">
                       </div>
                       
-                      <div class="row mt-4">
+                      {{-- <div class="row mt-4 d-none">
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label for="date">Date <span class="text-danger">*</span></label>
@@ -82,7 +82,7 @@
                               </div>
                           </div>
                           @endif
-                      </div>
+                      </div> --}}
                       
                       <div class="row mt-4">
                           <div class="col-md-6">
@@ -154,12 +154,12 @@
 </div>
 
 <script>
-  document.getElementById('bookingForm').addEventListener('submit', function(e) {
-    const confirmUpdate = confirm('Warning: Updating your booking may change your work priority based on our system. Do you want to proceed?');
-    if (!confirmUpdate) {
-      e.preventDefault();
-    }
-  });
+  // document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  //   const confirmUpdate = confirm('Warning: Updating your booking may change your work priority based on our system. Do you want to proceed?');
+  //   if (!confirmUpdate) {
+  //     e.preventDefault();
+  //   }
+  // });
 </script>
 
 @endsection

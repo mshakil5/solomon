@@ -88,7 +88,7 @@
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 @if($booking->status == 1 && $booking->type != 1)
-                                    <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning d-none">
+                                    <a href="{{ route('service.booking.edit', $booking->id) }}" class="btn btn-warning">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                 @endif

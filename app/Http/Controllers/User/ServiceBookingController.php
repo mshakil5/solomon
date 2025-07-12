@@ -77,8 +77,8 @@ class ServiceBookingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'description' => 'nullable|string',
-            'date' => 'required|date',
-            'time' => 'required',
+            // 'date' => 'required|date',
+            // 'time' => 'required',
             'billing_address_id' => 'required|exists:additional_addresses,id',
             'shipping_address_id' => 'required|exists:additional_addresses,id',
             'files.*' => 'nullable|file|max:10240',
@@ -94,40 +94,10 @@ class ServiceBookingController extends Controller
             ->where('status', 1)
             ->findOrFail($id);
 
-        $now = now();
-        $serviceDateTime = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
-        $diffInMinutes = $now->diffInMinutes($serviceDateTime, false);
-        $hour = $serviceDateTime->format('H');
-        $dayOfWeek = $serviceDateTime->dayOfWeek;
-
-        $company = CompanyDetails::select('opening_time', 'closing_time')->first();
-        $openingHour = $company?->opening_time ?? '10:00';
-        $closingHour = $company?->closing_time ?? '18:00';
-
-        $opening = Carbon::createFromFormat('H:i', $openingHour)->format('H');
-        $closing = Carbon::createFromFormat('H:i', $closingHour)->format('H');
-
-        if ($serviceDateTime->isToday() && $diffInMinutes >= 0 && $diffInMinutes <= 120) {
-            $type = 1; $fee = 400.00;
-        } elseif ($serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2; $fee = 250.00;
-        } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
-            $type = 3; $fee = 300.00;
-        } else {
-            $type = 4; $fee = 0.00;
-        }
-
-        $totalFee = $booking->service_fee + $fee;
-
         $booking->update([
             'billing_address_id' => $request->billing_address_id,
             'shipping_address_id' => $request->shipping_address_id,
             'description' => $request->description,
-            'date' => $request->date,
-            'time' => $request->time,
-            'additional_fee' => $fee,
-            'total_fee' => $totalFee,
-            'type' => $type
         ]);
 
         if ($request->has('remove_files')) {
