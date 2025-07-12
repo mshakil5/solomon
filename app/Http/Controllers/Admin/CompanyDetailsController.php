@@ -81,6 +81,7 @@ class CompanyDetailsController extends Controller
 
         $data->company_name = $request->company_name;
         $data->status = $request->has('status') ? 1 : 0;
+        $data->app_version = $request->app_version;
         $data->email1 = $request->email1;
         $data->email2 = $request->email2;
         $data->phone1 = $request->phone1;

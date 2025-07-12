@@ -185,6 +185,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                    <label>App Version</label>
+                    <input type="text" class="form-control @error('app_version') is-invalid @enderror" id="app_version" name="app_version" value="{{$data->app_version}}">
+                    </div>
+                </div>
 
 
                 <div class="col-sm-4 d-none">

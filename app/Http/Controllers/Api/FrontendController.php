@@ -603,14 +603,15 @@ class FrontendController extends Controller
                 'message' => 'Company details not found.'
             ], 404);
         }
-
+        $appVersion = $data->app_version;
         
 
         return response()->json([
             'success' => true,
             'data' => $data,
             'openingDayTime' => $openingDayTime,
-            'cities' => $cities
+            'cities' => $cities,
+            'app_version' => $appVersion
         ], 200);
 
 
