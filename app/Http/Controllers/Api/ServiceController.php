@@ -500,7 +500,7 @@ class ServiceController extends Controller
                     if (Carbon::parse($date)->isToday()) {
                         $combined = Carbon::createFromFormat('Y-m-d H:i', "$date $value");
                         if ($combined->lte(now())) {
-                            $fail('The time must be after the current time for today.');
+                            $fail('Nu poți selecta o dată în trecut.');
                         }
                     }
                 }
