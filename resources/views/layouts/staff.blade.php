@@ -3,12 +3,13 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solomon Maintainance</title>
 
-    @php
-        $companyDetails = \App\Models\CompanyDetails::first();
-    @endphp
+       @php
+            $companyDetails = \App\Models\CompanyDetails::first();
+        @endphp
 
+    <title>{{ $companyDetails->company_name ?? 'Tot Pro' }}</title>
+    
     <link rel="icon" href="{{ asset('images/company/' . $companyDetails->fav_icon) }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <link rel="stylesheet" href="{{ asset('assets/staff/css/bootstrap.min.css')}}">

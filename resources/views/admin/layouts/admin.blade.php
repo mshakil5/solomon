@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <!-- CSRF Token -->
+
+    @php
+        $companyDetails = \App\Models\CompanyDetails::first();
+    @endphp
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Solomon Maintainance</title>
-
-  @php
-      $companyDetails = \App\Models\CompanyDetails::first();
-  @endphp
+  <title>{{ $companyDetails->company_name ?? 'Tot Pro' }}</title>
   
   <link rel="icon" href="{{ asset('images/company/' . $companyDetails->fav_icon) }}">
 

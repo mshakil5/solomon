@@ -14,7 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Tot Pro</title>
+    <title>{{ $companyDetails->company_name ?? 'Tot Pro' }}</title>
 
     <link rel="icon" href="{{ asset('images/company/' . $companyDetails->fav_icon) }}">
     
