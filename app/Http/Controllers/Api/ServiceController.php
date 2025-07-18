@@ -110,11 +110,13 @@ class ServiceController extends Controller
         $selectedDate = $request->date;
         $selectedTime = $request->time;
 
-        if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
+        $adjustedTime = Carbon::createFromFormat('H:i', $selectedTime)->addMinutes(2)->format('H:i');
+
+        if ($selectedDate === now()->format('Y-m-d') && $adjustedTime <= now()->format('H:i')) {
             return response()->json([
                 'status' => false,
-                'message' => 'Time must be after the current time for today.',
-                'errors' => ['time' => ['The time must be after now.']]
+                'message' => 'Ora trebuie să fie cu cel puțin 2 minute după ora curentă pentru astăzi.',
+                'errors' => ['time' => ['Ora trebuie să fie după cea curentă.']]
             ], 422);
         }
 
