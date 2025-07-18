@@ -514,7 +514,7 @@ class ServiceController extends Controller
         }
 
         $date = $request->date;
-        $time = $request->time;
+        $time = $request->time ?? now()->format('H:i');
         $now = now();
 
         $typeFees = [
