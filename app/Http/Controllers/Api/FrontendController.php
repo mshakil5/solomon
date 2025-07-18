@@ -603,7 +603,11 @@ class FrontendController extends Controller
                 'message' => 'Company details not found.'
             ], 404);
         }
-        $appVersion = $data->app_version;
+        $appVersion = [
+            'app_version' => '1.2.1',
+            'app_category' => 'Urgent',
+        ];
+        
         
 
         return response()->json([
