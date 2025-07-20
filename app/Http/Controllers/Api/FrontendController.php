@@ -25,6 +25,7 @@ use App\Models\Softcode;
 use App\Models\Master;
 use App\Models\Slider;
 use App\Models\Holiday;
+use App\Models\PaymentGateway;
 
 class FrontendController extends Controller
 {
@@ -607,7 +608,10 @@ class FrontendController extends Controller
             'app_version' => '1.2.1',
             'app_category' => 'Urgent',
         ];
-        
+
+        $stripe = PaymentGateway::where('name', 'stripe')
+            ->where('status', 1)
+            ->first(['clientid', 'secretid', 'mode']);
         
 
         return response()->json([
@@ -615,7 +619,8 @@ class FrontendController extends Controller
             'data' => $data,
             'openingDayTime' => $openingDayTime,
             'cities' => $cities,
-            'app_version' => $appVersion
+            'app_version' => $appVersion,
+            'stripe' => $stripe
         ], 200);
 
 
