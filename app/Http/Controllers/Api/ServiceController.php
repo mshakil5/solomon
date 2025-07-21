@@ -278,8 +278,8 @@ class ServiceController extends Controller
         if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
             return response()->json([
                 'status' => false,
-                'message' => 'Time must be after the current time for today.',
-                'errors' => ['time' => ['The time must be after now.']]
+                'message' => 'Ora trebuie să fie după ora curentă pentru astăzi.',
+                'errors' => ['time' => ['Ora trebuie să fie după cea curentă.']]
             ], 422);
         }
 
@@ -614,8 +614,8 @@ class ServiceController extends Controller
         if ($selectedDate === now()->format('Y-m-d') && $selectedTime <= now()->format('H:i')) {
             return response()->json([
                 'status' => false,
-                'message' => 'Time must be after the current time for today.',
-                'errors' => ['time' => ['The time must be after now.']]
+                'message' => 'Ora trebuie să fie după ora curentă pentru astăzi.',
+                'errors' => ['time' => ['Ora trebuie să fie după cea curentă.']]
             ], 422);
         }
 
@@ -683,7 +683,7 @@ class ServiceController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Booking created successfully without service.',
+            'message' => 'Programarea a fost creată cu succes.',
             'data' => $booking->load('files'),
         ]);
     }
