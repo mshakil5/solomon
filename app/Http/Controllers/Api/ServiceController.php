@@ -566,10 +566,10 @@ class ServiceController extends Controller
             $type = 3; //Holiday always Outside Working Hours
         } elseif ($serviceDateTime && $dayOfWeek === 0) {
             $type = 3; // Sunday always Outside Working Hours
-        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
-            $type = 2; // Prioritized
         } elseif ($dayOfWeek === 0 || $hour < $opening || $hour >= $closing) {
             $type = 3; // Outside Working Hours
+        } elseif ($serviceDateTime && $serviceDateTime->isToday() && $diffInMinutes > 120) {
+            $type = 2; // Prioritized
         } else {
             $type = 4; // Standard
         }
