@@ -606,7 +606,7 @@ class FrontendController extends Controller
         }
         $appVersion = [
             'app_version' => '1.2.1',
-            'app_category' => 'Urgent',
+            'app_category' => 'Normal',
         ];
 
         $stripe = PaymentGateway::where('name', 'stripe')
