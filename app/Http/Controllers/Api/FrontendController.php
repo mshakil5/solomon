@@ -605,7 +605,7 @@ class FrontendController extends Controller
             ], 404);
         }
         $appVersion = [
-            'app_version' => '1.2.1',
+            'app_version' => '1.2.0',
             'app_category' => 'Normal',
         ];
 
