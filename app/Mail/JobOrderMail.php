@@ -34,7 +34,7 @@ class JobOrderMail extends Mailable
 
     public function build()
     {
-        return $this->from('info@totpro.net', 'TOT PRO')
+        return $this->from('info@totpro.ro', 'TOT PRO')
                     ->subject($this->array['subject'])
                     ->markdown('emails.job_order');
     }
