@@ -34,7 +34,7 @@ class ContactMessageMail extends Mailable
 
     public function build()
     {
-        return $this->from('info@totpro.ro', 'TOT PRO')
+        return $this->from('contact@totpro.ro', 'TOT PRO')
                     ->subject($this->array['subject'])
                     ->markdown('emails.contact_message');
     }

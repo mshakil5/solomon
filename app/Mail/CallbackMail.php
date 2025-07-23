@@ -34,7 +34,7 @@ class CallbackMail extends Mailable
 
     public function build()
     {
-        return $this->from('info@totpro.ro', 'TOT PRO')
+        return $this->from('contact@totpro.ro', 'TOT PRO')
                     ->subject($this->userData['subject'])
                     ->markdown('emails.callback')
                     ->with([
