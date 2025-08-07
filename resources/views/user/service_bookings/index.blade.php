@@ -23,7 +23,7 @@
                             <th class="text-center">{{ $lang ? 'Serviciu' : 'Service' }}</th>
                             <th class="text-center">{{ $lang ? 'Data Programată' : 'Scheduled Date' }}</th>
                             <th class="text-center">{{ $lang ? 'Ora' : 'Time' }}</th>
-                            <th class="text-center">{{ $lang ? 'Factura' : 'Invoice' }}</th>
+                            <th class="text-center d-none">{{ $lang ? 'Factura' : 'Invoice' }}</th>
                             <th class="text-center">{{ $lang ? 'Status' : 'Status' }}</th>
                             <th class="text-center">{{ $lang ? 'Detalii' : 'Details' }}</th>
                         </tr>
@@ -56,7 +56,7 @@
                             <td class="text-center">
                                 {{ $booking->time ? \Carbon\Carbon::parse($booking->time)->format('h:i A') : '-' }}
                             </td>
-                            <td class="text-center">
+                            <td class="text-center d-none">
                                 @if ($booking->invoices->count() > 0)
                                 <a href="{{ route('service.booking.invoice', $booking->id) }}" class="btn btn-primary">
                                     {{ $lang ? 'Factură' : 'Invoice' }}

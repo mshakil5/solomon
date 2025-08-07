@@ -245,7 +245,7 @@
                 @endif
 
                 @if($booking->invoices->count() > 0)
-                  <div class="row mt-2">
+                  <div class="row mt-2 d-none">
                     <div class="col-12">
                       <h4>{{ $lang ? 'Facturi' : 'Invoices' }}</h4>
                       <div class="table-responsive">         

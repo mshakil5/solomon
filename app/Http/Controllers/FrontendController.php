@@ -655,6 +655,14 @@ class FrontendController extends Controller
                 ->update(['booking_id' => $booking->id]);
         }
 
+        $emailText = "Rezervarea dvs. a fost trimisă cu succes.\n\n" .
+                    "Vă mulțumim pentru încredere!";
+
+        Mail::raw($emailText, function ($message) {
+            $message->to(auth()->user()->email)
+                    ->subject('Confirmare Rezervare');
+        });
+
         session()->forget('booking_request');
 
         return redirect()->route('user.service.bookings')->with('success', 'Booking created successfully.');

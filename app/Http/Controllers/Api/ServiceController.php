@@ -193,6 +193,13 @@ class ServiceController extends Controller
             }
         }
 
+        $emailText = "Rezervarea dvs. a fost trimisă cu succes.\n\n" .
+                    "Vă mulțumim pentru încredere!";
+
+        Mail::raw($emailText, function ($message) {
+            $message->to(auth()->user()->email)
+                    ->subject('Confirmare Rezervare');
+        });
 
         return response()->json([
             'success' => true,
