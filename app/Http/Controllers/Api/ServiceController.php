@@ -16,6 +16,9 @@ use App\Models\Holiday;
 use App\Models\NewService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Mail\JobOrderMail;
+use App\Models\Contact;
+use Illuminate\Support\Facades\Mail;
 
 class ServiceController extends Controller
 {
@@ -189,6 +192,7 @@ class ServiceController extends Controller
                 $booking->files()->create(['file' => $filename]);
             }
         }
+
 
         return response()->json([
             'success' => true,
