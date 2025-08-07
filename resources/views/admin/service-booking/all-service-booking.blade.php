@@ -17,27 +17,80 @@
                   <thead>
                   <tr>
                     <th>#</th>
+                    <th>Status</th>
                     <th>Booking Date</th>
                     <th>Date</th>
                     <th>Time</th>
                     <th>Type</th>
-                    <th>
+                    {{-- <th>
                       Service Fee
-                    </th>
+                    </th> --}}
                     <th>Client</th>
                     <th>Service</th>
                     {{-- <th>Billing Address</th> --}}
                     {{-- <th>Delivery Address</th> --}}
                     <th>Description</th>
-                    <th>Status</th>
                     <th>Details</th>
-                    <th>Action</th>
+                    {{-- <th>Action</th> --}}
                   </tr>
                   </thead>
                   <tbody>
                     @foreach ($bookings as $key => $data)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
+                      <td>
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-secondary">
+                            <span id="stsval{{$data->id}}">
+                              @if ($data->status == 1) Placed
+                              @elseif($data->status == 2) Confirmed
+                              @elseif($data->status == 3) Completed
+                              @elseif($data->status == 4) Cancelled
+                              @endif
+                            </span>
+                          </button>
+                          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                          </button>
+                          <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="1" >Placed</a>
+                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="2">Confirmed</a>
+                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="3">Completed</a>
+                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="4">Cancelled</a>
+                          </div>
+                        </div>
+
+
+                        {{-- @if (!$data->workAssign)
+                          <button class="btn btn-secondary assign-staff mt-2" 
+                                  data-booking-id="{{ $data->id }}" 
+                                  data-toggle="modal" 
+                                  data-target="#assignStaffModal">
+                              Assign Staff
+                          </button>
+                        @else
+                          <p class="mt-2 text-success">
+                            Assigned to: {{ $data->workAssign->staff->name ?? '' }}
+                          </p>
+                              @php
+                                $totalDurationInSeconds = 0;
+
+                                  foreach ($data->workTimes as $workTime) {
+                                      if ($workTime->start_time && $workTime->end_time && !$workTime->is_break) {
+                                          $totalDurationInSeconds += $workTime->duration;
+                                      }
+                                  }
+
+                                  $hours = floor($totalDurationInSeconds / 3600);
+                                  $minutes = floor(($totalDurationInSeconds % 3600) / 60);
+                                  $seconds = $totalDurationInSeconds % 60;
+                              @endphp
+
+                                <span>{{ $hours }}h {{ $minutes }}m {{ $seconds }}s</span>
+
+                        @endif --}}
+
+                      </td>
                       <td>{{ date('d/m/Y', strtotime($data->created_at)) }}</td>    
                       <td>{{ \Carbon\Carbon::parse($data->date)->format('d/m/Y') }}</td>
                       <td>{{ $data->time }}</td>
@@ -53,9 +106,9 @@
                               @else Standard @endif
                           </span>
                       </td>
-                      <td>
+                      {{-- <td>
                           {{ $data->service_fee }}
-                      </td>
+                      </td> --}}
                     
                       <td style="text-align: left">
                           {{$data->user->name}} </br> <br>
@@ -97,64 +150,14 @@
                           {!! $data->description !!}
                       </td>
 
-                      <td>
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-secondary">
-                            <span id="stsval{{$data->id}}">
-                              @if ($data->status == 1) Placed
-                              @elseif($data->status == 2) Confirmed
-                              @elseif($data->status == 3) Completed
-                              @elseif($data->status == 4) Cancelled
-                              @endif
-                            </span>
-                          </button>
-                          <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-                          <div class="dropdown-menu" role="menu">
-                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="1" >Placed</a>
-                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="2">Confirmed</a>
-                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="3">Completed</a>
-                            <a class="dropdown-item stsBtn" style="cursor: pointer;" data-id="{{$data->id}}" value="4">Cancelled</a>
-                          </div>
-                        </div>
-                        @if (!$data->workAssign)
-                          <button class="btn btn-secondary assign-staff mt-2" 
-                                  data-booking-id="{{ $data->id }}" 
-                                  data-toggle="modal" 
-                                  data-target="#assignStaffModal">
-                              Assign Staff
-                          </button>
-                        @else
-                          <p class="mt-2 text-success">
-                            Assigned to: {{ $data->workAssign->staff->name ?? '' }}
-                          </p>
-                              @php
-                                $totalDurationInSeconds = 0;
-
-                                  foreach ($data->workTimes as $workTime) {
-                                      if ($workTime->start_time && $workTime->end_time && !$workTime->is_break) {
-                                          $totalDurationInSeconds += $workTime->duration;
-                                      }
-                                  }
-
-                                  $hours = floor($totalDurationInSeconds / 3600);
-                                  $minutes = floor(($totalDurationInSeconds % 3600) / 60);
-                                  $seconds = $totalDurationInSeconds % 60;
-                              @endphp
-
-                                <span>{{ $hours }}h {{ $minutes }}m {{ $seconds }}s</span>
-
-                        @endif
-
-                      </td>
+                      
                      
                       <td>
                             <a href="{{ route('admin.booking.details', $data->id) }}" class="btn btn-secondary">
                                 <i class="fas fa-eye"></i>
                             </a>
                       </td>
-                      <td>
+                      {{-- <td>
                         @if ($data->status == 3)
                           @php $invoiceCount = $data->invoices->count(); @endphp
                           <a href="{{ route('admin.booking.invoices', $data->id) }}" class="btn btn-primary btn-sm" title="Invoice">
@@ -170,7 +173,7 @@
                                 title="Set Price">
                           <i class="fas fa-pound-sign"></i>
                         </button>
-                      </td>
+                      </td> --}}
   
                     </tr>
                     @endforeach
