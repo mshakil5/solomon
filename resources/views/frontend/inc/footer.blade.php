@@ -20,7 +20,23 @@
             {{ session('app_locale', 'ro') == 'ro' ? 'Terms & Conditions' : 'Terms & Conditions' }}
         </a>
     </p>
-    <div class="social-icons">
+    <div class="social-icons mb-1">
+      <a href="https://play.google.com/store/apps/details?id=com.tot.pro&pcampaignid=web_share"
+        target="_blank"
+        class="d-inline-block me-2">
+          <img src="https://play.google.com/intl/en_us/badges/static/images/badges/ro_badge_web_generic.png"
+              alt="{{ session('app_locale', 'ro') == 'ro' ? 'Descarcă de pe Google Play' : 'Get it on Google Play' }}"
+              style="height:40px;">
+      </a>
+
+      <a href="https://apps.apple.com/gb/app/tot-pro/id6741846121"
+        target="_blank"
+        class="d-inline-block">
+          <img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ro-ro?size=250x83"
+            alt="{{ session('app_locale', 'ro') == 'ro' ? 'Descarcă din App Store' : 'Download on the App Store' }}"
+            style="height:30px;">
+      </a>
+
         @if($companyDetails->facebook)
             <a href="{{ $companyDetails->facebook }}" target="_blank" class="social-link">
                 <i class="fab fa-facebook-f"></i>
