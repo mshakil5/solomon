@@ -288,7 +288,7 @@
                                                 {{ $lang ? 'Vă rugăm să selectați o dată.' : 'Please select a date.' }}
                                             </div>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3"  onclick="toggleTimeInput()">
                                             <label for="eventTime" class="form-label">{{ $lang ? 'Ora selectată' : 'Selected Time' }}</label>
                                             <input type="text" class="form-control" id="eventTime" readonly required>
                                             <div class="invalid-feedback">
@@ -782,6 +782,7 @@ $(document).ready(function() {
                 cleanupModals();
                 toastr.success('{{ $lang ? "Adresă adăugată cu succes!" : "Address added successfully!" }}');
                 updateAddressDropdown(isShipping ? 'shipping' : 'billing', response.address);
+                updateShippingAddressDropdown(isShipping ? 'shipping' : 'shipping', response.address);
             }
         } catch (error) {
             handleFormErrors(error);
@@ -791,6 +792,26 @@ $(document).ready(function() {
     }
 
     function updateAddressDropdown(addressType, address) {
+        const selectElement = $(`select[name="${addressType}_address_id"]`);
+        const addressText = `${address.name}, ${address.first_name}, ${address.phone}`;
+        const newOption = new Option(addressText, address.id, true, true);
+        newOption.dataset.details = JSON.stringify({
+            name: address.name,
+            first_name: address.first_name,
+            phone: address.phone,
+            district: address.district,
+            first_line: address.first_line,
+            second_line: address.second_line,
+            third_line: address.third_line,
+            town: address.town,
+            post_code: address.post_code,
+            floor: address.floor,
+            apartment: address.apartment
+        });
+        selectElement.append(newOption).trigger('change');
+    }
+    
+    function updateShippingAddressDropdown(addressType, address) {
         const selectElement = $(`select[name="${addressType}_address_id"]`);
         const addressText = `${address.name}, ${address.first_name}, ${address.phone}`;
         const newOption = new Option(addressText, address.id, true, true);
@@ -856,6 +877,7 @@ $(document).ready(function() {
         displayAddressDetails('billing', details);
         if ($('#sameAsBilling').is(':checked')) {
             const billingVal = $(this).val();
+            console.log(billingVal);
             $('select[name="shipping_address_id"]').val(billingVal).trigger('change');
         }
     });
@@ -870,6 +892,7 @@ $(document).ready(function() {
     $('#sameAsBilling').on('change', function() {
         if ($(this).is(':checked')) {
             const billingVal = $('select[name="billing_address_id"]').val();
+            console.log(billingVal);
             if (billingVal) {
                 $('select[name="shipping_address_id"]').val(billingVal).trigger('change');
             }
@@ -1214,11 +1237,16 @@ $(document).ready(function() {
             }
             const billingAddress = $('select[name="billing_address_id"]').val();
             const shippingAddress = $('select[name="shipping_address_id"]').val();
-            if (!billingAddress || !shippingAddress) {
+            const sameAsBillingChecked = $('#sameAsBilling').is(':checked');
+
+            if (!billingAddress) {
+                isValid = false;
+            }
+            if (!shippingAddress && !sameAsBillingChecked) {
                 isValid = false;
             }
             if (!isValid) {
-                toastr.error('{{ $lang ? "Vă rugăm să completați toate câmpurile obligatorii corect." : "Please complete all required fields correctly." }}');
+                toastr.error('{{ $lang ? "Vă rugăm să completați toate câmpurile obligatorii corect." : "Please complete all required fields correctly. 2" }}');
             }
         }
 

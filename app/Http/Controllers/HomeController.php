@@ -111,7 +111,7 @@ class HomeController extends Controller
     public function cleanDB()
     {
         $tables = [
-            'acc_del_requests',
+            // 'acc_del_requests',
             'additional_addresses',
             'call_backs',
             'careers',

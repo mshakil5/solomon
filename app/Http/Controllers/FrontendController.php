@@ -639,13 +639,27 @@ class FrontendController extends Controller
         ]);
 
         if (!empty($data['temp_files'])) {
+            $destinationDir = public_path('images/service');
+            if (!is_dir($destinationDir)) {
+                mkdir($destinationDir, 0755, true); // Create directory if it doesn't exist
+            }
+
             foreach ($data['temp_files'] as $filename) {
-                $sourcePath = public_path('temp_booking_files/' . $filename);
-                $destinationPath = public_path('images/service/' . $filename);
+                $sourcePath = public_path('temp_booking_files' . DIRECTORY_SEPARATOR . $filename);
+                $destinationPath = public_path('images' . DIRECTORY_SEPARATOR . 'service' . DIRECTORY_SEPARATOR . $filename);
 
                 if (file_exists($sourcePath)) {
-                    rename($sourcePath, $destinationPath);
-                    $booking->files()->create(['file' => $filename]);
+                    if (!file_exists($destinationPath)) {
+                        if (rename($sourcePath, $destinationPath)) {
+                            $booking->files()->create(['file' => $filename]);
+                        } else {
+                            \Log::error("Failed to rename $sourcePath to $destinationPath");
+                        }
+                    } else {
+                        \Log::warning("Destination file already exists: $destinationPath");
+                    }
+                } else {
+                    \Log::error("Source file does not exist: $sourcePath");
                 }
             }
         }
