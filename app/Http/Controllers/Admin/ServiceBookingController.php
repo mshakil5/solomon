@@ -99,5 +99,13 @@ class ServiceBookingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function bookingTransactions($id)
+    {
+        $serviceDetails = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('id', $id)->first();
+        // dd($serviceDetails);
+        $booking = ServiceBooking::with('user', 'service', 'transactions')->findOrFail($id);
+        return view('admin.service-booking.transactions', compact('booking', 'id','serviceDetails'));
+    }
+
 
 }

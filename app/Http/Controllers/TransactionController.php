@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServiceBooking;
 use App\Models\Work;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -119,5 +121,104 @@ class TransactionController extends Controller
         $data = Transaction::with(['invoice.serviceBooking', 'booking'])->orderBy('id', 'desc')->get();
         return view('admin.work.transaction.list', compact('data'));
     }
+
+
+
+
+
+    // service transactions
+
+    public function serviceTranStore(Request $request)
+    {
+        if(empty($request->date)){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Date \" field..!</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
+
+        if(empty($request->amount)){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Amount \" field..!</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
+
+        $work = ServiceBooking::findOrFail($request->service_booking_id);
+
+        $transaction = new Transaction();
+        $transaction->date = $request->date;
+        $transaction->amount = $request->amount;
+        $transaction->booking_id = $work->id;
+        $transaction->user_id = $work->user_id; 
+        $transaction->payment_type = "Cash"; 
+        $transaction->transaction_type = $request->type;
+        $transaction->created_by = Auth::user()->id;
+
+        $timestamp = now()->format('YmdHis');
+        $randomDigits = rand(1000, 9999);
+        $transaction->tranid = $timestamp . $randomDigits;
+
+        if ($transaction->save()){
+            $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Transaction Create Successfully.</b></div>";
+            return response()->json(['status'=> 300,'message'=>$message]);
+        }else{
+            return response()->json(['status'=> 303,'message'=>'Server Error!!']);
+        };
+    }
+
+    public function serviceTranEdit($id)
+    {
+        $where = [
+            'id'=>$id
+        ];
+        $info = Transaction::where($where)->get()->first();
+        return response()->json($info);
+    }
+    
+    public function serviceTranUpdate(Request $request)
+    {
+        if(empty($request->date)){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Date \" field..!</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
+
+        if(empty($request->amount)){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Amount \" field..!</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
+
+        $transaction = Transaction::find($request->codeid);
+
+        if (!$transaction) {
+            return response()->json(['error' => 'Transaction not found'], 404);
+        }
+
+        $transaction->date = $request->date;
+        $transaction->amount = $request->amount;
+        $transaction->transaction_type = $request->type;
+        $transaction->created_by = Auth::user()->id;
+        $transaction->save();
+
+        if ($transaction->save()) {
+            $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data Updated Successfully.</b></div>";
+            return response()->json(['status'=> 300,'message'=>$message]);
+        } 
+        else {
+           return response()->json(['status'=> 303,'message'=>'Server Error!!']);
+        }
+    }
+
+    public function serviceTranDestroy($id)
+    {
+        if(Transaction::destroy($id)){
+            return response()->json(['success'=>true,'message'=>'Data has been deleted successfully']);
+        }else{
+            return response()->json(['success'=>false,'message'=>'Delete Failed']);
+        }
+    }
+
+
+
 
 }

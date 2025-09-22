@@ -30,6 +30,7 @@
                     {{-- <th>Billing Address</th> --}}
                     {{-- <th>Delivery Address</th> --}}
                     <th>Description</th>
+                    <th>Transaction</th>
                     <th>Details</th>
                     {{-- <th>Action</th> --}}
                   </tr>
@@ -148,6 +149,12 @@
                       </td> --}}
                       <td>
                           {!! $data->description !!}
+                      </td>
+
+                      <td>
+                          <a href="{{ route('admin.booking.transactions', $data->id) }}" class="btn btn-secondary">
+                              <i class="fas fa-money"></i>
+                          </a>
                       </td>
 
                       

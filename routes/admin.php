@@ -74,6 +74,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/change-booking-status', [ServiceBookingController::class, 'changeBookingStatus']);
 
     Route::get('/booking-details/{id}', [ServiceBookingController::class, 'bookingDetails'])->name('admin.booking.details');
+    Route::get('/booking-transactions/{id}', [ServiceBookingController::class, 'bookingTransactions'])->name('admin.booking.transactions');
 
     Route::post('/assign-staff', [WorkController::class, 'assignStaff'])->name('assign.staff');
 
@@ -106,6 +107,12 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->name('transaction.destroy');
 
 
+    Route::post('/service-transactions', [TransactionController::class, 'serviceTranStore']);
+    Route::get('/service-transactions/{id}/edit', [TransactionController::class, 'serviceTranEdit']);
+    Route::post('/service-transactions-update', [TransactionController::class, 'serviceTranUpdate']);
+    Route::get('/service-transactions/{id}', [TransactionController::class, 'serviceTranDestroy']);
+
+    
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::post('/transactions', [TransactionController::class, 'store']);
     Route::get('/transactions/{id}/edit', [TransactionController::class, 'edit']);
