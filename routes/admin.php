@@ -265,5 +265,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/holiday/{id}', [HolidayController::class, 'holidayDelete']);
     Route::post('/holiday-status', [HolidayController::class, 'toggleStatus']);
 
+    Route::get('/clean-db', [HomeController::class, 'cleanDB']);
+
 });
   

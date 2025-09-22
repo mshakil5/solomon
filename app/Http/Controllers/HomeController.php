@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkAssign;
 use App\Models\WorkReview;
+use Illuminate\Support\Facades\DB;
   
 class HomeController extends Controller
 {
@@ -106,4 +107,43 @@ class HomeController extends Controller
             return view('home');
         }
     } 
+    
+    public function cleanDB()
+    {
+        $tables = [
+            'acc_del_requests',
+            'additional_addresses',
+            'call_backs',
+            'careers',
+            'invoices',
+            'jobs',
+            'new_services',
+            'payments',
+            'quotes',
+            'reviews',
+            'review_answers',
+            'review_questions',
+            'service_bookings',
+            'service_booking_reviews',
+            'service_images',
+            'transactions',
+            'uploads',
+            'works',
+            'work_assigns',
+            'work_images',
+            'work_reviews',
+            'work_review_replies',
+            'work_times',
+        ];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        foreach ($tables as $table) {
+            DB::table($table)->truncate();
+        }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        return "Cleaned successfully.";
+    }
 }
