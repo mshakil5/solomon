@@ -41,7 +41,7 @@
                     <select name="type" id="type" class="form-control">
                         <option value="Budget">Initial Budget</option>
                         <option value="Receive">Receive</option>
-                        <option value="Expense">Expense</option>
+                        {{-- <option value="Expense">Expense</option> --}}
                     </select>
                   </div>
                 </div>
@@ -92,40 +92,64 @@
                             <table id="dataTransactionsTable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Date</th>
-                                        <th>Transaction Inputter</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>                                
-                                        <th>Action</th>                                
+                                        <th style="width: 5%">ID</th>
+                                        <th style="width: 10%">Date</th>
+                                        <th  class="text-center"  style="width: 15%">Transaction Inputter</th>
+                                        <th  class="text-center">Description</th>
+                                        <th  class="text-center" style="width: 10%">Receive</th>                                
+                                        <th  class="text-center" style="width: 10%">Budget</th>                                
+                                        <th  class="text-center" style="width: 8%">Action</th>                                
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
-                                        $balance = 0;
-                                        // $balance = $totalBalance;
+                                        $totalReceive = 0;
+                                        $totalBudget = 0;
                                     @endphp
         
-                                    @foreach($booking->transactions as $index => $data)
+                                    @foreach($transactions as $index => $data)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ \Carbon\Carbon::parse($data->date)->format('d-m-Y') }}</td>
                                             <td>{{ \App\Models\User::find($data->created_by)->name ?? 'Unknown' }}</td>
                                             <td>{{ $data->transaction_type }}</td> 
-                                            @if(in_array($data->transaction_type, ['Budget', 'Receive', 'Expense']))
-                                            <td>{{ $data->amount }}</td>
+                                            @if(in_array($data->transaction_type, ['Receive', 'Expense']))
+                                            <td class="text-right">{{ $data->amount }}</td>
+                                            <td></td>
                                             @php
-                                                $balance = $balance - $data->amount;
+                                                $totalReceive += $data->amount;
+                                            @endphp
+                                            @elseif($data->transaction_type == 'Budget')
+
+                                            <td></td>
+                                            <td class="text-right">{{ $data->amount }}</td>
+
+                                            @php
+                                                $totalBudget += $data->amount;
                                             @endphp
                                             @endif
                                             
                                             <td>
-                                                <a class="btn btn-link" id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="font-size: 20px;"></i></a>
-                                                <a class="btn btn-link" id="deleteBtn" rid="{{$data->id}}"><i class="fas fa-trash" style="color: red; font-size: 20px;"></i></a>
+                                                <a class="" id="EditBtn" rid="{{$data->id}}"><i class="fa fa-edit" style="font-size: 20px;"></i></a>
+                                                <a class="" id="deleteBtn" rid="{{$data->id}}"><i class="fas fa-trash" style="color: red; font-size: 20px;"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                  <tr>
+                                    <td  class="text-right" colspan="4"> Total: </td>
+                                    <td class="text-right">{{ number_format($totalReceive, 2) }}</td>
+                                    <td class="text-right">{{ number_format($totalBudget, 2) }}</td>
+                                    <td></td>
+                                  </tr>
+                                  <tr>
+                                    <td  class="text-right" colspan="4"> Due: </td>
+                                    <td class="text-right text-danger">{{ number_format($totalBudget- $totalReceive, 2) }}</td>
+                                    <td class="text-right"></td>
+                                    <td></td>
+                                  </tr>
+                                </tfoot>
                             </table>
                         </div>
 

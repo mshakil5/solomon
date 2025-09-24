@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ServiceBooking;
+use App\Models\Transaction;
 use App\Models\User;
 
 class ServiceBookingController extends Controller
@@ -102,9 +103,9 @@ class ServiceBookingController extends Controller
     public function bookingTransactions($id)
     {
         $serviceDetails = ServiceBooking::with(['service', 'user', 'billingAddress', 'invoices'])->where('id', $id)->first();
-        // dd($serviceDetails);
-        $booking = ServiceBooking::with('user', 'service', 'transactions')->findOrFail($id);
-        return view('admin.service-booking.transactions', compact('booking', 'id','serviceDetails'));
+        $transactions = Transaction::where('booking_id', $id)->get();
+        $budget = Transaction::where('booking_id', $id)->where('transaction_type','Budget')->sum('amount');
+        return view('admin.service-booking.transactions', compact('transactions', 'id','serviceDetails','budget'));
     }
 
 
