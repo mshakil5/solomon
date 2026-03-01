@@ -73,6 +73,6 @@
     </p>
     <p>
         {{ session('app_locale', 'ro') == 'ro' ? 'Proiectat și dezvoltat de' : 'Designed & Developed by' }}
-        <a href="https://mentosoftware.com" target="_blank">Mentosoftware</a>
+        <a href="https://www.mentosoftware.co.uk/" target="_blank">Mentosoftware</a>
     </p>
 </div>
